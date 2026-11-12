@@ -13,10 +13,10 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
 ## Herunterladen
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (23 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 23 MB · DMG 78 MB (Intel und Apple Silicon) · .deb 43 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (24 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (82 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (45 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 24 MB · DMG 82 MB (Intel und Apple Silicon) · .deb 45 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 MB</sub>
 </p>
 
 **Systemanforderungen.** Ein 64-Bit-Rechner mit Windows 10 oder 11, macOS 11 oder neuer oder Linux (x86_64). Rund

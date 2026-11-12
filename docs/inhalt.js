@@ -212,9 +212,9 @@ S.laden = {
  p:{en:'One file, double-click, done. KlangFeder fetches its own dictionaries, with a progress bar.',de:'Eine Datei, Doppelklick, fertig. Die Wörterbücher lädt die KlangFeder selbst nach, mit Fortschrittsbalken.'},
  knopf:{en:'Download',de:'Herunterladen'},
  systeme:[
-  {name:'Windows',typ:'Setup.exe',zeile:{en:'Windows 10 / 11 · 64-bit',de:'Windows 10 / 11 · 64 Bit'},datei:'KlangFeder-Setup.exe',mb:23},
-  {name:'macOS',typ:'DMG',zeile:{en:'macOS 11 or newer · Intel and Apple Silicon',de:'macOS 11 oder neuer · Intel und Apple Silicon'},datei:'KlangFeder.dmg',mb:78},
-  {name:'Linux',typ:'.deb',zeile:{en:'Ubuntu, Debian, Mint · 64-bit',de:'Ubuntu, Debian, Mint · 64 Bit'},datei:'KlangFeder-amd64.deb',mb:43}
+  {name:'Windows',typ:'Setup.exe',zeile:{en:'Windows 10 / 11 · 64-bit',de:'Windows 10 / 11 · 64 Bit'},datei:'KlangFeder-Setup.exe',mb:24},
+  {name:'macOS',typ:'DMG',zeile:{en:'macOS 11 or newer · Intel and Apple Silicon',de:'macOS 11 oder neuer · Intel und Apple Silicon'},datei:'KlangFeder.dmg',mb:82},
+  {name:'Linux',typ:'.deb',zeile:{en:'Ubuntu, Debian, Mint · 64-bit',de:'Ubuntu, Debian, Mint · 64 Bit'},datei:'KlangFeder-amd64.deb',mb:45}
  ],
  anf:{en:'<b>System requirements.</b> About 1.5 GB free for program and dictionaries. A current web browser. Other Linux systems: the <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Not signed: on Windows, Edge first holds the download back – click the arrow next to “Delete” → “Keep”; on first launch Windows may ask once more, and macOS blocks the app until you allow it under Privacy & Security → “Open Anyway”. Once installed, a bell next to “System” shows a new version; one click installs it.',
       de:'<b>Systemanforderungen.</b> Rund 1,5 GB frei für Programm und Wörterbücher. Ein aktueller Webbrowser. Andere Linux-Systeme: das <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Nicht signiert: Unter Windows hält Edge den Download zuerst zurück – Pfeil neben „Löschen“ → „Beibehalten“; beim ersten Start fragt Windows unter Umständen noch einmal nach, und macOS blockiert die App, bis du sie unter Datenschutz & Sicherheit → „Dennoch öffnen“ freigibst. Einmal installiert, zeigt eine Glocke neben „System“ eine neue Fassung; ein Klick spielt sie ein.'}
