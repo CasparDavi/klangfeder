@@ -44,7 +44,8 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
    - **Windows:** Edge hält die Datei zuerst zurück. In der Download-Liste den **Pfeil neben *Löschen*** anklicken →
      *Beibehalten* (falls gefragt: *Trotzdem beibehalten*). Erscheint danach „Der Computer wurde durch Windows
      geschützt“: *Weitere Informationen* → *Trotzdem ausführen*.
-   - **macOS:** Wird die App blockiert: Systemeinstellungen → Datenschutz & Sicherheit → *Dennoch öffnen*.
+   - **macOS:** Beim ersten Start blockiert macOS die App. Dann Systemeinstellungen → *Datenschutz & Sicherheit* →
+     ganz unten bei KlangFeder *Dennoch öffnen* → noch einmal *Öffnen*. Danach startet sie ohne Rückfrage.
    - **Ubuntu, Debian, Mint:** Doppelklick auf die `.deb`-Datei, im App-Zentrum *Installieren*, dann die KlangFeder
      im Anwendungsmenü starten.
    - **Andere Linux-Systeme (AppImage):** Rechtsklick → Eigenschaften → *Als Programm ausführen* einschalten, dann
@@ -70,7 +71,7 @@ einschaltest – um Text und Wunsch an Claude oder ChatGPT zu schicken.
 <details><summary><b>Windows oder macOS sagt, die App sei unsicher.</b></summary>
 
 Die Installer sind nicht signiert. Einmal bestätigen, wie unter [Erste Schritte](#erste-schritte) beschrieben – unter
-Windows zuerst in Edge (Pfeil neben *Löschen* → *Beibehalten*).
+Windows zuerst in Edge (Pfeil neben *Löschen* → *Beibehalten*), unter macOS in *Datenschutz & Sicherheit* (*Dennoch öffnen*).
 </details>
 
 <details><summary><b>Ich habe das Browserfenster geschlossen – wie komme ich zurück?</b></summary>
@@ -97,8 +98,9 @@ deinem Benutzerordner – lösche ihn, wenn alles weg soll.
 - **Sie schlägt vor, sie entscheidet nicht.** Betonung, Versmaß und Reime sind gerechnet und können irren; das Urteil
   bleibt bei dir.
 - **Nicht mit Suno verbunden.** Die KlangFeder gehört nicht zu Suno Inc. Sie zählt nur, was in Sunos Felder passt.
-- **Getestet:** Installation aus diesem Release unter Ubuntu 24.04 und Windows 11 – unter Windows mit dem einen
-  Handgriff in Edge (*Beibehalten*, siehe [Erste Schritte](#erste-schritte)). macOS steht noch aus.
+- **Getestet:** Installation aus diesem Release unter Ubuntu 24.04, Windows 11 und macOS 26 (Intel), je mit dem einen
+  Handgriff aus [Erste Schritte](#erste-schritte): unter Windows *Beibehalten* in Edge, unter macOS *Dennoch öffnen*.
+  Apple Silicon ist eingebaut, aber noch nicht auf einem echten Gerät getestet.
 
 ## Lizenz
 

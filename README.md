@@ -43,7 +43,8 @@ of free space for the program and the dictionaries. A current web browser.
 1. **Download and open.** The installers are not signed, so browser and system ask for confirmation once:
    - **Windows:** Edge holds the file back first. In the download list click the **arrow next to *Delete*** → *Keep*
      (if asked: *Keep anyway*). If "Windows protected your PC" appears afterwards: *More info* → *Run anyway*.
-   - **macOS:** if it is blocked, System Settings → Privacy & Security → *Open Anyway*.
+   - **macOS:** on the first launch macOS blocks the app. Then System Settings → *Privacy & Security* → at the bottom,
+     next to KlangFeder, *Open Anyway* → *Open* once more. After that it starts without asking.
    - **Ubuntu, Debian, Mint:** double-click the `.deb` file, *Install* in the App Center, then start KlangFeder from
      the application menu.
    - **Other Linux systems (AppImage):** right-click → Properties → allow *Executable as Program*, then double-click.
@@ -68,7 +69,7 @@ to Claude or ChatGPT.
 <details><summary><b>Windows or macOS says the app is unsafe.</b></summary>
 
 The installers are not signed. Confirm once as described under [Getting started](#getting-started) – on Windows first
-in Edge (arrow next to *Delete* → *Keep*).
+in Edge (arrow next to *Delete* → *Keep*), on macOS in *Privacy & Security* (*Open Anyway*).
 </details>
 
 <details><summary><b>I closed the browser window – how do I get back?</b></summary>
@@ -95,8 +96,9 @@ Center. AppImage: delete the file. Your texts and the dictionaries stay in the `
 - **It suggests, it does not decide.** Stress, metre and rhymes are computed and can be wrong; the judgement stays with
   you.
 - **Not affiliated with Suno.** KlangFeder is not part of Suno Inc. It only counts what fits into Suno’s fields.
-- **Tested:** installation from this release on Ubuntu 24.04 and Windows 11 – on Windows with the one step in Edge
-  (*Keep*, see [Getting started](#getting-started)). macOS is still to come.
+- **Tested:** installation from this release on Ubuntu 24.04, Windows 11 and macOS 26 (Intel), each with the one step
+  from [Getting started](#getting-started): *Keep* in Edge on Windows, *Open Anyway* on macOS. Apple Silicon is built
+  in but not yet tested on a real device.
 
 ## Licence
 
