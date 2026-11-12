@@ -175,14 +175,16 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
    /* Platz für den Plus-Knopf unten rechts */
 .k.w12 > .filterliste{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:28px}
 .balken{padding:4px 32px 30px;margin-top:auto}
-.balken .bz{margin:0 0 14px}
-.balken .bn{margin:0 0 6px;font-size:15px;font-weight:600;color:var(--text)}
+.balken .bz{margin:0 0 9px}
+.balken .bn{margin:0 0 3px;font-size:15px;font-weight:600;color:var(--text)}
 .balken .bn small{font-weight:400;color:var(--leise)}
-.balken .bb{position:relative;height:22px}
+.balken .bk{margin:2px 0 6px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
+.balken .bz + .bk{margin-top:14px}
+.balken .bb{position:relative;height:15px}
 .balken .bb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 .balken i.ges{background:color-mix(in srgb,var(--akzent) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--akzent)}
 .balken i.neu{background:var(--akzent)}
-.balken .bw{margin:6px 0 0;font-size:14px;color:var(--leise)}
+.balken .bw{margin:3px 0 0;font-size:14px;color:var(--leise)}
 .balken .bw b{color:var(--text)}
 .balken .bl{display:flex;gap:18px;margin:4px 0 0;font-size:13px;color:var(--leise)}
 .balken .bl i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:0}
@@ -368,8 +370,8 @@ function bild(id, L){
       + `<div class="sl r">${g.bei[L].join('<br>')}</div></div>`; }
   if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${g.w[L].some(x => x.length > 40) ? `<ul class="fl">${g.w[L].map(x => `<li>${x}</li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* lange Einträge als Liste untereinander */
   /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
-  if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
-    return `<div class="balken">${g.zeilen.map(z => `<div class="bz"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges" style="width:${Math.max(0.6, 100 * z.ges / max).toFixed(1)}%"></i>${z.neu ? `<i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
+  if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.filter(z => z.ges).map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
+    return `<div class="balken">${g.zeilen.map(z => z.kopf ? `<p class="bk">${z.kopf[L]}</p>` : `<div class="bz"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges" style="width:${Math.max(0.6, 100 * z.ges / max).toFixed(1)}%"></i>${z.neu ? `<i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
       + `<p class="bl"><span><i class="ges"></i>${g.leg.ges[L]}</span><span><i class="neu"></i>${g.leg.neu[L]}</span></p></div>`; }
   /* Ausrichtung zweier Lautketten wie in einem Alignment-Betrachter: je Laut ein Kästchen; | gleich, : ähnlich, · verschieden,
      leer = vor dem Reim (zählt nicht); rechts Punkte und Reimstufe in ihrer Farbe */

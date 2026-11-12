@@ -280,10 +280,12 @@ const BILDER = {
      en: ['<b>Wiktionary</b>: German word forms with pronunciation (CC BY-SA)', '<b>CMUdict</b>: English words with stress (BSD)', '<b>OpenThesaurus</b>: about 49,000 groups of German synonyms (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: English synonyms and opposites (CC BY 4.0)'] } } ] },
   /* Umfang der ausgewerteten gemeinfreien Werke: gelesene Stichwörter, davon neu (nicht in ipa-dict bzw. ipa-dict + Viëtor) */
   umfang: { balken: { zeilen: [
+   { kopf: { de: 'Deutsch', en: 'German' } },
    { n: 'Wiktionary', ges: 705180, neu: 705180 },
    { n: 'Viëtor 1921', ges: 36779, neu: 11223 },
    { n: 'Muret-Sanders 1900', ges: 62047, neu: 26322 },
-   { n: 'CMUdict', zus: { de: 'englisch', en: 'English' }, ges: 126052, neu: 126052 } ],
+   { kopf: { de: 'Englisch', en: 'English' } },
+   { n: 'CMUdict', ges: 126052, neu: 126052 } ],
    leg: { ges: { de: 'Wörter', en: 'words' }, neu: { de: 'davon neu', en: 'of those new' }, alle: { de: 'alle neu', en: 'all new' } } } },
 };
 const POSTER = {}, TEMPO = {};
