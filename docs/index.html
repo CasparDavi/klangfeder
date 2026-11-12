@@ -130,18 +130,7 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .k.quer .text{flex:0 0 34%;align-self:center}
 .k.quer .bild{flex:1;margin-top:0}
 @media screen and (max-width:820px){.k.quer{flex-direction:column}.k.quer .text{flex:none}}
-/* Handy: die neuen Kachelarten mit dem Seitenrand der Texte (24 px) und ohne feste Breiten */
-@media screen and (max-width:820px){
-  .balken,.filterliste,.matrix,.ausr,.sollbild{padding-left:24px;padding-right:24px}
-  .ausr .ar{grid-template-columns:62px repeat(4,minmax(0,1fr))}
-  .ausr .ap{grid-column:2 / -1;grid-row:auto!important;padding:4px 0 0}
-  .sollbild{grid-template-columns:1fr auto 14px}
-  .sollbild .st{white-space:normal}
-  .sollbild .sn{grid-column:1 / -1;padding:0 0 6px}
-  .matrix{grid-template-columns:1fr}
-  .matrix svg{height:auto;width:100%;justify-self:stretch}
-  .matrix .ml{flex-direction:row;flex-wrap:wrap;align-items:center}
-}
+
 .filterliste{padding:4px 32px 30px;margin-top:auto}
 .filterliste .fk{margin:16px 0 4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
 .filterliste .fw{margin:0;font-size:16px;line-height:1.55;color:var(--text)}
@@ -353,6 +342,19 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
 .laden .k p{margin-bottom:20px}
 .laden .anf{max-width:900px;margin:28px 0 0;color:var(--leise);font-size:15px;text-wrap:pretty}
 .laden .anf b{color:var(--text)}
+/* Handy (steht zuletzt, damit es die allgemeinen Regeln überstimmt): die neuen Kachelarten mit dem Seitenrand der Texte (24 px) und ohne feste Breiten */
+@media screen and (max-width:820px){
+  .balken,.filterliste,.matrix,.ausr,.sollbild{padding-left:24px;padding-right:24px}
+  .ausr .ar{grid-template-columns:52px repeat(4,minmax(0,1fr));column-gap:5px}
+  .ausr .al{height:38px;font-size:17px}
+  .ausr .ap{grid-column:2 / -1;grid-row:3!important;padding:2px 0 0}
+  .sollbild{grid-template-columns:minmax(0,1fr) auto 14px;column-gap:10px}
+  .sollbild .st{white-space:normal;min-width:0;font-size:16px}
+  .sollbild .sn{grid-column:1 / -1;padding:0 0 6px}
+  .matrix{grid-template-columns:1fr}
+  .matrix svg{height:auto;width:100%;justify-self:stretch}
+  .matrix .ml{flex-direction:row;flex-wrap:wrap;align-items:center}
+}
 </style>
 <link rel="icon" href="data:,">
 </head>
