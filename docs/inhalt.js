@@ -160,8 +160,8 @@ const S = {
       de:['<b>Wozu:</b> Seltene und alte Wörter, Zusammensetzungen und Namen bekommen ihre Betonung aus einem Wörterbuch statt aus einer Regel – <b>Un</b>wert, <b>Ur</b>kraft, pianis<b>si</b>mo.','<b>Viëtor</b> ist frei veröffentlicht: <a href="https://github.com/CasparDavi/vietor-1921">github.com/CasparDavi/vietor-1921</a>.','<b>Beide Werke</b> sind gemeinfrei; die Scans stammen aus dem Internet Archive.']}},
   {id:'umfang',w:5,klein:{en:'Size',de:'Umfang'},
    h:{en:'Words with their stress.',de:'Wörter mit ihrer Betonung.'},
-   p:{en:'How many words each dictionary knows with pronunciation – and for the old ones, how many of them are new to KlangFeder.',
-      de:'Wie viele Wörter jedes Wörterbuch mit Aussprache kennt – und bei den alten, wie viele davon neu für die KlangFeder sind.'},
+   p:{en:'KlangFeder looks words up in this order. Full: what a dictionary adds that the ones before it did not know.',
+      de:'In dieser Reihenfolge schlägt die KlangFeder nach. Voll: was ein Wörterbuch dazubringt, das die davor noch nicht kannten.'},
    d:{en:['<b>Muret-Sanders</b>, Encyclopaedic Dictionary, German–English part, Langenscheidt 1900: two volumes, about 2,500 pages.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3rd edition 1921: about 500 pages.'],
       de:['<b>Muret-Sanders</b>, Enzyklopädisches Wörterbuch, Teil Deutsch–Englisch, Langenscheidt 1900: zwei Bände, rund 2 500 Seiten.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3. Auflage 1921: rund 500 Seiten.']}},
   {id:'korpora',w:12,klein:{en:'Free sources',de:'Freie Quellen'},
@@ -280,11 +280,11 @@ const BILDER = {
      en: ['<b>Wiktionary</b>: German word forms with pronunciation (CC BY-SA)', '<b>CMUdict</b>: English words with stress (BSD)', '<b>OpenThesaurus</b>: about 49,000 groups of German synonyms (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: English synonyms and opposites (CC BY 4.0)'] } } ] },
   /* Umfang der ausgewerteten gemeinfreien Werke: gelesene Stichwörter, davon neu (nicht in ipa-dict bzw. ipa-dict + Viëtor) */
   umfang: { balken: { zeilen: [
-   { n: 'Wiktionary', ges: 852714 },
-   { n: 'CMUdict', ges: 135166 },
+   { n: 'Wiktionary', ges: 705180, neu: 705180 },
+   { n: 'Viëtor 1921', ges: 36779, neu: 11223 },
    { n: 'Muret-Sanders 1900', ges: 62047, neu: 26322 },
-   { n: 'Viëtor 1921', ges: 36779, neu: 11223 } ],
-   leg: { ges: { de: 'gelesen', en: 'read' }, neu: { de: 'davon neu', en: 'of those new' } } } },
+   { n: 'CMUdict', zus: { de: 'englisch', en: 'English' }, ges: 126052, neu: 126052 } ],
+   leg: { ges: { de: 'Wörter', en: 'words' }, neu: { de: 'davon neu', en: 'of those new' }, alle: { de: 'alle neu', en: 'all new' } } } },
 };
 const POSTER = {}, TEMPO = {};
 const NUR_TEXT = new Set([]);   // Kacheln, die ohne Bild stehen
