@@ -13,10 +13,10 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
 ## Herunterladen
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (22 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (23 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 22 MB · DMG 78 MB (Intel und Apple Silicon) · .deb 43 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
+<br><sub>Setup.exe 23 MB · DMG 78 MB (Intel und Apple Silicon) · .deb 43 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
 </p>
 
 **Systemanforderungen.** Ein 64-Bit-Rechner mit Windows 10 oder 11, macOS 11 oder neuer oder Linux (x86_64). Rund
@@ -63,7 +63,7 @@ zu legen, geht ebenso. Die Glocke gibt es ab Fassung 0.9.2.
 ## Deine Texte
 
 Deine Texte bleiben auf deinem Rechner. Die KlangFeder hat kein Konto, keine Cloud und kein Tracking. Ins Netz geht sie
-nur, um ihre Wörterbücher zu holen, um bei GitHub nach einer neuen Fassung zu fragen und – nur wenn du eine KI
+nur, um ihre Wörterbücher zu holen, um bei GitHub nach einer neuen Fassung zu fragen, auf Wunsch das Songkorpus von songkorpus.de zu holen und – nur wenn du eine KI
 einschaltest – um Text und Wunsch an Claude oder ChatGPT zu schicken.
 
 ## Fragen
@@ -97,8 +97,7 @@ deinem Benutzerordner – lösche ihn, wenn alles weg soll.
 
 - **Sie schlägt vor, sie entscheidet nicht.** Betonung, Versmaß und Reime sind gerechnet und können irren; das Urteil
   bleibt bei dir.
-- **Nicht mit Suno verbunden.** Die KlangFeder gehört nicht zu Suno Inc. Sie zählt nur, was in Sunos Felder passt.
-- **Getestet:** Installation aus diesem Release unter Ubuntu 24.04, Windows 11 und macOS 26 (Intel), je mit dem einen
+- **Getestet:** Installation unter Ubuntu 24.04 (AppImage), Windows 11 und macOS 26 (Intel), je mit dem einen
   Handgriff aus [Erste Schritte](#erste-schritte): unter Windows *Beibehalten* in Edge, unter macOS *Dennoch öffnen*.
   Apple Silicon ist eingebaut, aber noch nicht auf einem echten Gerät getestet.
 

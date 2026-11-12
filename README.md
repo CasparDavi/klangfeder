@@ -13,10 +13,10 @@ the words that fit. German and English. Free, no account, runs on your own compu
 ## Download
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (22 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (23 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 22 MB · DMG 78 MB (Intel and Apple Silicon) · .deb 43 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
+<br><sub>Setup.exe 23 MB · DMG 78 MB (Intel and Apple Silicon) · .deb 43 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
 </p>
 
 **System requirements.** A 64-bit computer with Windows 10 or 11, macOS 11 or newer, or Linux (x86_64). About 1.5 GB
@@ -61,7 +61,7 @@ is there from version 0.9.2.
 ## Your texts
 
 Your texts stay on your computer. KlangFeder has no account, no cloud and no tracking. It goes online only to fetch its
-dictionaries, to ask GitHub whether there is a new version and – only if you switch on an AI – to send text and request
+dictionaries, to ask GitHub whether there is a new version, to fetch the Songkorpus from songkorpus.de if you ask for it, and – only if you switch on an AI – to send text and request
 to Claude or ChatGPT.
 
 ## Questions
@@ -95,8 +95,7 @@ Center. AppImage: delete the file. Your texts and the dictionaries stay in the `
 
 - **It suggests, it does not decide.** Stress, metre and rhymes are computed and can be wrong; the judgement stays with
   you.
-- **Not affiliated with Suno.** KlangFeder is not part of Suno Inc. It only counts what fits into Suno’s fields.
-- **Tested:** installation from this release on Ubuntu 24.04, Windows 11 and macOS 26 (Intel), each with the one step
+- **Tested:** installation on Ubuntu 24.04 (AppImage), Windows 11 and macOS 26 (Intel), each with the one step
   from [Getting started](#getting-started): *Keep* in Edge on Windows, *Open Anyway* on macOS. Apple Silicon is built
   in but not yet tested on a real device.
 

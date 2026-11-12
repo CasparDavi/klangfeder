@@ -6,7 +6,7 @@
 <title>KlangFeder</title>
 <!-- Link-Vorschau (Discord, Mastodon, Messenger): fest in Englisch, Crawler führen kein JavaScript aus -->
 <meta name="description" content="For poems and songs: KlangFeder shows you while you write how your lines sound – stress, metre, rhyme. German and English, on your own computer, free.">
-<meta name="theme-color" content="#ff8a2a">
+<meta name="theme-color" content="#f97b14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KlangFeder">
 <meta property="og:title" content="KlangFeder – Hear your verse while you write it.">
@@ -130,17 +130,31 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .k.quer .text{flex:0 0 34%;align-self:center}
 .k.quer .bild{flex:1;margin-top:0}
 @media screen and (max-width:820px){.k.quer{flex-direction:column}.k.quer .text{flex:none}}
+/* Handy: die neuen Kachelarten mit dem Seitenrand der Texte (24 px) und ohne feste Breiten */
+@media screen and (max-width:820px){
+  .balken,.filterliste,.matrix,.ausr,.sollbild{padding-left:24px;padding-right:24px}
+  .ausr .ar{grid-template-columns:62px repeat(4,minmax(0,1fr))}
+  .ausr .ap{grid-column:2 / -1;grid-row:auto!important;padding:4px 0 0}
+  .sollbild{grid-template-columns:1fr auto 14px}
+  .sollbild .st{white-space:normal}
+  .sollbild .sn{grid-column:1 / -1;padding:0 0 6px}
+  .matrix{grid-template-columns:1fr}
+  .matrix svg{height:auto;width:100%;justify-self:stretch}
+  .matrix .ml{flex-direction:row;flex-wrap:wrap;align-items:center}
+}
 .filterliste{padding:4px 32px 30px;margin-top:auto}
 .filterliste .fk{margin:16px 0 4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
 .filterliste .fw{margin:0;font-size:16px;line-height:1.55;color:var(--text)}
 .filterliste .fw b{font-weight:700;color:var(--akzent)}
-.filterliste .fl{margin:0;padding:0;list-style:none;font-size:15px;line-height:1.5;color:var(--leise)}
-.filterliste .fl li{margin:0 0 6px}
+.filterliste .fl{margin:0;padding:0;list-style:none;font-size:16px;line-height:1.5;color:var(--leise)}
+.filterliste .fl li{margin:0 0 12px}
+.filterliste .fl b,.filterliste .fl span,.filterliste .fl small{display:block}
 .filterliste .fl b{color:var(--text);font-weight:600}
+.filterliste .fl small{font-size:13px;color:var(--leise)}
 .k > .filterliste,.k > .balken{padding-bottom:64px}   /* Platz für den Plus-Knopf unten rechts */
 .matrix{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:18px;padding:0 32px 64px;margin-top:auto}
 .matrix svg{display:block;height:372px;width:auto;max-width:100%;justify-self:end}
-.matrix svg text{font:13px/1 ui-monospace,"SF Mono",Menlo,monospace;fill:var(--leise)}
+.matrix svg text{font:var(--ms,13px)/1 ui-monospace,"SF Mono",Menlo,monospace;fill:var(--leise)}
 .matrix .ml{display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-size:13px;color:var(--leise)}
 .matrix .ml span{margin:2px 0}
 .matrix .ml i{width:22px;height:14px;border-radius:2px;display:block}
@@ -151,9 +165,9 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .ausr .aw{font-size:16px;color:var(--text)}
 .ausr .al{display:grid;place-items:center;height:44px;border-radius:8px;font:20px/1 ui-monospace,"SF Mono",Menlo,monospace;color:var(--text)}
 .ausr .al.gl{box-shadow:inset 0 0 0 1.5px #c9c9cd}
-.ausr .al.ae{box-shadow:inset 0 0 0 1.5px #8b8b90;border:0;background-image:repeating-linear-gradient(135deg,transparent 0 5px,#ffffff10 5px 7px)}
-.ausr .al.an{box-shadow:inset 0 0 0 1px #3a3a3e;color:var(--leise)}
-.ausr .al.au{color:#6a6a70}
+.ausr .al.ae{box-shadow:inset 0 0 0 1.5px #8b8b90}
+.ausr .al.an{box-shadow:inset 0 0 0 1px #6a6a70;color:var(--leise)}
+.ausr .al.au{color:#8b8b90}
 .ausr .ap{padding-left:12px;font-size:15px;color:var(--leise);line-height:1.5}
 .ausr .ap b{font-size:24px;color:var(--text);font-weight:700}
 .ausr .ap i{display:block;font-style:normal;font-weight:600;font-size:15px}
@@ -162,11 +176,11 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .k:not(.quer) > .ausr{align-self:end}
 .sollbild{display:grid;grid-template-columns:auto auto 14px 1fr;align-items:end;column-gap:14px;row-gap:12px;padding:6px 32px 64px;margin-top:auto}
 .sollbild .st{margin:0;font-size:17px;color:var(--text);white-space:nowrap}
-.sollbild .st.platz{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:15px;color:var(--leise)}
+.sollbild .st.muster{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:15px;color:var(--leise)}
 .sollbild .st b{color:var(--akzent);font-weight:600}
 .sollbild .sb{display:flex;align-items:flex-end;gap:2px;height:14px;padding-bottom:3px}
 .sollbild .sb i{width:6px;border-radius:1px 1px 0 0;background:#c9c9cd}
-.sollbild .sb i[style*="4px"]{background:#55555b}
+.sollbild .sb i.w{background:#6a6a70}
 .sollbild .sb i.um{background:none!important;box-shadow:inset 0 0 0 1.2px #8b8b90}
 .sollbild .sb i.zv{background:var(--akzent)!important}
 .sollbild .sr{font-size:16px;padding-bottom:1px}
@@ -283,7 +297,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
 }
 /* Zwei Paare mit Liste daneben: unter 1100 px wird die Liste so hoch, dass ueber dem Bild ein schwarzes Band entsteht */
 @media screen and (max-width:1100px) and (min-width:821px){
-  .k[data-id=messdaten],.k[data-id=messliste],.k[data-id=effektclip],.k[data-id=rezept],.k[data-id=uebersicht],.k[data-id=filtern]{grid-column:span 12}
+  .k[data-id=blast],.k[data-id=lautmatrix],.k[data-id=geruest],.k[data-id=soll],.k[data-id=buecher],.k[data-id=umfang]{grid-column:span 12}
 }
 @media (pointer:coarse){.sprache button{min-height:44px;min-width:44px}}
 @media print{
@@ -368,7 +382,7 @@ function bild(id, L){
       + (g.umschalter ? `<div class="sm um"><div class="modi"><span class="an">${g.links[L]}</span><span>${g.rechts[L]}</span></div></div>`
         : `<div class="sm"><i></i><div class="knopf"><svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></div><i></i><b>${g.knopf[L]}</b></div>`)
       + `<div class="sl r">${g.bei[L].join('<br>')}</div></div>`; }
-  if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${g.w[L].some(x => x.length > 40) ? `<ul class="fl">${g.w[L].map(x => `<li>${x}</li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* lange Einträge als Liste untereinander */
+  if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${typeof g.w[L][0] === 'object' ? `<ul class="fl">${g.w[L].map(x => `<li><b>${x.n}</b><span>${x.b}</span><small>${x.l}</small></li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* Einträge mit Name, Beschreibung, Lizenz: je eine Zeile */
   /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
   if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.filter(z => z.ges).map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
     return `<div class="balken">${g.zeilen.map(z => z.kopf ? `<p class="bk">${z.kopf[L]}</p>` : `<div class="bz"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges" style="width:${Math.max(0.6, 100 * z.ges / max).toFixed(1)}%"></i>${z.neu ? `<i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
@@ -393,8 +407,8 @@ function bild(id, L){
       + `<div class="ml"><span>${g.leg.rechts[L]}</span>${F.slice().reverse().map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.links[L]}</span><span class="leer"><i></i>${g.leg.leer[L]}</span></div></div>`; }
   /* Soll und Ist (Aufbau): je Zeile Text, Balken wie im Programm, Reimbuchstabe, Erklärung */
   if (q && q.sollbild){ const z = q.sollbild[L] || q.sollbild.en, F = { A: '#4a8fff', B: '#45c26a' };
-    const balken = m => [...m].map(c => `<i class="${c === '!' ? 'zv' : /[WS]/.test(c) ? 'um' : ''}" style="height:${/[sS]/.test(c) ? 13 : 4}px"></i>`).join('');
-    return `<div class="sollbild">${z.map(x => `<p class="st${x.platz ? ' platz' : ''}">${x.t}</p><span class="sb">${balken(x.m)}</span><b class="sr" style="color:${F[x.r]}${x.blass ? ';opacity:.45;font-style:italic' : ''}">${x.r}</b><span class="sn">${x.n}</span>`).join('')}</div>`; }
+    const balken = m => [...m].map(c => `<i class="${[c === '!' ? 'zv' : /[WS]/.test(c) ? 'um' : '', /[sS]/.test(c) ? '' : 'w'].filter(Boolean).join(' ')}" style="height:${/[sS]/.test(c) ? 13 : 4}px"></i>`).join('');
+    return `<div class="sollbild">${z.map(x => `<p class="st${x.platz ? ' muster' : ''}">${x.t}</p><span class="sb">${balken(x.m)}</span><b class="sr" style="color:${F[x.r]}${x.blass ? ';font-style:italic;font-weight:500' : ''}">${x.r}</b><span class="sn">${x.n}</span>`).join('')}</div>`; }
   if (q && q.konsole) return `<div class="bild konsole"><div class="leiste"><i></i><i></i><i></i><span>KlangTresor</span></div><pre>${konsole(L).map(z => z.replace(/^  (KlangTresor (läuft|is running|работает))$/, '  <b>$1</b>').replace(/http:\/\/[^ ]+/g, '<u>$&</u>')).join('\n')}</pre></div>`;
   if (q && q.geraete){ const g = q.geraete;
     return `<div class="bild geraete"><div class="lap"><div class="schirm"><img src="${g.laptop}" alt=""></div><div class="fuss"></div></div>`
@@ -534,6 +548,11 @@ function einpassen(){
   if (h1){ h1.style.setProperty('--fit', 1); const f = h1.parentElement.clientWidth / h1.getBoundingClientRect().width;
     if (f < 1) h1.style.setProperty('--fit', (Math.floor(f * 100) / 100).toFixed(2)); }
   // Servermeldung: auf schmaleren Kacheln derselbe Ausschnitt wie auf dem großen Schirm (dort 22 em Text breit), nur kleiner.
+  // Lautmatrix: die SVG-Schrift skaliert mit – so groß setzen, dass sie gerendert mindestens 12 px hat (Hausregel 14)
+  for (const sv of document.querySelectorAll('.matrix svg')){
+    const vb = sv.viewBox.baseVal, f = sv.getBoundingClientRect().width / (vb && vb.width || 1);
+    if (f > 0) sv.style.setProperty('--ms', Math.max(13, 12.5 / f).toFixed(1) + 'px');
+  }
   for (const pre of document.querySelectorAll('.konsole pre')){
     const f = Math.min(1, (pre.clientWidth - 32) / (22 * 13));
     pre.style.setProperty('--fit', (Math.floor(f * 100) / 100).toFixed(2));
