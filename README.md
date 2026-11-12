@@ -31,7 +31,8 @@ of free space for the program and the dictionaries. A current web browser.
 - **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites and phrases. Gaps
   and placeholders such as `x-X-x-X` are filled with words that fit exactly.
 - **Plan the structure.** Verses, chorus, bridge: lines, beats and rhyme per section, as a plan or taken from the text.
-- **For Suno.** Counts what fits into Suno’s fields and estimates the length of the song.
+- **For Suno.** Counts what fits into Suno’s fields (lyrics at most 5,000 characters, styles 1,000) and has both ready
+  to copy; together with KlangTresor it also estimates the length of the song.
 - **AI if you like.** Claude or ChatGPT write or revise with you, via your own account there. Without AI, KlangFeder
   runs entirely on its own.
 

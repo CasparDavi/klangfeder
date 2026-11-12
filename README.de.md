@@ -31,7 +31,8 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
 - **Wörter finden.** Rechtsklick auf ein Wort: Reime darauf, Ersatzwörter im gleichen Maß, Gegenteile und Wendungen.
   Lücken und Platzhalter wie `x-X-x-X` füllt sie mit Wörtern, die genau hineinpassen.
 - **Aufbau planen.** Strophen, Refrain, Bridge: Zeilen, Hebungen und Reim je Abschnitt, als Plan oder aus dem Text.
-- **Für Suno.** Zählt, was in Sunos Felder passt, und schätzt die Länge des Lieds.
+- **Für Suno.** Zählt, was in Sunos Felder passt (Lyrics höchstens 5000 Zeichen, Styles 1000), und legt beides zum
+  Kopieren bereit; zusammen mit dem KlangTresor schätzt sie auch die Länge des Lieds.
 - **Wahlweise mit KI.** Claude oder ChatGPT schreiben oder überarbeiten mit, über dein eigenes Konto dort. Ohne KI
   läuft die KlangFeder ganz für sich.
 
