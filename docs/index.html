@@ -143,13 +143,14 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .filterliste .fl b{color:var(--text);font-weight:600}
 .filterliste .fl small{font-size:13px;color:var(--leise)}
 .k > .filterliste,.k > .balken{padding-bottom:64px}   /* Platz für den Plus-Knopf unten rechts */
-.matrix{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:18px;padding:0 32px 64px;margin-top:auto}
-.matrix svg{display:block;height:372px;width:auto;max-width:100%;justify-self:end}
+.matrix{display:grid;grid-template-columns:1fr;align-items:center;row-gap:14px;padding:0 32px 64px;margin-top:auto}   /* Legende unter der Matrix: die Matrix bekommt die volle Breite (Buchstaben neben den Lauten) */
+.matrix svg{display:block;height:auto;width:100%;max-width:520px;justify-self:center}
 .matrix svg text{font:var(--ms,13px)/1 ui-monospace,"SF Mono",Menlo,monospace;fill:var(--leise)}
-.matrix .ml{display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-size:13px;color:var(--leise)}
-.matrix .ml span{margin:2px 0}
-.matrix .ml i{width:22px;height:14px;border-radius:2px;display:block}
-.matrix .ml .leer{display:flex;align-items:center;gap:6px;margin-top:12px}
+.matrix svg text.sb{fill:#8b8b90}   /* Buchstaben zum Lautzeichen, rechts neben dem Diagonalfeld seiner Zeile: einen Ton dunkler als das Zeichen (Kontrast > 5 : 1) */
+.matrix .ml{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:3px;font-size:13px;color:var(--leise)}
+.matrix .ml span{margin:0 6px}
+.matrix .ml i{width:18px;height:13px;border-radius:2px;display:block}
+.matrix .ml .leer{display:flex;align-items:center;gap:6px;margin:0 0 0 14px}
 .matrix .ml .leer i{background:none;box-shadow:inset 0 0 0 1px #3a3a3e}
 .ausr{padding:4px 32px 64px;margin-top:auto}
 .ausr .ar{display:grid;grid-template-columns:86px repeat(4,54px) 1fr;column-gap:7px;row-gap:7px;align-items:center;margin:0 0 22px}
@@ -201,14 +202,11 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .bild.trip{display:flex;justify-content:center;align-items:center;gap:4%;padding:5% 6% 0;aspect-ratio:21/11;background:radial-gradient(ellipse at 50% 120%,#3a2410 0%,var(--kachel2) 70%)}
 .bild.trip img{width:auto;height:100%;max-width:28%;object-fit:contain;border-radius:22px 22px 0 0;border:6px solid #2b2b2e;border-bottom:0;box-shadow:0 0 0 1px #3a3a3e}
 @media screen and (max-width:820px){.bild.trip{aspect-ratio:4/3;gap:3%;padding:6% 3% 0}.bild.trip img{border-radius:14px 14px 0 0;border-width:4px}}
-.bild.laschen{aspect-ratio:auto;background:none;overflow:visible;max-width:560px;width:100%;margin:0 auto;align-self:center}
-/* Registerlaschen (Hausregel): jede Lasche oben und seitlich umrandet; die offene in der Akzentfarbe, unten offen über der
-   Grundlinie; die anderen stehen auf der Grundlinie in der Akzentfarbe */
-.laschen .lr{display:flex;gap:4px;padding:0 0 0 10px;border-bottom:1.5px solid var(--akzent)}
-.laschen .lr button{font:inherit;font-size:14px;line-height:1.2;padding:7px 14px;color:var(--leise);background:none;border:1px solid var(--linie);border-bottom:0;border-radius:8px 8px 0 0;cursor:pointer}
-.laschen .lr button:hover{color:var(--text)}
-.laschen .lr button.an{color:var(--text);border:1.5px solid var(--akzent);border-bottom:0;background:var(--kachel);margin-bottom:-1.5px;padding-bottom:8.5px}
-.laschen img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;display:block;background:#0c0c0d}
+.bild.reihe{aspect-ratio:auto;background:none;overflow:visible;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:0 32px 64px}   /* unten Platz für den Plus-Knopf */
+.reihe figure{margin:0;min-width:0}
+.reihe figcaption{font-size:15px;font-weight:600;color:var(--text);margin:0 0 8px}
+.reihe img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;display:block;border-radius:8px;background:#0c0c0d}
+@media screen and (max-width:820px){.bild.reihe{grid-template-columns:1fr;padding:0 24px 64px;gap:18px}}
 .bild .platz{position:absolute;inset:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--leise);font-size:14px;border:1px dashed #3a3a40;border-radius:16px}
 .plus{position:absolute;right:18px;bottom:18px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:rgba(66,66,69,.78);backdrop-filter:blur(10px);color:var(--text);cursor:pointer;display:grid;place-items:center}
 .plus svg{width:14px;height:14px}
@@ -413,14 +411,15 @@ function bild(id, L){
         + `<span class="aw">${z.b}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[1]}</span>`).join('')}</div>`; }).join('')}`
       + `<p class="aleg"><span class="al gl"></span>${g.leg.gleich[L]}<span class="al ae"></span>${g.leg.aehnlich[L]}<span class="al an"></span>${g.leg.anders[L]}<span class="al au"></span>${g.leg.aussen[L]}</p></div>`; }
   /* halbe Matrix (Tufte: nur Daten-Tinte); divergente 7 Stufen von Jörg, grau = Zufall (0), Diagonale = 1 */
-  if (q && q.matrix){ const g = q.matrix, n = g.laute.length, c = 21, r0 = 34, F = ['#0b85fe','#529beb','#76accb','#afafaf','#c9a284','#e68a65','#ff6158'];
+  if (q && q.matrix){ const g = q.matrix, n = g.laute.length, c = 21, sb = g.schreibung || null, r0 = 34, F = ['#0b85fe','#529beb','#76accb','#afafaf','#c9a284','#e68a65','#ff6158'];
+    const mitB = a => sb && sb[a] ? `${a} (${sb[a]})` : a;   /* Lautzeichen mit seinen Buchstaben, für den Tooltip */
     const stufe = x => x < -1 ? 0 : x < -0.5 ? 1 : x < -0.15 ? 2 : x <= 0.15 ? 3 : x <= 0.5 ? 4 : x < 0.95 ? 5 : 6;
     const wert = (a, b) => { const k1 = a + '|' + b, k2 = b + '|' + a; return k1 in g.werte ? g.werte[k1] : k2 in g.werte ? g.werte[k2] : null; };
     let z = '';
-    g.laute.forEach((a, i) => { z += `<text x="${r0 - 6}" y="${r0 + i * c + c / 2 + 5}" text-anchor="end">${a}</text><text x="${r0 + i * c + c / 2}" y="${r0 + n * c + 16}" text-anchor="middle">${a}</text>`;
+    g.laute.forEach((a, i) => { z += (sb && sb[a] ? `<text class="sb" x="${r0 + (i + 1) * c + 5}" y="${r0 + i * c + c / 2 + 5}">${sb[a]}</text>` : '') + `<text x="${r0 - 6}" y="${r0 + i * c + c / 2 + 5}" text-anchor="end">${a}</text><text x="${r0 + i * c + c / 2}" y="${r0 + n * c + 16}" text-anchor="middle">${a}</text>`;
       for (let j = 0; j <= i; j++) { const w = wert(a, g.laute[j]); if (w == null) continue;
-        z += `<rect x="${r0 + j * c + 1}" y="${r0 + i * c + 1}" width="${c - 2}" height="${c - 2}" rx="2" fill="${F[stufe(w)]}"><title>${a} / ${g.laute[j]}: ${w.toFixed(2).replace('.', L === 'de' ? ',' : '.')}</title></rect>`; } });
-    const W = r0 + n * c + 4, H = r0 + n * c + 24;
+        z += `<rect x="${r0 + j * c + 1}" y="${r0 + i * c + 1}" width="${c - 2}" height="${c - 2}" rx="2" fill="${F[stufe(w)]}"><title>${mitB(a)} / ${mitB(g.laute[j])}: ${w.toFixed(2).replace('.', L === 'de' ? ',' : '.')}</title></rect>`; } });
+    const W = r0 + n * c + 4 + (sb ? 44 : 0), H = r0 + n * c + 24;   /* rechts Platz für die Buchstaben der letzten Zeilen */
     return `<div class="matrix"><svg viewBox="0 ${r0 - 4} ${W} ${H - r0 + 4}" role="img" aria-label="${g.leg.rechts[L]}">${z}</svg>`
       + `<div class="ml"><span>${g.leg.rechts[L]}</span>${F.slice().reverse().map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.links[L]}</span><span class="leer"><i></i>${g.leg.leer[L]}</span></div></div>`; }
   /* Soll und Ist (Aufbau): je Zeile Text, Balken wie im Programm, Reimbuchstabe, Erklärung */
@@ -431,8 +430,7 @@ function bild(id, L){
   if (q && q.geraete){ const g = q.geraete;
     return `<div class="bild geraete"><div class="lap"><div class="schirm"><img src="${g.laptop}" alt=""></div><div class="fuss"></div></div>`
       + `<div class="tab"><img src="${g.tablet}" alt=""></div><div class="hand"><img src="${g.handy}" alt=""></div></div>`; }
-  if (q && q.laschen) return `<div class="bild laschen"><div class="lr" role="tablist">${q.laschen.map((x, i) => `<button role="tab" aria-selected="${!i}" class="${i ? '' : 'an'}" data-src="${x.s[L] || x.s.en}">${x.n[L]}</button>`).join('')}</div>`
-    + `<img src="${q.laschen[0].s[L] || q.laschen[0].s.en}" alt="${q.laschen[0].n[L]}" loading="lazy"></div>`;
+  if (q && q.reihe) return `<div class="bild reihe">${q.reihe.map(x => `<figure><figcaption>${x.n[L]}</figcaption><img src="${x.s[L] || x.s.en}" alt="${x.n[L]}" loading="lazy"></figure>`).join('')}</div>`;
   if (Array.isArray(q)) return `<div class="bild trip">${q.map(u => `<img src="${u}" alt="" loading="lazy">`).join('')}</div>`;
   if (!q) return `<div class="bild"><div class="platz">${S.kopf.platz[L]} · ${id}</div></div>`;
   if (/\.mp4(\?|$)/.test(q)) return `<div class="bild"><video src="${q}"${POSTER[id] ? ` poster="${POSTER[id]}"` : ''} autoplay muted loop playsinline data-tempo="${TEMPO[id] || 1}" onloadedmetadata="this.defaultPlaybackRate=this.playbackRate=+this.dataset.tempo"></video></div>`;
@@ -604,8 +602,6 @@ addEventListener('resize', lage);
 function zu(){ document.getElementById('overlay').classList.remove('auf'); document.body.style.overflow = ''; }
 document.addEventListener('click', e => {
   const p = e.target.closest('.plus'); if (p) return auf(p.dataset.k, p);
-  const la = e.target.closest('.laschen .lr button');   /* Registerlasche: Bild wechseln */
-  if (la){ const b = la.closest('.laschen'); b.querySelectorAll('.lr button').forEach(x => { x.classList.toggle('an', x === la); x.setAttribute('aria-selected', x === la); }); const im = b.querySelector('img'); im.src = la.dataset.src; im.alt = la.textContent; return; }
   const ab = e.target.closest('.abspielen');
   if (ab){ const v = ab.parentElement.querySelector('video'); knopfWeg(v); v.play().catch(() => {}); return; }
   if (e.target.closest('.zu') || e.target.id === 'overlay') zu();

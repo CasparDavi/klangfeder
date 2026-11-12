@@ -74,10 +74,11 @@ const S = {
       de:'Aus den Reimen von rund 61 000 Gedichten gelernt: wie viel öfter zwei Vokale an der Reimstelle zusammenstehen, als der Zufall erwarten lässt. Warm: öfter, blau: seltener, leer: nie zusammen gesehen.'},
    d:{en:['<b>For example:</b> long and short i (Miete / Mitte) almost never rhyme, long i and long ü (Liebe / trübe) often.','<b>The measure</b> is pointwise mutual information (PMI) per pair of sounds, scaled so that every sound gives 1 with itself.','<b>Consonants</b> have the same kind of table; it decides how heavily a different final consonant counts against a rhyme.'],
       de:['<b>Ein Beispiel:</b> Langes und kurzes i (Miete / Mitte) reimen fast nie, langes i und langes ü (Liebe / trübe) oft.','<b>Gemessen</b> als punktweise Transinformation (PMI) je Lautpaar, so skaliert, dass jeder Laut mit sich selbst 1 ergibt.','<b>Für Konsonanten</b> gibt es dieselbe Art Tafel; sie bestimmt, was ein anderer Endkonsonant kostet.']}},
-  /* Ansehen (Jörg, 12.11.2026: „eine Abbildung mit Registerlaschen – flächentreue Wort-Cloud, Dotplot der Wiederholungen,
-     Circos-Plot der Wiederholungen; mehr würde ich nicht zeigen … als funktionierendes Addon drin, aber noch nicht die
-     Megawerbung“). Bilder: „Die Gedanken sind frei“ (Volkslied, Fassung 1842), werkzeug/aufnahme/ansehen.mjs. */
-  {id:'ansehen',w:12,quer:true,klein:{en:'Look',de:'Ansehen'},
+  /* Ansehen (Jörg, 12.11.2026: „flächentreue Wort-Cloud, Dotplot der Wiederholungen, Circos-Plot der Wiederholungen;
+     mehr würde ich nicht zeigen … als funktionierendes Addon drin, aber noch nicht die Megawerbung“; zuerst als Laschen,
+     dann „nebeneinander, die Beschriftung oben drüber“). Bilder: „Die Gedanken sind frei“ (Volkslied, Fassung 1842),
+     werkzeug/aufnahme/ansehen.mjs. */
+  {id:'ansehen',w:12,klein:{en:'Look',de:'Ansehen'},
    h:{en:'The song as a picture.',de:'Das Lied als Bild.'},
    p:{en:'A tab of its own shows the text as a word cloud, as a dot plot and as a circle of its repetitions.',
       de:'Eine eigene Lasche zeigt den Text als Wortwolke, als Dotplot und als Kreis seiner Wiederholungen.'},
@@ -232,8 +233,8 @@ const BILDER = {
   ki: { sprachen: { de: `img/ki-de.webp?v=${BV}`, en: `img/ki-en.webp?v=${BV}` } },
   laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}` } },
   vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}` } },
-  /* Ansehen: ein Bild mit Registerlaschen, je Lasche ein quadratisches Bild je Sprache */
-  ansehen: { laschen: ['wolke', 'dotplot', 'kreis'].map((b, i) => ({ n: [{ de: 'Wortwolke', en: 'Word cloud' }, { de: 'Dotplot', en: 'Dot plot' }, { de: 'Kreis', en: 'Circle' }][i],
+  /* Ansehen: drei quadratische Bilder nebeneinander, je mit Beschriftung darüber, je Sprache */
+  ansehen: { reihe: ['wolke', 'dotplot', 'kreis'].map((b, i) => ({ n: [{ de: 'Wortwolke', en: 'Word cloud' }, { de: 'Dotplot', en: 'Dot plot' }, { de: 'Kreis', en: 'Circle' }][i],
    s: { de: `img/ansehen-${b}-de.webp?v=${BV}`, en: `img/ansehen-${b}-en.webp?v=${BV}` } })) },
   /* Aufbau als Schaubilder statt Screenshots (Caspar_D, 12.11.2026: „keine screenshots, lieber zwei schaubilder“) */
   geruest: { schaubild: { umschalter: true, links: { de: 'Lied', en: 'Song' }, rechts: { de: 'Gedicht', en: 'Poem' }, knopf: { de: '', en: '' },
@@ -280,7 +281,13 @@ const BILDER = {
    leg: { gleich: { de: 'gleich', en: 'same' }, aehnlich: { de: 'ähnlich', en: 'similar' }, anders: { de: 'verschieden', en: 'different' }, aussen: { de: 'vor dem Reim', en: 'before the rhyme' } } } },
   /* Vokalmatrix aus der gelernten Reimmatrix (KlangFeder daten/de/laut/pmi.json, TextGrid-Gedichte, Stand 10.11.2026):
      normierte PMI je Paar, 1 = gleicher Laut; fehlende Paare wurden nie zusammen gesehen (bleiben leer) */
-  lautmatrix: { matrix: { laute: ["i", "ɪ", "e", "ɛ", "y", "ʏ", "ø", "œ", "u", "ʊ", "o", "ɔ", "a", "ə", "ɐ", "aɪ̯", "ɔʏ̯", "aʊ̯"], werte: {"a|a": 1, "ə|ə": 1, "aɪ̯|aɪ̯": 1, "ɛ|ɛ": 1, "œ|ɛ": 0.582, "ɐ|ɐ": 1, "e|ɛ": -0.095, "ɪ|ʏ": 0.536, "e|e": 1, "i|i": 1, "o|ɔ": 0.274, "ɪ|ɪ": 1, "i|y": 0.671, "œ|ɪ": -0.1, "ɔ|ɔ": 1, "u|u": 1, "o|o": 1, "ɔʏ̯|ɔʏ̯": 1, "ʏ|ʏ": 1, "ʊ|ʊ": 1, "e|ø": 0.552, "y|ʏ": 0.203, "aʊ̯|aʊ̯": 1, "y|y": 1, "œ|ʏ": -0.47, "aɪ̯|ɔʏ̯": 0.515, "u|ʊ": -0.466, "i|ʏ": -0.354, "ø|ø": 1, "œ|œ": 1, "o|ø": -0.493, "ø|œ": 0.237, "ø|ɛ": -0.127, "œ|ɔ": -0.445, "y|ø": -0.293, "i|ɪ": -1.45, "œ|ʊ": -0.501, "ɛ|ɪ": -1.78, "ɪ|ʊ": -1.821},
+  /* schreibung: welche Buchstaben im Deutschen für das Lautzeichen stehen (Jörg, 12.11.2026: „um die Buchstabenkombis
+     ergänzen, für die die Lautzeichen stehen“) – Liebe, mir, ihn · Mitte · Weg, See, sehr · Bett, Hände · trübe, Kühe, Typ ·
+     Hütte · schön, Höhle · Hölle · gut, Uhr · Mutter · Rose, Boot, Sohn · Sonne · Tag, Saal, Bahn, Mann · Liebe (unbetont) ·
+     Vater, mir · Zeit, Mai · Freude, Häuser · Haus */
+  lautmatrix: { matrix: { laute: ["i", "ɪ", "e", "ɛ", "y", "ʏ", "ø", "œ", "u", "ʊ", "o", "ɔ", "a", "ə", "ɐ", "aɪ̯", "ɔʏ̯", "aʊ̯"],
+   schreibung: { "i": "ie, i, ih", "ɪ": "i", "e": "e, ee, eh", "ɛ": "e, ä", "y": "ü, üh, y", "ʏ": "ü", "ø": "ö, öh", "œ": "ö", "u": "u, uh", "ʊ": "u",
+     "o": "o, oo, oh", "ɔ": "o", "a": "a, aa, ah", "ə": "e", "ɐ": "er, r", "aɪ̯": "ei, ai", "ɔʏ̯": "eu, äu", "aʊ̯": "au" }, werte: {"a|a": 1, "ə|ə": 1, "aɪ̯|aɪ̯": 1, "ɛ|ɛ": 1, "œ|ɛ": 0.582, "ɐ|ɐ": 1, "e|ɛ": -0.095, "ɪ|ʏ": 0.536, "e|e": 1, "i|i": 1, "o|ɔ": 0.274, "ɪ|ɪ": 1, "i|y": 0.671, "œ|ɪ": -0.1, "ɔ|ɔ": 1, "u|u": 1, "o|o": 1, "ɔʏ̯|ɔʏ̯": 1, "ʏ|ʏ": 1, "ʊ|ʊ": 1, "e|ø": 0.552, "y|ʏ": 0.203, "aʊ̯|aʊ̯": 1, "y|y": 1, "œ|ʏ": -0.47, "aɪ̯|ɔʏ̯": 0.515, "u|ʊ": -0.466, "i|ʏ": -0.354, "ø|ø": 1, "œ|œ": 1, "o|ø": -0.493, "ø|œ": 0.237, "ø|ɛ": -0.127, "œ|ɔ": -0.445, "y|ø": -0.293, "i|ɪ": -1.45, "œ|ʊ": -0.501, "ɛ|ɪ": -1.78, "ɪ|ʊ": -1.821},
    leg: { links: { de: 'seltener als Zufall', en: 'less often than chance' }, rechts: { de: 'öfter', en: 'more often' }, leer: { de: 'nie gesehen', en: 'never seen' } } } },
   /* Freie Wörterbücher und Korpora (daten/QUELLEN.md der KlangFeder); Zahlen wie dort */
   korpora: { liste: [
