@@ -56,13 +56,19 @@ const S = {
       de:'Wie gut zwei Wörter reimen, hört die KlangFeder an ihrer Aussprache. Die Farbe steht als Streifen an jeder Reimliste.'},
    d:{en:['<b>Impure rhymes</b> by the rules of prosody (mir/Tür, Zeit/freut) count in the rhyme scheme.','<b>The list of rhymes</b> runs from identical to echo; the scroll wheel decides how far.'],
       de:['<b>Unreine Reime</b> nach der Verslehre (mir/Tür, Zeit/freut) zählen im Reimschema mit.','<b>Die Reimliste</b> läuft von rührend bis Anklang; das Mausrad entscheidet, wie weit.']}},
-  {id:'blast',w:7,klein:{en:'How it finds rhymes',de:'Wie sie Reime findet'},
+  ]},
+ {augenbraue:{en:'Under the hood',de:'Unter der Haube'},
+  h:{en:'Rhymes, analysed with the methods of bioinformatics.',de:'Reime, mit Verfahren der Bioinformatik analysiert.'},
+  p:{en:'As biology compares protein and DNA sequences, KlangFeder compares chains of sounds: aligned like BLAST, scored with a substitution matrix learned from rhymes.',
+     de:'Wie die Biologie Eiweiß- und Erbgutsequenzen vergleicht, vergleicht die KlangFeder Lautketten: ausgerichtet wie mit BLAST, bewertet mit einer Austauschmatrix, die aus Reimen gelernt ist.'},
+  kacheln:[
+  {id:'blast',w:6,klein:{en:'How it finds rhymes',de:'Wie sie Reime findet'},
    h:{en:'Rhymes aligned like genes.',de:'Reime aligniert wie Gene.'},
-   p:{en:'Every word becomes a chain of sounds and is aligned from its end – with the method biology uses to compare protein and DNA sequences. How alike two sounds are, KlangFeder learned from rhymes, among them those of about 61,000 poems.',
-      de:'Jedes Wort wird zur Kette von Lauten und vom Ende her ausgerichtet – mit dem Verfahren, mit dem die Biologie Eiweiß- und Erbgutsequenzen vergleicht. Wie ähnlich sich zwei Laute sind, hat die KlangFeder aus Reimen gelernt, unter anderem aus denen von rund 61 000 Gedichten.'},
+   p:{en:'Every word becomes a chain of sounds and is aligned from its end, sound against sound. Three real alignments from KlangFeder: the same sounds give full points, similar ones fewer, and what comes before the rhyme does not count.',
+      de:'Jedes Wort wird zur Kette von Lauten und vom Ende her ausgerichtet, Laut gegen Laut. Drei echte Ausrichtungen aus der KlangFeder: Gleiche Laute bringen volle Punkte, ähnliche weniger, was vor dem Reim steht, zählt nicht.'},
    d:{en:['<b>Anchored at the end, open to the left</b> (as in BLAST): the alignment grows as long as the score carries it.','<b>A table of sound pairs</b> (a substitution matrix, as BLOSUM is for proteins): how often two sounds stand together at the rhyme, more often than chance gives points.','<b>Syllables have weight:</b> a missing unstressed syllable costs little, a stressed one a lot – Tag / sagen rhymes, Heim / Heimat does not.'],
       de:['<b>Am Ende verankert, nach links offen</b> (wie bei BLAST): Die Ausrichtung wächst, solange die Punkte tragen.','<b>Eine Tafel der Lautpaare</b> (Austauschmatrix, wie BLOSUM bei Eiweißen): Wie oft zwei Laute an Reimstelle zusammenstehen – häufiger als der Zufall gibt Punkte.','<b>Silben haben Gewicht:</b> Eine fehlende unbetonte Silbe kostet wenig, eine betonte viel – Tag / sagen reimt, Heim / Heimat nicht.']}},
-  {id:'lautmatrix',w:5,klein:{en:'Sound matrix',de:'Lautmatrix'},
+  {id:'lautmatrix',w:6,klein:{en:'Sound matrix',de:'Lautmatrix'},
    h:{en:'Which vowels rhyme.',de:'Welche Vokale sich reimen.'},
    p:{en:'Learned from the rhymes of about 61,000 poems: how much more often two vowels stand together at the rhyme than chance would have it. Warm: more often, blue: less often, empty: never seen together.',
       de:'Aus den Reimen von rund 61 000 Gedichten gelernt: wie viel öfter zwei Vokale an Reimstelle zusammenstehen, als der Zufall erwarten lässt. Warm: öfter, blau: seltener, leer: nie zusammen gesehen.'},
@@ -212,7 +218,7 @@ const BILDER = {
   laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}` } },
   vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}` } },
   /* Aufbau als Schaubilder statt Screenshots (Caspar_D, 12.11.2026: „keine screenshots, lieber zwei schaubilder“) */
-  geruest: { schaubild: { links: { de: 'Lied', en: 'Song' }, rechts: { de: 'Gedicht', en: 'Poem' }, knopf: { de: 'ein Klick', en: 'one click' },
+  geruest: { schaubild: { umschalter: true, links: { de: 'Lied', en: 'Song' }, rechts: { de: 'Gedicht', en: 'Poem' }, knopf: { de: 'ein Klick', en: 'one click' },
    von: { de: ['Pop', 'Strophe · Refrain', 'AABA', 'Ballade', 'Blues', 'Rap'], en: ['pop', 'verse · chorus', 'AABA', 'ballad', 'blues', 'rap'] },
    bei: { de: ['Sonett', 'Stanze', 'Terzinen', 'Volksliedstrophe', 'Limerick', 'Haiku'], en: ['sonnet', 'ottava rima', 'terza rima', 'folk-song stanza', 'limerick', 'haiku'] } } },
   /* Soll und Ist: Balken wie im Programm. m je Silbe: w/s gefüllt (Senkung/Hebung), W/S Umriss (fehlt noch), ! zu viel.
@@ -246,13 +252,14 @@ const BILDER = {
    { k: { de: 'Anklang', en: 'echo' }, f: '#76767b', w: { de: ['Wind / Winter', 'klingt ähnlich, andere Silbenzahl'], en: ['Wind / Winter', 'sounds alike, other syllable count'] } } ] },
   /* Ausrichtung zweier Lautketten wie im Programm (kern/laute.mjs ausrichten, Gedichte-Matrix; Punkte am 12.11.2026 gerechnet):
      | gleich, : ähnlich, · verschieden; „von“ = Punkte des Worts gegen sich selbst */
-  blast: { pre: { titel: 'Reim-BLAST', zeilen: {
-   de: ['Liebe    l   iː  b  ə', '             :   |  |', 'trübe   tʁ   yː  b  ə', '<b>Punkte 10,4 von 11,4  → unrein</b>', '',
-        'Liebe    l   iː  b  ə', '             |   ·  |', 'Wiege    v   iː  ɡ  ə', '<b>Punkte  7,7 von 11,4  → Assonanz</b>', '',
-        'Herz     h   ɛ   ɐ̯ t͡s', '             |   | |', 'Schmerz ʃm   ɛ   ɐ̯ t͡s', '<b>Punkte  6,0 von 6,0   → rein</b>'],
-   en: ['Liebe    l   iː  b  ə', '             :   |  |', 'trübe   tʁ   yː  b  ə', '<b>score 10.4 of 11.4  → impure</b>', '',
-        'Liebe    l   iː  b  ə', '             |   ·  |', 'Wiege    v   iː  ɡ  ə', '<b>score  7.7 of 11.4  → assonance</b>', '',
-        'Herz     h   ɛ   ɐ̯ t͡s', '             |   | |', 'Schmerz ʃm   ɛ   ɐ̯ t͡s', '<b>score  6.0 of 6.0   → perfect</b>'] } } },
+  blast: { ausrichtung: {
+   zeilen: [
+    { a: 'Liebe', b: 'trübe', s: [['l', 'tʁ', ' '], ['iː', 'yː', ':'], ['b', 'b', '|'], ['ə', 'ə', '|']], p: '10,4', pe: '10.4', max: '11,4', maxe: '11.4', st: 'unrein' },
+    { a: 'Liebe', b: 'Wiege', s: [['l', 'v', ' '], ['iː', 'iː', '|'], ['b', 'ɡ', '·'], ['ə', 'ə', '|']], p: '7,7', pe: '7.7', max: '11,4', maxe: '11.4', st: 'Assonanz' },
+    { a: 'Herz', b: 'Schmerz', s: [['h', 'ʃm', ' '], ['ɛ', 'ɛ', '|'], ['ɐ̯', 'ɐ̯', '|'], ['t͡s', 't͡s', '|']], p: '6,0', pe: '6.0', max: '6,0', maxe: '6.0', st: 'rein' } ],
+   stufen: { unrein: { de: 'unrein', en: 'impure', f: '#e6d23e' }, Assonanz: { de: 'Assonanz', en: 'assonance', f: '#f08a24' }, rein: { de: 'rein', en: 'perfect', f: '#4a8fff' } },
+   von: { de: 'von', en: 'of' },
+   leg: { gleich: { de: 'gleich', en: 'same' }, aehnlich: { de: 'ähnlich', en: 'similar' }, anders: { de: 'verschieden', en: 'different' }, aussen: { de: 'vor dem Reim', en: 'before the rhyme' } } } },
   /* Vokalmatrix aus der gelernten Reimmatrix (KlangFeder daten/de/laut/pmi.json, TextGrid-Gedichte, Stand 10.11.2026):
      normierte PMI je Paar, 1 = gleicher Laut; fehlende Paare wurden nie zusammen gesehen (bleiben leer) */
   lautmatrix: { matrix: { laute: ["i", "ɪ", "e", "ɛ", "y", "ʏ", "ø", "œ", "u", "ʊ", "o", "ɔ", "a", "ə", "ɐ", "aɪ̯", "ɔʏ̯", "aʊ̯"], werte: {"a|a": 1, "ə|ə": 1, "aɪ̯|aɪ̯": 1, "ɛ|ɛ": 1, "œ|ɛ": 0.582, "ɐ|ɐ": 1, "e|ɛ": -0.095, "ɪ|ʏ": 0.536, "e|e": 1, "i|i": 1, "o|ɔ": 0.274, "ɪ|ɪ": 1, "i|y": 0.671, "œ|ɪ": -0.1, "ɔ|ɔ": 1, "u|u": 1, "o|o": 1, "ɔʏ̯|ɔʏ̯": 1, "ʏ|ʏ": 1, "ʊ|ʊ": 1, "e|ø": 0.552, "y|ʏ": 0.203, "aʊ̯|aʊ̯": 1, "y|y": 1, "œ|ʏ": -0.47, "aɪ̯|ɔʏ̯": 0.515, "u|ʊ": -0.466, "i|ʏ": -0.354, "ø|ø": 1, "œ|œ": 1, "o|ø": -0.493, "ø|œ": 0.237, "ø|ɛ": -0.127, "œ|ɔ": -0.445, "y|ø": -0.293, "i|ɪ": -1.45, "œ|ʊ": -0.501, "ɛ|ɪ": -1.78, "ɪ|ʊ": -1.821},
