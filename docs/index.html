@@ -134,6 +134,9 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .filterliste .fk{margin:16px 0 4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
 .filterliste .fw{margin:0;font-size:16px;line-height:1.55;color:var(--text)}
 .filterliste .fw b{font-weight:700;color:var(--akzent)}
+.filterliste .fl{margin:0;padding:0;list-style:none;font-size:15px;line-height:1.5;color:var(--leise)}
+.filterliste .fl li{margin:0 0 6px}
+.filterliste .fl b{color:var(--text);font-weight:600}
 .k > .filterliste,.k > .balken{padding-bottom:64px}   /* Platz für den Plus-Knopf unten rechts */
 .matrix{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:18px;padding:0 32px 64px;margin-top:auto}
 .matrix svg{display:block;height:372px;width:auto;max-width:100%;justify-self:end}
@@ -362,7 +365,7 @@ function bild(id, L){
       + (g.umschalter ? `<div class="sm um"><div class="modi"><span class="an">${g.links[L]}</span><span>${g.rechts[L]}</span></div></div>`
         : `<div class="sm"><i></i><div class="knopf"><svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></div><i></i><b>${g.knopf[L]}</b></div>`)
       + `<div class="sl r">${g.bei[L].join('<br>')}</div></div>`; }
-  if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p><p class="fw">${g.w[L].join(' · ')}</p></div>`).join('')}</div>`;
+  if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${g.w[L].some(x => x.length > 40) ? `<ul class="fl">${g.w[L].map(x => `<li>${x}</li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* lange Einträge als Liste untereinander */
   /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
   if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
     return `<div class="balken">${g.zeilen.map(z => `<div class="bz"><p class="bn">${z.n}</p><div class="bb"><i class="ges" style="width:${(100 * z.ges / max).toFixed(1)}%"></i><i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i></div><p class="bw">${z3(z.ges)} · <b>${z3(z.neu)}</b></p></div>`).join('')}`

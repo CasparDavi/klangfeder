@@ -148,9 +148,9 @@ const S = {
       de:['<b>Vorlagen:</b> Lieder aus dem KlangTresor, als Vorlagen angekreuzt, zeigen ihren Stil – Versmaß, Reim, Aufbau – und dienen der KI als Vorbild.','<b>Die Länge</b> ist grob (im Mittel ±12 %); die Dichte sagt mehr.','<b>Der KlangTresor</b> ist ein eigenes, freies Programm für dein Suno-Archiv: <a href="https://github.com/CasparDavi/klangtresor">github.com/CasparDavi/klangtresor</a>.']}},
   ]},
  {augenbraue:{en:'Sources',de:'Quellen'},
-  h:{en:'Old dictionaries, read anew.',de:'Alte Wörterbücher, neu gelesen.'},
-  p:{en:'Free modern dictionaries do not know many words – and where they do, the secondary stress is often missing. So we went through two public-domain pronunciation dictionaries page by page.',
-     de:'Freie moderne Wörterbücher kennen viele Wörter nicht – und wo sie sie kennen, fehlt oft der Nebenton. Zwei gemeinfreie Aussprachewörterbücher haben wir deshalb Seite für Seite ausgewertet.'},
+  h:{en:'Old dictionaries and free corpora, read anew.',de:'Alte Wörterbücher und freie Korpora, neu gelesen.'},
+  p:{en:'KlangFeder learns pronunciation, rhymes and phrases from free dictionaries and free collections of texts (corpora). Where those do not know a word – or miss its secondary stress – two public-domain pronunciation dictionaries step in, which we went through page by page.',
+     de:'Aussprache, Reime und Wendungen lernt die KlangFeder aus freien Wörterbüchern und freien Textsammlungen (Korpora). Wo die ein Wort nicht kennen – oder ihm der Nebenton fehlt –, helfen zwei gemeinfreie Aussprachewörterbücher, die wir Seite für Seite ausgewertet haben.'},
   kacheln:[
   {id:'buecher',w:7,klein:{en:'Muret-Sanders 1900 · Viëtor 1921',de:'Muret-Sanders 1900 · Viëtor 1921'},
    h:{en:'Stress as it was printed.',de:'Betonung, wie sie gedruckt steht.'},
@@ -164,6 +164,12 @@ const S = {
       de:'Gelesen, und davon neu für die KlangFeder: Wörter, die die freien modernen Wörterbücher nicht kennen.'},
    d:{en:['<b>Muret-Sanders</b>, Encyclopaedic Dictionary, German–English part, Langenscheidt 1900: two volumes, about 2,500 pages.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3rd edition 1921: about 500 pages.'],
       de:['<b>Muret-Sanders</b>, Enzyklopädisches Wörterbuch, Teil Deutsch–Englisch, Langenscheidt 1900: zwei Bände, rund 2 500 Seiten.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3. Auflage 1921: rund 500 Seiten.']}},
+  {id:'korpora',w:12,klein:{en:'Free sources',de:'Freie Quellen'},
+   h:{en:'What KlangFeder learns from.',de:'Woraus die KlangFeder lernt.'},
+   p:{en:'Every source is free to use; their licences stay with them and are listed in full in the data package (QUELLEN.md).',
+      de:'Jede Quelle ist frei nutzbar; ihre Lizenzen bleiben bei ihr und stehen vollständig im Datenpaket (QUELLEN.md).'},
+   d:{en:['<b>Derived data</b> – pronunciations, rhyme pairs, phrases – keeps the licence of its source.','<b>Song lyrics</b> are not part of the package.'],
+      de:['<b>Abgeleitete Daten</b> – Lautschrift, Reimpaare, Wendungen – behalten die Lizenz ihrer Quelle.','<b>Liedtexte</b> sind nicht im Paket.']}},
   ]},
  {augenbraue:{en:'Yours',de:'Bei dir'},
   h:{en:'Your verse stays with you.',de:'Deine Verse bleiben bei dir.'},
@@ -264,6 +270,14 @@ const BILDER = {
      normierte PMI je Paar, 1 = gleicher Laut; fehlende Paare wurden nie zusammen gesehen (bleiben leer) */
   lautmatrix: { matrix: { laute: ["i", "ɪ", "e", "ɛ", "y", "ʏ", "ø", "œ", "u", "ʊ", "o", "ɔ", "a", "ə", "ɐ", "aɪ̯", "ɔʏ̯", "aʊ̯"], werte: {"a|a": 1, "ə|ə": 1, "aɪ̯|aɪ̯": 1, "ɛ|ɛ": 1, "œ|ɛ": 0.582, "ɐ|ɐ": 1, "e|ɛ": -0.095, "ɪ|ʏ": 0.536, "e|e": 1, "i|i": 1, "o|ɔ": 0.274, "ɪ|ɪ": 1, "i|y": 0.671, "œ|ɪ": -0.1, "ɔ|ɔ": 1, "u|u": 1, "o|o": 1, "ɔʏ̯|ɔʏ̯": 1, "ʏ|ʏ": 1, "ʊ|ʊ": 1, "e|ø": 0.552, "y|ʏ": 0.203, "aʊ̯|aʊ̯": 1, "y|y": 1, "œ|ʏ": -0.47, "aɪ̯|ɔʏ̯": 0.515, "u|ʊ": -0.466, "i|ʏ": -0.354, "ø|ø": 1, "œ|œ": 1, "o|ø": -0.493, "ø|œ": 0.237, "ø|ɛ": -0.127, "œ|ɔ": -0.445, "y|ø": -0.293, "i|ɪ": -1.45, "œ|ʊ": -0.501, "ɛ|ɪ": -1.78, "ɪ|ʊ": -1.821},
    leg: { links: { de: 'seltener als Zufall', en: 'less often than chance' }, rechts: { de: 'öfter', en: 'more often' }, leer: { de: 'nie gesehen', en: 'never seen' } } } },
+  /* Freie Wörterbücher und Korpora (daten/QUELLEN.md der KlangFeder); Zahlen wie dort */
+  korpora: { liste: [
+   { k: { de: 'Korpora', en: 'Corpora' }, w: {
+     de: ['<b>TextGrid / Zeno.org</b>: rund 61 000 deutsche Gedichte (CC BY 3.0 DE)', '<b>Gutenberg Poetry Corpus</b>: rund 3 Mio englische Verszeilen (CC0)', '<b>Wortschatz Leipzig</b>: Nachrichten, Wikipedia und Webtexte, je 1 Mio Sätze (CC BY)', '<b>FrequencyWords</b>: die 50 000 häufigsten Wörter je Sprache, aus Untertiteln (CC BY-SA)'],
+     en: ['<b>TextGrid / Zeno.org</b>: about 61,000 German poems (CC BY 3.0 DE)', '<b>Gutenberg Poetry Corpus</b>: about 3 million English lines of verse (CC0)', '<b>Wortschatz Leipzig</b>: news, Wikipedia and web texts, 1 million sentences each (CC BY)', '<b>FrequencyWords</b>: the 50,000 most frequent words per language, from subtitles (CC BY-SA)'] } },
+   { k: { de: 'Wörterbücher', en: 'Dictionaries' }, w: {
+     de: ['<b>Wiktionary</b>: über 800 000 deutsche Wortformen mit Lautschrift (CC BY-SA)', '<b>CMUdict</b>: rund 135 000 englische Wörter mit Betonung (BSD)', '<b>OpenThesaurus</b>: rund 49 000 Gruppen sinnverwandter Wörter (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: englische Synonyme und Gegenteile (CC BY 4.0)'],
+     en: ['<b>Wiktionary</b>: over 800,000 German word forms with pronunciation (CC BY-SA)', '<b>CMUdict</b>: about 135,000 English words with stress (BSD)', '<b>OpenThesaurus</b>: about 49,000 groups of German synonyms (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: English synonyms and opposites (CC BY 4.0)'] } } ] },
   /* Umfang der ausgewerteten gemeinfreien Werke: gelesene Stichwörter, davon neu (nicht in ipa-dict bzw. ipa-dict + Viëtor) */
   umfang: { balken: { zeilen: [
    { n: 'Muret-Sanders 1900', ges: 62047, neu: 26322 },
