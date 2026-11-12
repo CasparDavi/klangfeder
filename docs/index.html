@@ -11,8 +11,8 @@
 <meta property="og:site_name" content="KlangFeder">
 <meta property="og:title" content="KlangFeder – Hear your verse while you write it.">
 <meta property="og:description" content="Stress, metre and rhyme while you write, for German and English poems and songs. Free software, runs on your own computer.">
-<meta property="og:url" content="https://caspardavi.github.io/klangfeder-releases/">
-<meta property="og:image" content="https://caspardavi.github.io/klangfeder-releases/img/og-en.jpg">
+<meta property="og:url" content="https://caspardavi.github.io/klangfeder/">
+<meta property="og:image" content="https://caspardavi.github.io/klangfeder/img/og-en.jpg">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:image:alt" content="KlangFeder – Hear your verse while you write it.">
@@ -48,7 +48,9 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .abschnitt>.kopf .augenbraue,.fahrt .kopf .augenbraue{font-size:17px;font-weight:600;color:var(--akzent);margin:0 0 8px}
 .abschnitt>.kopf h2,.fahrt .kopf h2{font-size:clamp(34px,5vw,56px);line-height:1.07;letter-spacing:-.01em;font-weight:700;margin:0 0 14px}
 .abschnitt>.kopf p,.fahrt .kopf p{font-size:clamp(18px,2vw,21px);color:var(--leise);margin:0;font-weight:500}
-.abschnitt>.kopf p a{color:var(--akzent);text-decoration:none}.abschnitt>.kopf p a:hover{text-decoration:underline}
+/* Links im Fließtext in der Akzentfarbe, nie browserblau (Caspar_D 12.11.2026: „appimage hat noch einen browserblauen link“) */
+.abschnitt>.kopf p a,.laden .anf a,.fenster a,.k .text a,.grenzen a{color:var(--akzent);text-decoration:none}
+.abschnitt>.kopf p a:hover,.laden .anf a:hover,.fenster a:hover,.k .text a:hover,.grenzen a:hover{text-decoration:underline}
 .raster{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
 .k{position:relative;grid-column:span 6;background:var(--kachel);border-radius:28px;overflow:hidden;display:flex;flex-direction:column}
 .k.w12{grid-column:span 12}.k.w8{grid-column:span 8}.k.w4{grid-column:span 4}.k.w6{grid-column:span 6}.k.w5{grid-column:span 5}.k.w7{grid-column:span 7}
@@ -315,7 +317,7 @@ function bild(id, L){
   if (/\.mp4(\?|$)/.test(q)) return `<div class="bild"><video src="${q}"${POSTER[id] ? ` poster="${POSTER[id]}"` : ''} autoplay muted loop playsinline data-tempo="${TEMPO[id] || 1}" onloadedmetadata="this.defaultPlaybackRate=this.playbackRate=+this.dataset.tempo"></video></div>`;
   return `<div class="bild"${FORMAT[id] ? ` style="aspect-ratio:${FORMAT[id]}"` : ''}><img src="${q}" alt="" loading="lazy"></div>`;
 }
-const LADEN = 'https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/';
+const LADEN = 'https://github.com/CasparDavi/klangfeder/releases/latest/download/';
 const mbL = (n) => (L === 'ru' ? n + ' МБ' : n + ' MB');
 /* Die drei Knöpfe im Kopf: direkt die Datei; die Einzelheiten stehen unten im Abschnitt „Herunterladen“. */
 function knoepfe(){ return `<div class="knoepfe">${S.laden.systeme.map(x => `<a href="${LADEN}${x.datei}">${x.name} ↓<small>${mbL(x.mb)}</small></a>`).join('')}</div>`; }

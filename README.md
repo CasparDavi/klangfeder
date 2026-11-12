@@ -1,4 +1,4 @@
-<a href="https://caspardavi.github.io/klangfeder-releases/?lang=en"><img src="docs/img/readme-en.jpg" alt="KlangFeder – Hear your verse while you write it." width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder/?lang=en"><img src="docs/img/readme-en.jpg" alt="KlangFeder – Hear your verse while you write it." width="100%"></a>
 
 <p align="center"><a href="README.de.md">Deutsch</a> · <b>English</b></p>
 
@@ -8,15 +8,15 @@
 For poems and songs: KlangFeder shows you while you write how your lines sound – stress, metre, rhyme. And it finds
 the words that fit. German and English. Free, no account, runs on your own computer.
 
-**[See everything it can do → feature page](https://caspardavi.github.io/klangfeder-releases/?lang=en)**
+**[See everything it can do → feature page](https://caspardavi.github.io/klangfeder/?lang=en)**
 
 ## Download
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (22 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 22 MB · DMG 78 MB (Intel and Apple Silicon) · .deb 43 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (22 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 22 MB · DMG 78 MB (Intel and Apple Silicon) · .deb 43 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
 </p>
 
 **System requirements.** A 64-bit computer with Windows 10 or 11, macOS 11 or newer, or Linux (x86_64). About 1.5 GB
@@ -24,7 +24,7 @@ of free space for the program and the dictionaries. A current web browser.
 
 ## What it does
 
-<a href="https://caspardavi.github.io/klangfeder-releases/?lang=en"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder with a song text: stress, beats, rhymes, the structure on the left" width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder/?lang=en"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder with a song text: stress, beats, rhymes, the structure on the left" width="100%"></a>
 
 - **See the stress.** Stressed syllables light up, unstressed ones step back. Every line shows its syllables, beats
   and cadence, every section its metre.

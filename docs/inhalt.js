@@ -117,8 +117,8 @@ const S = {
   l:{en:['KlangFeder suggests, it does not decide. Stress, metre and rhymes are computed and can be wrong; the judgement stays with you.','Your texts stay on your computer. Only if you let an AI write or revise do text and request go to Claude or ChatGPT, via your own account there.','KlangFeder is not part of Suno. It only counts what fits into Suno’s fields.'],
      de:['Die KlangFeder schlägt vor, sie entscheidet nicht. Betonung, Versmaß und Reime sind gerechnet und können irren; das Urteil bleibt bei dir.','Deine Texte bleiben auf deinem Rechner. Nur wenn du eine KI schreiben oder überarbeiten lässt, gehen Text und Wunsch an Claude oder ChatGPT, über dein eigenes Konto dort.','Die KlangFeder gehört nicht zu Suno. Sie zählt nur, was in Sunos Felder passt.']}
  },
- fuss:{en:'KlangFeder is free software by Caspar_D · github.com/CasparDavi/klangfeder-releases',
-       de:'Die KlangFeder ist freie Software von Caspar_D · github.com/CasparDavi/klangfeder-releases'},
+ fuss:{en:'KlangFeder is free software by Caspar_D · github.com/CasparDavi/klangfeder',
+       de:'Die KlangFeder ist freie Software von Caspar_D · github.com/CasparDavi/klangfeder'},
  stern:{en:'',de:''}
 };
 
@@ -134,8 +134,8 @@ S.laden = {
   {name:'macOS',typ:'DMG',zeile:{en:'macOS 11 or newer · Intel and Apple Silicon',de:'macOS 11 oder neuer · Intel und Apple Silicon'},datei:'KlangFeder.dmg',mb:78},
   {name:'Linux',typ:'.deb',zeile:{en:'Ubuntu, Debian, Mint · 64-bit',de:'Ubuntu, Debian, Mint · 64 Bit'},datei:'KlangFeder-amd64.deb',mb:43}
  ],
- anf:{en:'<b>System requirements.</b> About 1.5 GB free for program and dictionaries. A current web browser. Other Linux systems: the <a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Not signed: on first launch Windows and macOS ask for confirmation. Once installed, KlangFeder updates itself: a bell next to “System” shows a new version.',
-      de:'<b>Systemanforderungen.</b> Rund 1,5 GB frei für Programm und Wörterbücher. Ein aktueller Webbrowser. Andere Linux-Systeme: das <a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Nicht signiert: Beim ersten Start fragen Windows und macOS nach. Einmal installiert, erneuert sich die KlangFeder selbst: Eine Glocke neben „System“ zeigt eine neue Fassung.'}
+ anf:{en:'<b>System requirements.</b> About 1.5 GB free for program and dictionaries. A current web browser. Other Linux systems: the <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Not signed: on first launch Windows and macOS ask for confirmation. Once installed, KlangFeder updates itself: a bell next to “System” shows a new version.',
+      de:'<b>Systemanforderungen.</b> Rund 1,5 GB frei für Programm und Wörterbücher. Ein aktueller Webbrowser. Andere Linux-Systeme: das <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Nicht signiert: Beim ersten Start fragen Windows und macOS nach. Einmal installiert, erneuert sich die KlangFeder selbst: Eine Glocke neben „System“ zeigt eine neue Fassung.'}
 };
 
 const BV = '3';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
@@ -154,7 +154,7 @@ const BILDER = {
 };
 const POSTER = {}, TEMPO = {};
 const NUR_TEXT = new Set([]);   // Kacheln, die ohne Bild stehen
-const GH = 'github.com/CasparDavi/klangfeder-releases';
+const GH = 'github.com/CasparDavi/klangfeder';
 const ghLink = (s) => s.replace(GH, `<a class="gh" href="https://${GH}">${GH}</a>`);
 const KONSOLE = {}, konsole = () => [];
 const FORMAT = { schreiben: '1560/700', reimschema: '1310/950', reimsuche: '1310/950', ersatz: '1380/1095', luecke: '1000/1111', zaehlen: '676/620', regie: '1090/1000', ki: '676/680', laenge: '1495/1073', vergleich: '1560/1045' };   /* ki w5 / laenge w7: 5·680/676 = 7·1073/1495 */   /* ersatz w7 / luecke w5: 7·1095/1380 = 5·1111/1000, Unterkanten fluchten */   /* Kacheln, deren Bild ein eigenes Seitenverhaeltnis hat */
