@@ -117,7 +117,7 @@ const S = {
      de:'Schreibst du für Suno, legt die KlangFeder Text und Stil so bereit, wie Suno sie will – gezählt und zum Kopieren.'},
   kacheln:[
   {id:'zaehlen',w:6,klein:{en:'Character count',de:'Zeichen zählen'},
-   h:{en:'It fits, or you see that it does not.',de:'Es passt, oder du siehst es.'},
+   h:{en:'You see whether it fits.',de:'Du siehst, ob es passt.'},
    p:{en:'Lyrics and styles counted separately against Suno’s limits of 5,000 and 1,000 characters. One button copies each field.',
       de:'Lyrics und Styles getrennt gezählt, gegen Sunos Grenzen von 5000 und 1000 Zeichen. Ein Knopf kopiert jedes Feld.'},
    d:{en:['<b>The style prompt</b> is saved with every version of your text.','<b>Together with KlangTresor</b>, KlangFeder also estimates the length of the song and how densely Suno will sing it.'],
