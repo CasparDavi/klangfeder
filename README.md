@@ -1,38 +1,105 @@
-# KlangFeder – Downloads
+<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-en.jpg" alt="KlangFeder – Hear your verse while you write it." width="100%"></a>
 
-KlangFeder ist ein Werkzeug zum Schreiben von Liedtexten: Betonung, Versmaß, Reime, Reimsuche, Aufbau.
-Hier liegen nur die Installer und das Datenpaket; der Programmcode wird woanders gepflegt.
+<p align="center"><a href="README.de.md">Deutsch</a> · <b>English</b></p>
 
-| System | Datei |
-|---|---|
-| Windows 10/11 | [KlangFeder-Setup.exe](https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-Setup.exe) |
-| macOS | [KlangFeder.dmg](https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder.dmg) |
-| Linux: Ubuntu, Debian, Mint (x86_64) | [KlangFeder-amd64.deb](https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-amd64.deb) – empfohlen |
-| Linux: andere (x86_64) | [KlangFeder-x86_64.AppImage](https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-x86_64.AppImage) |
+# KlangFeder
 
-Die Wörterbücher (Datenpaket) holt die KlangFeder bei der Installation selbst.
+**Hear your verse while you write it.**
+For poems and songs: KlangFeder shows you while you write how your lines sound – stress, metre, rhyme. And it finds
+the words that fit. German and English. Free, no account, runs on your own computer.
 
-### Linux: so geht's
+## Download
 
-**Ubuntu, Debian, Mint – das .deb-Paket**
-1. `KlangFeder-amd64.deb` herunterladen und im Ordner „Downloads“ doppelklicken.
-2. Das App-Zentrum (bzw. die Paketinstallation) öffnet sich: **Installieren** und dein Passwort eingeben.
-3. **KlangFeder** im Anwendungsmenü starten. Beim ersten Start legt sie sich nach `~/KlangFeder`, der Browser geht auf,
-   und die Seite „System“ holt die Wörterbücher (Fortschrittsbalken).
+<p align="center">
+<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (22 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (78 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (43 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 22 MB · DMG 78 MB (Intel and Apple Silicon) · .deb 43 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 40 MB</sub>
+</p>
 
-Erneuern: das neuere Paket genauso installieren. Entfernen: im App-Zentrum, oder `sudo apt remove klangfeder`;
-deine Texte und Wörterbücher in `~/KlangFeder` bleiben.
+**System requirements.** A 64-bit computer with Windows 10 or 11, macOS 11 or newer, or Linux (x86_64). About 1.5 GB
+of free space for the program and the dictionaries. A current web browser.
 
-**Andere Linux-Systeme – das AppImage**
-1. `KlangFeder-x86_64.AppImage` herunterladen.
-2. Linux startet heruntergeladene Dateien nicht von selbst: **Rechtsklick → Eigenschaften → „Als Programm ausführen“**
-   einschalten (je nach System auch „Ausführbar“ / „Allow executing file as program“).
-3. Doppelklicken. Weiter wie oben ab Schritt 3.
+## What it does
 
-## Datenpaket und Lizenzen
-Das Datenpaket enthält Wörterbücher aus freien Quellen und daraus abgeleitete Daten. Die Quellen und Lizenzen
-stehen vollständig in `QUELLEN.md` im Paket, unter anderem:
-- Wiktionary über ipa-dict (CC BY-SA)
+<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder with a song text: stress, beats, rhymes, the structure on the left" width="100%"></a>
+
+- **See the stress.** Stressed syllables light up, unstressed ones step back. Every line shows its syllables, beats
+  and cadence, every section its metre.
+- **See the rhymes.** Same colour rhymes. Each section shows its rhyme scheme (alternate, couplets, tail rhyme …) –
+  as a finding or as a rule.
+- **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites and phrases. Gaps
+  and placeholders such as `x-X-x-X` are filled with words that fit exactly.
+- **Plan the structure.** Verses, chorus, bridge: lines, beats and rhyme per section, as a plan or taken from the text.
+- **For Suno.** Counts what fits into Suno’s fields and estimates the length of the song.
+- **AI if you like.** Claude or ChatGPT write or revise with you, via your own account there. Without AI, KlangFeder
+  runs entirely on its own.
+
+## Getting started
+
+1. **Download and open.** The installers are not signed yet, so the first launch asks for confirmation once:
+   - **Windows:** "Windows protected your PC" → *More info* → *Run anyway*.
+   - **macOS:** if it is blocked, System Settings → Privacy & Security → *Open Anyway*.
+   - **Ubuntu, Debian, Mint:** double-click the `.deb` file, *Install* in the App Center, then start KlangFeder from
+     the application menu.
+   - **Other Linux systems (AppImage):** right-click → Properties → allow *Executable as Program*, then double-click.
+2. **It fetches its dictionaries itself** (about 350 MB), with a progress bar: on Windows the installer itself,
+   on Mac and Linux the *System* page that opens in your browser on the first start.
+3. **KlangFeder runs as an icon** in the taskbar, Dock or panel. The page is at **http://localhost:8790**.
+
+## Updates
+
+When a new version is out, a bell appears next to *System*. One click on the *System* page installs it; your texts,
+dictionaries and settings stay as they are. Running a newer installer over an old installation does the same. The bell
+is there from version 0.9.2.
+
+## Your texts
+
+Your texts stay on your computer. KlangFeder has no account, no cloud and no tracking. It goes online only to fetch its
+dictionaries, to ask GitHub whether there is a new version and – only if you switch on an AI – to send text and request
+to Claude or ChatGPT.
+
+## Questions
+
+<details><summary><b>Windows or macOS says the app is unsafe.</b></summary>
+
+The installers are not signed yet. Confirm once as described under [Getting started](#getting-started).
+</details>
+
+<details><summary><b>I closed the browser window – how do I get back?</b></summary>
+
+KlangFeder keeps running until you quit it via its icon. Its icon in the taskbar, Dock or panel (or starting it again)
+opens the page again; it is at http://localhost:8790.
+</details>
+
+<details><summary><b>Fetching the dictionaries stopped.</b></summary>
+
+The *System* page says what is missing. Press the button again: what has already arrived is continued. Without a
+connection, the data package can also be chosen as a file.
+</details>
+
+<details><summary><b>How do I uninstall it?</b></summary>
+
+Windows: Settings → Apps → KlangFeder. macOS: drag the app to the Bin. Ubuntu, Debian, Mint: remove it in the App
+Center. AppImage: delete the file. Your texts and the dictionaries stay in the `KlangFeder` folder in your home folder
+– delete it if you want everything gone.
+</details>
+
+## Good to know
+
+- **It suggests, it does not decide.** Stress, metre and rhymes are computed and can be wrong; the judgement stays with
+  you.
+- **Not affiliated with Suno.** KlangFeder is not part of Suno Inc. It only counts what fits into Suno’s fields.
+- **Tested:** installation on Ubuntu 24.04 from this release, without any help. Windows and macOS are built; a test of a
+  fresh installation is still to come.
+
+## Licence
+
+KlangFeder is free of charge; its program is released under the **MIT licence**. Dictionaries and corpora keep their
+own licences. KlangFeder fetches the dictionaries as a data package; sources and licences are listed in full in
+`QUELLEN.md` inside the package, among them:
+
+- Wiktionary via ipa-dict (CC BY-SA)
 - OpenThesaurus (LGPL 2.1 / CC BY-SA 4.0)
 - Open English WordNet (CC BY 4.0)
 - CMUdict (BSD)
@@ -40,21 +107,14 @@ stehen vollständig in `QUELLEN.md` im Paket, unter anderem:
 - TextGrid (CC BY 3.0 DE)
 - Gutenberg Poetry Corpus (CC0)
 
-Im Programm selbst (nicht im Datenpaket): die Lautschrift aus Viëtor, *Deutsches Aussprachewörterbuch*, 3. Aufl. 1921
-– gemeinfrei, für die KlangFeder digitalisiert und frei veröffentlicht unter CC0:
-[github.com/CasparDavi/vietor-1921](https://github.com/CasparDavi/vietor-1921).
+Derived dictionary data is under the same licence as its source (CC BY-SA). Inside the program: the transcriptions from
+Viëtor, *Deutsches Aussprachewörterbuch*, 3rd ed. 1921 – public domain, digitised for KlangFeder and released under
+CC0: [github.com/CasparDavi/vietor-1921](https://github.com/CasparDavi/vietor-1921).
 
-Abgeleitete Wörterbuchdaten stehen unter derselben Lizenz wie ihre Quelle (CC BY-SA).
+Phrases from song lyrics (Songkorpus, IDS Mannheim, CC BY-NC 4.0, "non-commercial scientific research only") are
+**not** in the package. If you want them, let KlangFeder fetch them from songkorpus.de itself and agree to the IDS
+conditions there.
 
-Wendungen aus Liedtexten (Songkorpus, IDS Mannheim, CC BY-NC 4.0, „non-commercial scientific research only“) sind
-**nicht** im Paket. Wer sie nutzen will, lässt sie die KlangFeder selbst von songkorpus.de holen und stimmt dabei
-den Bedingungen des IDS zu.
-
----
-
-KlangFeder is a tool for writing song lyrics (stress, metre, rhymes). This repository only hosts the installers
-and the data package. Sources and licences of the data are listed in `QUELLEN.md` inside the package.
-
-Linux: on Ubuntu, Debian or Mint take `KlangFeder-amd64.deb` – double-click it, install it in the App Center and
-start KlangFeder from the application menu. Other distributions: the AppImage; downloaded files are not executable,
-so first right-click → Properties → "Allow executing file as program", then double-click.
+KlangFeder is made by Caspar_D. Large parts of the code were written in dialogue with an AI language model; design and
+decisions are Caspar_D's. This repository holds only the installers and the landing page; the program code is
+maintained elsewhere.
