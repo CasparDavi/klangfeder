@@ -81,11 +81,11 @@ const S = {
      de:'Synonyme, Gegenteile und Wendungen – jedes mit einem Zeichen, wie gut es in deinen Vers passt. Und Lücken, die die KlangFeder füllt.'},
   kacheln:[
   {id:'ersatz',w:7,klein:{en:'Replacements',de:'Ersatzwörter'},
-   h:{en:'Same meaning, same stress.',de:'Gleich gemeint, gleich betont.'},
-   p:{en:'Synonyms with the same syllable pattern come first. A small battery shows for every suggestion how well it fits exactly this place in the line.',
-      de:'Synonyme mit demselben Silbenmuster stehen vorn. Eine kleine Batterie zeigt bei jedem Vorschlag, wie gut er an genau diese Stelle der Zeile passt.'},
-   d:{en:['<b>At the top</b> the line with its beats, the selection marked. Full battery: exactly the beats of this place; three quarters: a syllable more or less; half: it stumbles; a quarter: a main stress on an offbeat; empty: the line gets a different number of beats.','<b>From OpenThesaurus and Wiktionary</b>; on a Mac also from the Dictionary app and, if it is running, Microsoft Word.','<b>“rhymes”</b> marks synonyms that also rhyme with the partner line.','<b>English</b> from the Open English WordNet.'],
-      de:['<b>Oben</b> die Zeile mit ihren Hebungen, die Auswahl markiert. Volle Batterie: genau die Hebungen dieser Stelle; drei Viertel: eine Silbe mehr oder weniger; halb: es holpert; ein Viertel: ein Hauptton in der Senkung; leer: die Zeile bekommt eine andere Zahl Hebungen.','<b>Aus OpenThesaurus und dem Wiktionary</b>, auf dem Mac zusätzlich aus dem Programm Lexikon und, wenn es läuft, aus Microsoft Word.','<b>„reimt“</b> markiert Synonyme, die zugleich auf die Partnerzeile reimen.','<b>Englisch</b> aus dem Open English WordNet.']}},
+   h:{en:'Same meaning,<br>same stress.',de:'Gleich gemeint,<br>gleich betont.'},
+   p:{en:'Synonyms with the same syllable pattern come first. A small battery shows for every suggestion how well it fits exactly this place in the line; at the top, the line with its beats, the selection marked.',
+      de:'Synonyme mit demselben Silbenmuster stehen vorn. Eine kleine Batterie zeigt bei jedem Vorschlag, wie gut er an genau diese Stelle der Zeile passt; oben steht die Zeile mit ihren Hebungen, die Auswahl markiert.'},
+   d:{en:['<b>Full battery:</b> exactly the beats of this place; three quarters: a syllable more or less; half: it stumbles; a quarter: a main stress on an offbeat; empty: the line gets a different number of beats.','<b>From OpenThesaurus and Wiktionary</b>; on a Mac also from the Dictionary app and, if it is running, Microsoft Word.','<b>“rhymes”</b> marks synonyms that also rhyme with the partner line.','<b>English</b> from the Open English WordNet.'],
+      de:['<b>Volle Batterie:</b> genau die Hebungen dieser Stelle; drei Viertel: eine Silbe mehr oder weniger; halb: es holpert; ein Viertel: ein Hauptton in der Senkung; leer: die Zeile bekommt eine andere Zahl Hebungen.','<b>Aus OpenThesaurus und dem Wiktionary</b>, auf dem Mac zusätzlich aus dem Programm Lexikon und, wenn es läuft, aus Microsoft Word.','<b>„reimt“</b> markiert Synonyme, die zugleich auf die Partnerzeile reimen.','<b>Englisch</b> aus dem Open English WordNet.']}},
   {id:'luecke',w:5,klein:{en:'Gaps',de:'Lücken'},
    h:{en:'Three strokes, and the words fit.',de:'Drei Striche, und die Wörter passen.'},
    p:{en:'Write ___ or a pattern like x-X-x-X where the word is missing. A right-click shows words in exactly that metre that rhyme as well.',
@@ -218,7 +218,7 @@ const BILDER = {
   laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}` } },
   vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}` } },
   /* Aufbau als Schaubilder statt Screenshots (Caspar_D, 12.11.2026: „keine screenshots, lieber zwei schaubilder“) */
-  geruest: { schaubild: { umschalter: true, links: { de: 'Lied', en: 'Song' }, rechts: { de: 'Gedicht', en: 'Poem' }, knopf: { de: 'ein Klick', en: 'one click' },
+  geruest: { schaubild: { umschalter: true, links: { de: 'Lied', en: 'Song' }, rechts: { de: 'Gedicht', en: 'Poem' }, knopf: { de: '', en: '' },
    von: { de: ['Pop', 'Strophe · Refrain', 'AABA', 'Ballade', 'Blues', 'Rap'], en: ['pop', 'verse · chorus', 'AABA', 'ballad', 'blues', 'rap'] },
    bei: { de: ['Sonett', 'Stanze', 'Terzinen', 'Volksliedstrophe', 'Limerick', 'Haiku'], en: ['sonnet', 'ottava rima', 'terza rima', 'folk-song stanza', 'limerick', 'haiku'] } } },
   /* Soll und Ist: Balken wie im Programm. m je Silbe: w/s gefüllt (Senkung/Hebung), W/S Umriss (fehlt noch), ! zu viel.
