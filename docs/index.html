@@ -175,7 +175,7 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
    /* Platz für den Plus-Knopf unten rechts */
 .k.w12 > .filterliste{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:28px}
 .balken{padding:4px 32px 30px;margin-top:auto}
-.balken .bz{margin:0 0 18px}
+.balken .bz{margin:0 0 14px}
 .balken .bn{margin:0 0 6px;font-size:15px;font-weight:600;color:var(--text)}
 .balken .bb{position:relative;height:22px}
 .balken .bb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
@@ -368,7 +368,7 @@ function bild(id, L){
   if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${g.w[L].some(x => x.length > 40) ? `<ul class="fl">${g.w[L].map(x => `<li>${x}</li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* lange Einträge als Liste untereinander */
   /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
   if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
-    return `<div class="balken">${g.zeilen.map(z => `<div class="bz"><p class="bn">${z.n}</p><div class="bb"><i class="ges" style="width:${(100 * z.ges / max).toFixed(1)}%"></i><i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i></div><p class="bw">${z3(z.ges)} · <b>${z3(z.neu)}</b></p></div>`).join('')}`
+    return `<div class="balken">${g.zeilen.map(z => `<div class="bz"><p class="bn">${z.n}</p><div class="bb"><i class="ges" style="width:${Math.max(0.6, 100 * z.ges / max).toFixed(1)}%"></i>${z.neu ? `<i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b>` : ''}</p></div>`).join('')}`
       + `<p class="bl"><span><i class="ges"></i>${g.leg.ges[L]}</span><span><i class="neu"></i>${g.leg.neu[L]}</span></p></div>`; }
   /* Ausrichtung zweier Lautketten wie in einem Alignment-Betrachter: je Laut ein Kästchen; | gleich, : ähnlich, · verschieden,
      leer = vor dem Reim (zählt nicht); rechts Punkte und Reimstufe in ihrer Farbe */

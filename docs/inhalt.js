@@ -159,9 +159,9 @@ const S = {
    d:{en:['<b>What for:</b> rare and old words, compounds and names get their stress from a dictionary instead of a rule – <b>Un</b>wert, <b>Ur</b>kraft, pianis<b>si</b>mo.','<b>Viëtor</b> is released freely: <a href="https://github.com/CasparDavi/vietor-1921">github.com/CasparDavi/vietor-1921</a>.','<b>Both works</b> are in the public domain; the scans come from the Internet Archive.'],
       de:['<b>Wozu:</b> Seltene und alte Wörter, Zusammensetzungen und Namen bekommen ihre Betonung aus einem Wörterbuch statt aus einer Regel – <b>Un</b>wert, <b>Ur</b>kraft, pianis<b>si</b>mo.','<b>Viëtor</b> ist frei veröffentlicht: <a href="https://github.com/CasparDavi/vietor-1921">github.com/CasparDavi/vietor-1921</a>.','<b>Beide Werke</b> sind gemeinfrei; die Scans stammen aus dem Internet Archive.']}},
   {id:'umfang',w:5,klein:{en:'Size',de:'Umfang'},
-   h:{en:'Almost 100,000 headwords.',de:'Fast 100 000 Stichwörter.'},
-   p:{en:'Read, and of those new to KlangFeder: words the free modern dictionaries do not know.',
-      de:'Gelesen, und davon neu für die KlangFeder: Wörter, die die freien modernen Wörterbücher nicht kennen.'},
+   h:{en:'Words with their stress.',de:'Wörter mit ihrer Betonung.'},
+   p:{en:'How many words each dictionary knows with pronunciation – and for the old ones, how many of them are new to KlangFeder.',
+      de:'Wie viele Wörter jedes Wörterbuch mit Aussprache kennt – und bei den alten, wie viele davon neu für die KlangFeder sind.'},
    d:{en:['<b>Muret-Sanders</b>, Encyclopaedic Dictionary, German–English part, Langenscheidt 1900: two volumes, about 2,500 pages.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3rd edition 1921: about 500 pages.'],
       de:['<b>Muret-Sanders</b>, Enzyklopädisches Wörterbuch, Teil Deutsch–Englisch, Langenscheidt 1900: zwei Bände, rund 2 500 Seiten.','<b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3. Auflage 1921: rund 500 Seiten.']}},
   {id:'korpora',w:12,klein:{en:'Free sources',de:'Freie Quellen'},
@@ -210,7 +210,7 @@ S.laden = {
       de:'<b>Systemanforderungen.</b> Rund 1,5 GB frei für Programm und Wörterbücher. Ein aktueller Webbrowser. Andere Linux-Systeme: das <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Nicht signiert: Unter Windows hält Edge den Download zuerst zurück – Pfeil neben „Löschen“ → „Beibehalten“; beim ersten Start fragt Windows unter Umständen noch einmal nach, und macOS blockiert die App, bis du sie unter Datenschutz & Sicherheit → „Dennoch öffnen“ freigibst. Einmal installiert, erneuert sich die KlangFeder selbst: Eine Glocke neben „System“ zeigt eine neue Fassung.'}
 };
 
-const BV = '4';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
+const BV = '5';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
   titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}` } },
   schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}` } },
@@ -276,10 +276,12 @@ const BILDER = {
      de: ['<b>TextGrid / Zeno.org</b>: rund 61 000 deutsche Gedichte (CC BY 3.0 DE)', '<b>Gutenberg Poetry Corpus</b>: rund 3 Mio englische Verszeilen (CC0)', '<b>Wortschatz Leipzig</b>: Nachrichten, Wikipedia und Webtexte, je 1 Mio Sätze (CC BY)', '<b>FrequencyWords</b>: die 50 000 häufigsten Wörter je Sprache, aus Untertiteln (CC BY-SA)'],
      en: ['<b>TextGrid / Zeno.org</b>: about 61,000 German poems (CC BY 3.0 DE)', '<b>Gutenberg Poetry Corpus</b>: about 3 million English lines of verse (CC0)', '<b>Wortschatz Leipzig</b>: news, Wikipedia and web texts, 1 million sentences each (CC BY)', '<b>FrequencyWords</b>: the 50,000 most frequent words per language, from subtitles (CC BY-SA)'] } },
    { k: { de: 'Wörterbücher', en: 'Dictionaries' }, w: {
-     de: ['<b>Wiktionary</b>: über 800 000 deutsche Wortformen mit Lautschrift (CC BY-SA)', '<b>CMUdict</b>: rund 135 000 englische Wörter mit Betonung (BSD)', '<b>OpenThesaurus</b>: rund 49 000 Gruppen sinnverwandter Wörter (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: englische Synonyme und Gegenteile (CC BY 4.0)'],
-     en: ['<b>Wiktionary</b>: over 800,000 German word forms with pronunciation (CC BY-SA)', '<b>CMUdict</b>: about 135,000 English words with stress (BSD)', '<b>OpenThesaurus</b>: about 49,000 groups of German synonyms (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: English synonyms and opposites (CC BY 4.0)'] } } ] },
+     de: ['<b>Wiktionary</b>: deutsche Wortformen mit Lautschrift (CC BY-SA)', '<b>CMUdict</b>: englische Wörter mit Betonung (BSD)', '<b>OpenThesaurus</b>: rund 49 000 Gruppen sinnverwandter Wörter (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: englische Synonyme und Gegenteile (CC BY 4.0)'],
+     en: ['<b>Wiktionary</b>: German word forms with pronunciation (CC BY-SA)', '<b>CMUdict</b>: English words with stress (BSD)', '<b>OpenThesaurus</b>: about 49,000 groups of German synonyms (LGPL / CC BY-SA)', '<b>Open English WordNet</b>: English synonyms and opposites (CC BY 4.0)'] } } ] },
   /* Umfang der ausgewerteten gemeinfreien Werke: gelesene Stichwörter, davon neu (nicht in ipa-dict bzw. ipa-dict + Viëtor) */
   umfang: { balken: { zeilen: [
+   { n: 'Wiktionary', ges: 852714 },
+   { n: 'CMUdict', ges: 135166 },
    { n: 'Muret-Sanders 1900', ges: 62047, neu: 26322 },
    { n: 'Viëtor 1921', ges: 36779, neu: 11223 } ],
    leg: { ges: { de: 'gelesen', en: 'read' }, neu: { de: 'davon neu', en: 'of those new' } } } },
@@ -289,4 +291,4 @@ const NUR_TEXT = new Set([]);   // Kacheln, die ohne Bild stehen
 const GH = 'github.com/CasparDavi/klangfeder';
 const ghLink = (s) => s.replace(GH, `<a class="gh" href="https://${GH}">${GH}</a>`);
 const KONSOLE = {}, konsole = () => [];
-const FORMAT = { schreiben: '1560/700', reimschema: '1310/950', reimsuche: '1310/950', ersatz: '1380/1095', luecke: '1000/1111', zaehlen: '676/620', regie: '1090/1000', ki: '676/680', laenge: '1495/1073', vergleich: '1560/1045', buecher: '1320/880' };   /* ki w5 / laenge w7: 5·680/676 = 7·1073/1495 */   /* ersatz w7 / luecke w5: 7·1095/1380 = 5·1111/1000, Unterkanten fluchten */   /* Kacheln, deren Bild ein eigenes Seitenverhaeltnis hat */
+const FORMAT = { schreiben: '1560/700', reimschema: '1310/950', reimsuche: '1310/950', ersatz: '1380/1095', luecke: '1000/1111', zaehlen: '676/620', regie: '1090/1000', ki: '676/680', laenge: '1495/1073', vergleich: '1560/1045', buecher: '1536/1024' };   /* ki w5 / laenge w7: 5·680/676 = 7·1073/1495 */   /* ersatz w7 / luecke w5: 7·1095/1380 = 5·1111/1000, Unterkanten fluchten */   /* Kacheln, deren Bild ein eigenes Seitenverhaeltnis hat */
