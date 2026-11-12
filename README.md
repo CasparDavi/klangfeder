@@ -1,4 +1,4 @@
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-en.jpg" alt="KlangFeder – Hear your verse while you write it." width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder-releases/?lang=en"><img src="docs/img/readme-en.jpg" alt="KlangFeder – Hear your verse while you write it." width="100%"></a>
 
 <p align="center"><a href="README.de.md">Deutsch</a> · <b>English</b></p>
 
@@ -7,6 +7,8 @@
 **Hear your verse while you write it.**
 For poems and songs: KlangFeder shows you while you write how your lines sound – stress, metre, rhyme. And it finds
 the words that fit. German and English. Free, no account, runs on your own computer.
+
+**[See everything it can do → feature page](https://caspardavi.github.io/klangfeder-releases/?lang=en)**
 
 ## Download
 
@@ -22,7 +24,7 @@ of free space for the program and the dictionaries. A current web browser.
 
 ## What it does
 
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder with a song text: stress, beats, rhymes, the structure on the left" width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder-releases/?lang=en"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder with a song text: stress, beats, rhymes, the structure on the left" width="100%"></a>
 
 - **See the stress.** Stressed syllables light up, unstressed ones step back. Every line shows its syllables, beats
   and cadence, every section its metre.

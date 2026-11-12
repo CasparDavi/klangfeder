@@ -1,4 +1,4 @@
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-de.jpg" alt="KlangFeder – Verse, die man schon beim Schreiben hört." width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder-releases/?lang=de"><img src="docs/img/readme-de.jpg" alt="KlangFeder – Verse, die man schon beim Schreiben hört." width="100%"></a>
 
 <p align="center"><b>Deutsch</b> · <a href="README.md">English</a></p>
 
@@ -7,6 +7,8 @@
 **Verse, die man schon beim Schreiben hört.**
 Für Gedichte und Lieder: Die KlangFeder zeigt dir beim Schreiben, wie deine Zeilen klingen – Betonung, Versmaß, Reim.
 Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Konto, läuft auf deinem eigenen Rechner.
+
+**[Alles, was sie kann → Feature-Seite](https://caspardavi.github.io/klangfeder-releases/?lang=de)**
 
 ## Herunterladen
 
@@ -22,7 +24,7 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
 
 ## Was sie kann
 
-<a href="https://github.com/CasparDavi/klangfeder-releases/releases/latest"><img src="docs/img/readme-app-de.jpg" alt="Die KlangFeder mit einem Liedtext: Betonung, Hebungen, Reime, links der Aufbau" width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder-releases/?lang=de"><img src="docs/img/readme-app-de.jpg" alt="Die KlangFeder mit einem Liedtext: Betonung, Hebungen, Reime, links der Aufbau" width="100%"></a>
 
 - **Betonung sehen.** Betonte Silben leuchten, unbetonte treten zurück. Jede Zeile zeigt ihre Silben, Hebungen und
   Kadenz, jeder Abschnitt sein Versmaß.
