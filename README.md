@@ -40,8 +40,9 @@ of free space for the program and the dictionaries. A current web browser.
 
 ## Getting started
 
-1. **Download and open.** The installers are not signed yet, so the first launch asks for confirmation once:
-   - **Windows:** "Windows protected your PC" → *More info* → *Run anyway*.
+1. **Download and open.** The installers are not signed, so browser and system ask for confirmation once:
+   - **Windows:** Edge holds the file back first. In the download list click the **arrow next to *Delete*** → *Keep*
+     (if asked: *Keep anyway*). If "Windows protected your PC" appears afterwards: *More info* → *Run anyway*.
    - **macOS:** if it is blocked, System Settings → Privacy & Security → *Open Anyway*.
    - **Ubuntu, Debian, Mint:** double-click the `.deb` file, *Install* in the App Center, then start KlangFeder from
      the application menu.
@@ -66,7 +67,8 @@ to Claude or ChatGPT.
 
 <details><summary><b>Windows or macOS says the app is unsafe.</b></summary>
 
-The installers are not signed yet. Confirm once as described under [Getting started](#getting-started).
+The installers are not signed. Confirm once as described under [Getting started](#getting-started) – on Windows first
+in Edge (arrow next to *Delete* → *Keep*).
 </details>
 
 <details><summary><b>I closed the browser window – how do I get back?</b></summary>
@@ -93,8 +95,8 @@ Center. AppImage: delete the file. Your texts and the dictionaries stay in the `
 - **It suggests, it does not decide.** Stress, metre and rhymes are computed and can be wrong; the judgement stays with
   you.
 - **Not affiliated with Suno.** KlangFeder is not part of Suno Inc. It only counts what fits into Suno’s fields.
-- **Tested:** installation on Ubuntu 24.04 from this release, without any help. Windows and macOS are built; a test of a
-  fresh installation is still to come.
+- **Tested:** installation from this release on Ubuntu 24.04 and Windows 11 – on Windows with the one step in Edge
+  (*Keep*, see [Getting started](#getting-started)). macOS is still to come.
 
 ## Licence
 
