@@ -173,8 +173,8 @@ const S = {
   ]},
  {augenbraue:{en:'Yours',de:'Bei dir'},
   h:{en:'Your verse stays with you.',de:'Deine Verse bleiben bei dir.'},
-  p:{en:'KlangFeder runs on your computer, without an account and without a cloud. Every version is kept. The dictionaries come from free sources.',
-     de:'Die KlangFeder läuft auf deinem Rechner, ohne Konto und ohne Cloud. Jeder Stand wird aufgehoben. Die Wörterbücher stammen aus freien Quellen.'},
+  p:{en:'KlangFeder runs on your computer, without an account and without a cloud. Every version is kept.',
+     de:'Die KlangFeder läuft auf deinem Rechner, ohne Konto und ohne Cloud. Jeder Stand wird aufgehoben.'},
   kacheln:[
   {id:'vergleich',w:12,klein:{en:'Versions',de:'Fassungen'},
    h:{en:'Every version stays.',de:'Jeder Stand bleibt.'},
