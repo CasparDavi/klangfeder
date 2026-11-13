@@ -1,12 +1,12 @@
 <a href="https://caspardavi.github.io/klangfeder/?lang=de"><img src="docs/img/readme-de.jpg" alt="KlangFeder – Verse, die man schon beim Schreiben hört." width="100%"></a>
 
-<p align="center"><b>Deutsch</b> · <a href="README.md">English</a></p>
+<p align="center"><b>Deutsch</b> · <a href="README.md">English</a> · <a href="README.ru.md">Русский</a></p>
 
 # KlangFeder
 
 **Verse, die man schon beim Schreiben hört.**
 Für Gedichte und Lieder: Die KlangFeder zeigt dir beim Schreiben, wie deine Zeilen klingen – Betonung, Versmaß, Reim.
-Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Konto, läuft auf deinem eigenen Rechner.
+Und sie findet die Wörter, die passen. Deutsch, Englisch und Russisch. Kostenlos, ohne Konto, läuft auf deinem eigenen Rechner.
 
 **[Alles, was sie kann → Feature-Seite](https://caspardavi.github.io/klangfeder/?lang=de)**
 
@@ -15,8 +15,8 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
 <p align="center">
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (24 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (82 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (45 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 24 MB · DMG 82 MB (Intel und Apple Silicon) · .deb 45 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 MB</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (46 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 24 MB · DMG 82 MB (Intel und Apple Silicon) · .deb 46 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 MB</sub>
 </p>
 
 **Systemanforderungen.** Ein 64-Bit-Rechner mit Windows 10 oder 11, macOS 11 oder neuer oder Linux (x86_64). Rund
@@ -50,7 +50,7 @@ Und sie findet die Wörter, die passen. Deutsch und Englisch. Kostenlos, ohne Ko
      im Anwendungsmenü starten.
    - **Andere Linux-Systeme (AppImage):** Rechtsklick → Eigenschaften → *Als Programm ausführen* einschalten, dann
      Doppelklick.
-2. **Die Wörterbücher holt sie selbst** (rund 350 MB), mit Fortschrittsbalken: unter Windows der Installer selbst,
+2. **Die Wörterbücher holt sie selbst** (rund 430 MB), mit Fortschrittsbalken: unter Windows der Installer selbst,
    auf Mac und Linux die Seite *System*, die beim ersten Start im Browser aufgeht.
 3. **Die KlangFeder läuft als Symbol** in Taskleiste, Dock oder Panel. Die Seite liegt unter **http://localhost:8790**.
 
@@ -114,6 +114,9 @@ eigenen Lizenzen. Die Wörterbücher holt die KlangFeder als Datenpaket; Quellen
 - Wortschatz Leipzig (CC BY)
 - TextGrid (CC BY 3.0 DE)
 - Gutenberg Poetry Corpus (CC0)
+- Wiktionary, russische Wortformen mit Betonung, Synonyme und Beugung über kaikki.org (CC BY-SA 4.0)
+- Wikisource, russische Gedichte (gemeinfrei)
+- Reimpaare aus rund 180 000 russischen Liedern (Genius über Hugging Face, Lizenz nicht angegeben) – nur Paare mit Zahl, keine Texte
 
 Abgeleitete Wörterbuchdaten stehen unter derselben Lizenz wie ihre Quelle (CC BY-SA). Im Programm selbst: die
 Lautschrift aus Viëtor, *Deutsches Aussprachewörterbuch*, 3. Aufl. 1921 – gemeinfrei, für die KlangFeder digitalisiert

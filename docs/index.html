@@ -24,7 +24,7 @@
 :root{
   color-scheme:dark;   /* Bildlaufleisten und Formularteile dunkel (sonst zeichnet der Browser sie hell) */
   --bg:#000; --kachel:#141416; --kachel2:#1c1c1f; --linie:#2a2a2e;
-  --text:#f5f5f7; --leise:#a8a8ad; --akzent:#f97b14; --akzent2:#e31c79; --blau:#0b85fe;   /* Blau der Lautmatrix (stärkste Stufe): Englisch im Balkendiagramm */   /* Verlauf des KlangFeder-Schriftzugs (web/index.html #markezeichen) */
+  --text:#f5f5f7; --leise:#a8a8ad; --akzent:#f97b14; --akzent2:#e31c79; --blau:#0b85fe; --rot:#ff6158;   /* Blau der Lautmatrix (stärkste Stufe): Englisch im Balkendiagramm */   /* Verlauf des KlangFeder-Schriftzugs (web/index.html #markezeichen) */
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
@@ -193,6 +193,11 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .balken .blau i.ges{background:color-mix(in srgb,var(--blau) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--blau)}
 .balken .blau i.neu{background:var(--blau)}
 .balken .bk.blau{color:var(--blau)}
+/* Achse endet bei g.bruch (750 000); längere Säulen gebrochen: volle Breite mit Lücke kurz vor dem Ende (Caspar_D 13.11.2026) */
+.balken i.bruch{-webkit-mask:linear-gradient(90deg,#000 0 86%,transparent 86% 87.5%,#000 87.5% 89%,transparent 89% 90.5%,#000 90.5%);mask:linear-gradient(90deg,#000 0 86%,transparent 86% 87.5%,#000 87.5% 89%,transparent 89% 90.5%,#000 90.5%)}
+.balken .rot i.ges{background:color-mix(in srgb,var(--rot) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--rot)}
+.balken .rot i.neu{background:var(--rot)}
+.balken .bk.rot{color:var(--rot)}
 .balken .bl i.ges{background:color-mix(in srgb,#c9c9cd 22%,transparent);box-shadow:inset 0 0 0 1.5px #c9c9cd}   /* Legende neutral: Farbe = Sprache, die Legende erklärt nur Umriss/gefüllt */
 .balken .bl i.neu{background:#c9c9cd;box-shadow:none}
 .balken .bw{margin:3px 0 0;font-size:14px;color:var(--leise)}
@@ -345,7 +350,8 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
   .grenzen{margin:12mm 0 0;break-inside:avoid}
   footer{break-before:avoid}
 }
-.held .knoepfe{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:-26px 0 38px}
+/* Abstand Teaser → Knöpfe wie auf der KlangTresor-Feature-Seite (dort 77 px samt Broschüren-Link; Caspar_D 13.11.2026) */
+.held .knoepfe{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:77px 0 38px}
 .held .knoepfe a,.laden a.knopf{display:inline-block;padding:9px 20px;border-radius:980px;background:var(--akzent);color:#000;font-weight:600;font-size:16px;text-decoration:none}
 .held .knoepfe a:hover,.laden a.knopf:hover{background:#ffa255}
 .held .knoepfe a small{font-weight:500;opacity:.75;margin-left:6px}
@@ -373,7 +379,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
 </head>
 <body>
 <nav class="sprache" aria-label="Language">
-  <button data-l="de">DE</button><button data-l="en">EN</button>
+  <button data-l="de">DE</button><button data-l="en">EN</button><button data-l="ru" title="Перевод частично создан ИИ и ещё дорабатывается">RU*</button>
 </nav>
 <main id="seite"></main>
 <div class="overlay" id="overlay" role="dialog" aria-modal="true"><div class="fenster" id="fenster"></div></div>
@@ -399,15 +405,15 @@ function bild(id, L){
       + `<div class="sl r">${g.bei[L].join('<br>')}</div></div>`; }
   if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${typeof g.w[L][0] === 'object' ? `<ul class="fl">${g.w[L].map(x => `<li><b>${x.n}</b><span>${x.b}</span><small>${x.l}</small></li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* Einträge mit Name, Beschreibung, Lizenz: je eine Zeile */
   /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
-  if (q && q.balken){ const g = q.balken, max = Math.max(...g.zeilen.filter(z => z.ges).map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : 'en-US');
-    let gruppe = '';   // Farbe der Gruppe (kopf.farbe), gilt für die Zeilen darunter – Englisch blau wie die Lautmatrix
-    return `<div class="balken">${g.zeilen.map(z => z.kopf ? `<p class="bk${(gruppe = z.farbe || '') ? ' ' + gruppe : ''}">${z.kopf[L]}</p>` : `<div class="bz${gruppe ? ' ' + gruppe : ''}"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges" style="width:${Math.max(0.6, 100 * z.ges / max).toFixed(1)}%"></i>${z.neu ? `<i class="neu" style="width:${(100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
+  if (q && q.balken){ const g = q.balken, max = g.bruch || Math.max(...g.zeilen.filter(z => z.ges).map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : L === 'ru' ? 'ru-RU' : 'en-US');
+    let gruppe = '';   // Farbe der Gruppe (kopf.farbe), gilt für die Zeilen darunter – Englisch blau wie die Lautmatrix, Russisch rot (ihr anderes Ende)
+    return `<div class="balken">${g.zeilen.map(z => z.kopf ? `<p class="bk${(gruppe = z.farbe || '') ? ' ' + gruppe : ''}">${z.kopf[L]}</p>` : `<div class="bz${gruppe ? ' ' + gruppe : ''}"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges${z.ges > max ? ' bruch' : ''}" style="width:${Math.max(0.6, Math.min(100, 100 * z.ges / max)).toFixed(1)}%"></i>${z.neu ? `<i class="neu${z.neu > max ? ' bruch' : ''}" style="width:${Math.min(100, 100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
       + `<p class="bl"><span><i class="ges"></i>${g.leg.ges[L]}</span><span><i class="neu"></i>${g.leg.neu[L]}</span></p></div>`; }
   /* Ausrichtung zweier Lautketten wie in einem Alignment-Betrachter: je Laut ein Kästchen; | gleich, : ähnlich, · verschieden,
      leer = vor dem Reim (zählt nicht); rechts Punkte und Reimstufe in ihrer Farbe */
   if (q && q.ausrichtung){ const g = q.ausrichtung, art = { '|': 'gl', ':': 'ae', '·': 'an', ' ': 'au' };
     return `<div class="ausr">${g.zeilen.map(z => { const st = g.stufen[z.st];
-      return `<div class="ar"><span class="aw">${z.a}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[0]}</span>`).join('')}<span class="ap" style="grid-row:span 2"><b>${L === 'de' ? z.p : z.pe}</b> ${g.von[L]} ${L === 'de' ? z.max : z.maxe}<i style="color:${st.f}">${st[L]}</i></span>`
+      return `<div class="ar"><span class="aw">${z.a}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[0]}</span>`).join('')}<span class="ap" style="grid-row:span 2"><b>${L === 'en' ? z.pe : z.p}</b> ${g.von[L]} ${L === 'en' ? z.maxe : z.max}<i style="color:${st.f}">${st[L]}</i></span>`
         + `<span class="aw">${z.b}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[1]}</span>`).join('')}</div>`; }).join('')}`
       + `<p class="aleg"><span class="al gl"></span>${g.leg.gleich[L]}<span class="al ae"></span>${g.leg.aehnlich[L]}<span class="al an"></span>${g.leg.anders[L]}<span class="al au"></span>${g.leg.aussen[L]}</p></div>`; }
   /* halbe Matrix (Tufte: nur Daten-Tinte); divergente 7 Stufen von Jörg, grau = Zufall (0), Diagonale = 1 */
@@ -418,7 +424,7 @@ function bild(id, L){
     let z = '';
     g.laute.forEach((a, i) => { z += (sb && sb[a] ? `<text class="sb" x="${r0 + (i + 1) * c + 5}" y="${r0 + i * c + c / 2 + 5}">${sb[a]}</text>` : '') + `<text x="${r0 - 6}" y="${r0 + i * c + c / 2 + 5}" text-anchor="end">${a}</text><text x="${r0 + i * c + c / 2}" y="${r0 + n * c + 16}" text-anchor="middle">${a}</text>`;
       for (let j = 0; j <= i; j++) { const w = wert(a, g.laute[j]); if (w == null) continue;
-        z += `<rect x="${r0 + j * c + 1}" y="${r0 + i * c + 1}" width="${c - 2}" height="${c - 2}" rx="2" fill="${F[stufe(w)]}"><title>${mitB(a)} / ${mitB(g.laute[j])}: ${w.toFixed(2).replace('.', L === 'de' ? ',' : '.')}</title></rect>`; } });
+        z += `<rect x="${r0 + j * c + 1}" y="${r0 + i * c + 1}" width="${c - 2}" height="${c - 2}" rx="2" fill="${F[stufe(w)]}"><title>${mitB(a)} / ${mitB(g.laute[j])}: ${w.toFixed(2).replace('.', L !== 'en' ? ',' : '.')}</title></rect>`; } });
     const W = r0 + n * c + 4 + (sb ? 44 : 0), H = r0 + n * c + 24;   /* rechts Platz für die Buchstaben der letzten Zeilen */
     return `<div class="matrix"><svg viewBox="0 ${r0 - 4} ${W} ${H - r0 + 4}" role="img" aria-label="${g.leg.rechts[L]}">${z}</svg>`
       + `<div class="ml"><span>${g.leg.rechts[L]}</span>${F.slice().reverse().map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.links[L]}</span><span class="leer"><i></i>${g.leg.leer[L]}</span></div></div>`; }
