@@ -282,10 +282,10 @@ const BILDER = {
   ersatz: { sprachen: { de: `img/ersatz-de.webp?v=${BV}`, en: `img/ersatz-en.webp?v=${BV}`, ru: `img/ersatz-ru.webp?v=${BV}` } },
   luecke: { sprachen: { de: `img/luecke-de.webp?v=${BV}`, en: `img/luecke-en.webp?v=${BV}`, ru: `img/luecke-ru.webp?v=${BV}` } },
   zaehlen: { sprachen: { de: `img/zaehlen-de.webp?v=${BV}`, en: `img/zaehlen-en.webp?v=${BV}`, ru: `img/zaehlen-ru.webp?v=${BV}` } },
-  regie: { sprachen: { de: `img/regie-de.webp?v=${BV}`, en: `img/regie-en.webp?v=${BV}` } },
-  ki: { sprachen: { de: `img/ki-de.webp?v=${BV}`, en: `img/ki-en.webp?v=${BV}` } },
+  regie: { sprachen: { de: `img/regie-de.webp?v=${BV}`, en: `img/regie-en.webp?v=${BV}`, ru: `img/regie-ru.webp?v=${BV}` } },
+  ki: { sprachen: { de: `img/ki-de.webp?v=${BV}`, en: `img/ki-en.webp?v=${BV}`, ru: `img/ki-ru.webp?v=${BV}` } },
   laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}`, ru: `img/laenge-ru.webp?v=${BV}` } },
-  vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}` } },
+  vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}`, ru: `img/vergleich-ru.webp?v=${BV}` } },
   /* Ansehen: drei quadratische Bilder nebeneinander, je mit Beschriftung darüber, je Sprache */
   ansehen: { reihe: ['wolke', 'dotplot', 'kreis'].map((b, i) => ({ n: [{ de: 'Wortwolke', ru: 'Облако слов', en: 'Word cloud' }, { de: 'Dotplot', ru: 'Точечная матрица', en: 'Dot plot' }, { de: 'Kreis', ru: 'Круг', en: 'Circle' }][i],
    s: { de: `img/ansehen-${b}-de.webp?v=${BV}`, en: `img/ansehen-${b}-en.webp?v=${BV}`, ru: `img/ansehen-${b}-ru.webp?v=${BV}` } })) },
