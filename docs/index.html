@@ -429,7 +429,9 @@ function bild(id, L){
         z += `<rect x="${r0 + j * c + 1}" y="${r0 + i * c + 1}" width="${c - 2}" height="${c - 2}" rx="2" fill="${F[stufe(w)]}"><title>${mitB(a)} / ${mitB(g.laute[j])}: ${w.toFixed(2).replace('.', L !== 'en' ? ',' : '.')}</title></rect>`; } });
     const W = r0 + n * c + 4 + (sb ? 44 : 0), H = r0 + n * c + 24;   /* rechts Platz für die Buchstaben der letzten Zeilen */
     return `<div class="matrix"><svg viewBox="0 ${r0 - 4} ${W} ${H - r0 + 4}" role="img" aria-label="${g.leg.rechts[L]}">${z}</svg>`
-      + `<div class="ml"><span>${g.leg.rechts[L]}</span>${F.slice().reverse().map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.links[L]}</span><span class="leer"><i></i>${g.leg.leer[L]}</span></div></div>`; }
+      + `<div class="ml"><span>${g.leg.rechts[L]}</span>${F.slice().reverse().map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.links[L]}</span>`
+      + (g.leg.leer ? `<span class="leer"><i></i>${g.leg.leer[L]}</span>` : '')   /* nur wo die Tafel leere Felder hat: gelernt ja, gerechnet (Englisch) nein */
+      + `</div></div>`; }
   /* Soll und Ist (Aufbau): je Zeile Text, Balken wie im Programm, Reimbuchstabe, Erklärung */
   if (q && q.sollbild){ const z = q.sollbild[L] || q.sollbild.en, F = { A: '#4a8fff', B: '#45c26a' };
     const balken = m => [...m].map(c => `<i class="${[c === '!' ? 'zv' : /[WS]/.test(c) ? 'um' : '', /[sS]/.test(c) ? '' : 'w'].filter(Boolean).join(' ')}" style="height:${/[sS]/.test(c) ? 13 : 4}px"></i>`).join('');
