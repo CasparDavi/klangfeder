@@ -276,8 +276,8 @@ S.laden = {
 const BV = '5';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
   titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}` } },
-  schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}` } },
-  reimschema: { sprachen: { de: `img/reimschema-de.webp?v=${BV}`, en: `img/reimschema-en.webp?v=${BV}` } },
+  schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}`, ru: `img/schreiben-ru.webp?v=${BV}` } },
+  reimschema: { sprachen: { de: `img/reimschema-de.webp?v=${BV}`, en: `img/reimschema-en.webp?v=${BV}`, ru: `img/reimschema-ru.webp?v=${BV}` } },
   reimsuche: { sprachen: { de: `img/reimsuche-de.webp?v=${BV}`, en: `img/reimsuche-en.webp?v=${BV}` } },
   ersatz: { sprachen: { de: `img/ersatz-de.webp?v=${BV}`, en: `img/ersatz-en.webp?v=${BV}` } },
   luecke: { sprachen: { de: `img/luecke-de.webp?v=${BV}`, en: `img/luecke-en.webp?v=${BV}` } },
