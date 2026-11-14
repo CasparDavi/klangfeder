@@ -275,16 +275,16 @@ S.laden = {
 
 const BV = '5';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
-  titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}` } },
+  titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}`, ru: `img/titel-ru.webp?v=${BV}` } },
   schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}`, ru: `img/schreiben-ru.webp?v=${BV}` } },
   reimschema: { sprachen: { de: `img/reimschema-de.webp?v=${BV}`, en: `img/reimschema-en.webp?v=${BV}`, ru: `img/reimschema-ru.webp?v=${BV}` } },
   reimsuche: { sprachen: { de: `img/reimsuche-de.webp?v=${BV}`, en: `img/reimsuche-en.webp?v=${BV}`, ru: `img/reimsuche-ru.webp?v=${BV}` } },
-  ersatz: { sprachen: { de: `img/ersatz-de.webp?v=${BV}`, en: `img/ersatz-en.webp?v=${BV}` } },
-  luecke: { sprachen: { de: `img/luecke-de.webp?v=${BV}`, en: `img/luecke-en.webp?v=${BV}` } },
-  zaehlen: { sprachen: { de: `img/zaehlen-de.webp?v=${BV}`, en: `img/zaehlen-en.webp?v=${BV}` } },
+  ersatz: { sprachen: { de: `img/ersatz-de.webp?v=${BV}`, en: `img/ersatz-en.webp?v=${BV}`, ru: `img/ersatz-ru.webp?v=${BV}` } },
+  luecke: { sprachen: { de: `img/luecke-de.webp?v=${BV}`, en: `img/luecke-en.webp?v=${BV}`, ru: `img/luecke-ru.webp?v=${BV}` } },
+  zaehlen: { sprachen: { de: `img/zaehlen-de.webp?v=${BV}`, en: `img/zaehlen-en.webp?v=${BV}`, ru: `img/zaehlen-ru.webp?v=${BV}` } },
   regie: { sprachen: { de: `img/regie-de.webp?v=${BV}`, en: `img/regie-en.webp?v=${BV}` } },
   ki: { sprachen: { de: `img/ki-de.webp?v=${BV}`, en: `img/ki-en.webp?v=${BV}` } },
-  laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}` } },
+  laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}`, ru: `img/laenge-ru.webp?v=${BV}` } },
   vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}` } },
   /* Ansehen: drei quadratische Bilder nebeneinander, je mit Beschriftung darüber, je Sprache */
   ansehen: { reihe: ['wolke', 'dotplot', 'kreis'].map((b, i) => ({ n: [{ de: 'Wortwolke', ru: 'Облако слов', en: 'Word cloud' }, { de: 'Dotplot', ru: 'Точечная матрица', en: 'Dot plot' }, { de: 'Kreis', ru: 'Круг', en: 'Circle' }][i],
