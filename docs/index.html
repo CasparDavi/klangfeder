@@ -386,7 +386,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
 </nav>
 <main id="seite"></main>
 <div class="overlay" id="overlay" role="dialog" aria-modal="true"><div class="fenster" id="fenster"></div></div>
-<script src="inhalt.js"></script>
+<script src="inhalt.js?s=20261115"></script>   <!-- Stand der Datenstruktur: hochzählen, wenn inhalt.js neue Felder bekommt -->
 <script>
 const PLUS = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg>';
 const KREUZ = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg>';
@@ -447,7 +447,7 @@ function bild(id, L){
     return `<div class="matrix"><svg viewBox="0 ${r0 - 4} ${W} ${H - r0 + 4}" role="img" aria-label="${g.leg.rechts[L]}">${z}</svg>`
       + `<div class="ml"><span>${g.leg.links[L]}</span>${F.map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.rechts[L]}</span>`
       + (g.leg.leer ? `<span class="leer"><i></i>${g.leg.leer[L]}</span>` : '')
-      + `</div><div class="ml haelften"><span>${g.leg.unten[L]}</span><span>${g.leg.oben[L]}</span></div></div>`; }
+      + (g.leg.unten || g.leg.oben ? `</div><div class="ml haelften"><span>${g.leg.unten?.[L] || ''}</span><span>${g.leg.oben?.[L] || ''}</span></div></div>` : `</div></div>`); }
   /* Soll und Ist (Aufbau): je Zeile Text, Balken wie im Programm, Reimbuchstabe, Erklärung */
   if (q && q.sollbild){ const z = q.sollbild[L] || q.sollbild.en, F = { A: '#4a8fff', B: '#45c26a' };
     const balken = m => [...m].map(c => `<i class="${[c === '!' ? 'zv' : /[WS]/.test(c) ? 'um' : '', /[sS]/.test(c) ? '' : 'w'].filter(Boolean).join(' ')}" style="height:${/[sS]/.test(c) ? 13 : 4}px"></i>`).join('');
