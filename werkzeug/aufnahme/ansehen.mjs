@@ -1,6 +1,7 @@
 // Aufnahmen für die Kachel „Ansehen“ (Jörg, 12.11.2026: „eine Abbildung mit Registerlaschen – flächentreue Wort-Cloud,
-// Dotplot der Wiederholungen, Circos-Plot der Wiederholungen; mehr würde ich nicht zeigen“). Text: „Erlkönig“ (TEXT=<Datei>).
-// Aufruf aus dem Aufnahmeordner: URL=http://127.0.0.1:8792/ SPR=de TEXT=$A/erlkoenig.txt node <repo>/werkzeug/aufnahme/folge.mjs 1440 900 0 <repo>/werkzeug/aufnahme/ansehen.mjs
+// Dotplot der Wiederholungen, Circos-Plot der Wiederholungen; mehr würde ich nicht zeigen“). Text: je Sprache ein
+// Volkslied mit Kehrvers (TEXT=<Datei>) – NICHT der „Erlkönig“, in dem keine Zeile zweimal vorkommt.
+// Aufruf aus dem Aufnahmeordner: URL=http://127.0.0.1:8792/ SPR=de TEXT=$A/gedanken.txt node <repo>/werkzeug/aufnahme/folge.mjs 1440 900 0 <repo>/werkzeug/aufnahme/ansehen.mjs
 // Ergebnis: wolke-<spr>.png, dotplot-<spr>.png, kreis-<spr>.png (nur die Fläche der Lasche, ohne Kopfzeile).
 import fs from 'node:fs';
 const text = fs.readFileSync(process.env.TEXT, 'utf8'), spr = process.env.SPR || 'de';

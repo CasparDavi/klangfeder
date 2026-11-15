@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { starte, warte } from './cdp.mjs';
 
 const HIER = path.dirname(fileURLToPath(import.meta.url));
@@ -35,14 +36,26 @@ const [FB, FH, DPR] = [+(process.env.BREIT || 1600), +(process.env.HOCH || 1000)
 // Beispieltext, den die KlangFeder selbst mitbringt (Schukowski 1818) – dort ist nichts zu laden.
 // Die Liedtexte liegen NICHT im Repo; TEXT_DE und TEXT_EN zeigen auf sie (wie bei werkzeug/aufnahme/erlkoenig.mjs).
 const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: null };
-// Worauf die Werkbank aufgeht. Gesucht war ein Wort, das von jeder Kategorie etwas liefert, aber von keiner zu
-// viel (Jörg, 15.11.2026). Gemessen an allen Substantiven des Beispieltexts: „Papa" belegt alle neun Kategorien
-// (4 reine · 2 unreine · 120 Assonanzen · 6 Konsonanzen · 80 Anklänge · 6+5 Synonyme · 2 Gegenteile · 3 Wendungen)
-// und hat die wenigsten reinen Reime – so stehen die selteneren Stufen gleich im Bild.
-// Jörgs erste Wahl „Nebel" geht im Deutschen nicht: das Wort steht im Lied nur als „Nebelstreif", und darauf geht
-// die Werkbank als ganzes Wort auf; Zusammensetzungen liefern nichts. Englisch und Russisch behalten den Nebel.
-const WORT = { de: 'Papa', en: 'mist', ru: 'туман' };
-const WENDUNG = { de: 'bei Nacht', en: 'the night', ru: 'лесной царь' };
+// Worauf die Werkbank aufgeht. Gewählt sind Zeilenenden, weil dort zusätzlich die Reimpartner stehen und ein Bild
+// so beide Hälften der Werkbank zeigt – Ersatzwörter liefert sie an jeder Stelle der Zeile. (Hier stand bis zum
+// 15.11.2026 das Gegenteil: „nur bei einem Wort am Zeilenende". Das war falsch, geprüft an „Sohn" mitten in der
+// Zeile: 2+14 Synonyme, 1 Antonym. Jörgs Einwand hat außerdem einen echten Fehler zutage gebracht – das erste
+// Wort jeder Zeile lieferte wirklich nichts, siehe kern/werkbank-de.mjs:321.)
+// Gemessen an allen Zeilenenden des jeweiligen Beispieltexts (Jörg, 15.11.2026: ein Wort, das von jeder Kategorie
+// etwas liefert, aber von keiner zu viel):
+//   Not    49 reine · 23 unreine · 118 Assonanzen · 18 Konsonanzen · 80 Anklänge · 2+25 Synonyme · 1 Antonym · 7 Wendungen
+//   sight  23+17 Synonyme · 1 Antonym · 6 Wendungen
+//   водой  1+7 Synonyme · 13 Antonyme
+// Jörgs erste Wahl „Nebel" geht nicht: im deutschen Lied steht es nur als „Nebelstreif", und darauf geht die
+// Werkbank als ganzes Wort auf – Zusammensetzungen liefern nichts.
+const WORT = { de: 'Not', en: 'sight', ru: 'водой' };
+// Die Wendung für das Bild „luecke" muss MEHRERE Hebungen haben: die Werkbank sucht dort Wendungen, die über jede
+// Hebung mitreimen. „the night" (15.11.2026) hatte nur eine – das englische Bild zeigte zweimal den Satz „The
+// selection has only one beat" und sonst nichts. Gemessen an /api/reimsuche/zeile und /ketten:
+//   with crown and with train  56 Wendungen · 10 Wortketten   (Bowring, Zeile 12)
+//   garments of gold           48 · 3
+//   the night dark and drear    0 · 0   (nicht jede Folge trägt – vorher prüfen, nicht raten)
+const WENDUNG = { de: 'bei Nacht', en: 'with crown and with train', ru: 'лесной царь' };
 
 const laden = () => {
   const p = TEXT[SPR];
@@ -70,6 +83,11 @@ const schritte = {
       await new Promise(r => setTimeout(r, 4000)); return e.value.length + ' Zeichen'`);
   },
   // einen der nummerierten Abschnitte links öffnen, die übrigen zu
+  // auf eine andere Seite der KlangFeder wechseln (Systemseite: /system). Danach steht das Arbeitsblatt nicht mehr –
+  // solche Bilder gehören darum ans Ende der Liste.
+  seite: pfad => async K => { await K.sende('Page.navigate', { url: URL.replace(/\/$/, '') + pfad });
+      await new Promise(r => setTimeout(r, 4500));
+      return K.ev(`return location.pathname + ' / ' + document.title`); },
   abschnitt: nr => async K => K.ev(`document.querySelectorAll('.sechd[aria-expanded="true"]').forEach(b => b.click());
       const b = document.querySelector('.sechd[data-sec="${nr}"]'); if (!b) return 'Abschnitt ${nr} fehlt'; b.click();
       await new Promise(r => setTimeout(r, 2500));
@@ -78,8 +96,12 @@ const schritte = {
   werkbank: (was = 'wort') => async K => K.ev(`const t = document.getElementById('text');
       const s = ${J(was === 'wort' ? WORT[SPR] : WENDUNG[SPR])};
       const p = t.value.indexOf(s); if (p < 0) return 'nicht im Text: ' + s;
-      t.setSelectionRange(p + 1, ${was === 'wort' ? 'p + 1' : 'p + s.length'});
-      await wahlNachMarkierung(p + 1, ${was === 'wort' ? 'p + 1' : 'p + s.length'});
+      // Beim Wort genügt der Einfügestrich MITTEN im Wort (p + 1); bei einer Wendung muss die Markierung am
+      // ersten Zeichen beginnen. Bis zum 15.11.2026 begann auch sie bei p + 1 – im Bild stand dann „‚ei Nacht'
+      // ist markiert" statt „bei Nacht", und die erste Hebung fehlte in der Zählung („1 Hebung" statt 2).
+      const von = ${was === 'wort' ? 'p + 1' : 'p'}, bis = ${was === 'wort' ? 'p + 1' : 'p + s.length'};
+      t.setSelectionRange(von, bis);
+      await wahlNachMarkierung(von, bis);
       await new Promise(r => setTimeout(r, 7000));
       const w = document.getElementById('werkbank');
       return (w.hidden ? 'ZU' : 'offen') + ': ' + w.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`),
@@ -100,13 +122,18 @@ const BILDER = [
     vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], hoch: 1.15 },
 
   { name: 'ersatz', zeigt: 'Ersatzwörter: Synonyme, Gegenwörter, Wendungen – mit Maß und Reimhinweis',
-    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], scroll: 'ende', hoch: 1.0 },
+    // nur die Liste, ans Ende gescrollt: dort stehen Wendungen, Synonyme und Gegenteile. Mit dem Kopf darüber
+    // reichte der Ausschnitt nie bis dorthin – die Reimlisten sind länger als das Sichtfenster.
+    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank .lexikon'], scroll: 'ende', rand: 8 },
 
   { name: 'luecke', zeigt: 'die Werkbank auf einer Wendung: was an diese Stelle passt',
     vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'], hoch: 1.15 },
 
   { name: 'zaehlen', zeigt: 'Abschnitt „Für Suno": Zeichenzahl gegen Sunos Grenze, Lyrics zum Kopieren',
     vor: [schritte.text, schritte.abschnitt(5)], clip: ['.sec:has(#suno)'], hoch: 0.95 },
+
+  { name: 'gebunden', zeigt: 'die zehn Lichter zwischen „frei" und „streng" in der Werkzeugzeile über dem Text',
+    vor: [schritte.text], clip: ['#gebunden'], rand: 14 },
 
   { name: 'regie', zeigt: 'Regieanweisungen in eckigen Klammern, wie Suno sie liest',
     vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 3 },
@@ -117,10 +144,47 @@ const BILDER = [
   { name: 'laenge', zeigt: 'Länge bei Suno: Spielzeit, Platz je Zeile, Dichte gegen das Archiv',
     vor: [schritte.text, schritte.abschnitt(3), async K => K.ev(`const e = document.getElementById('aLaenge');
       for (let i = 0; i < 25 && !/\\d/.test(e.textContent); i++) await new Promise(r => setTimeout(r, 500));
-      return e.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`)], clip: ['#aLaenge'] },
+      return e.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`)], clip: ['#aLaenge'], inBlick: true },
 
   { name: 'vergleich', zeigt: 'alte und neue Fassung nebeneinander, mit Kennzahlen darüber',
-    vor: [schritte.text, schritte.vergleich], clip: ['#vergleich'] },
+    vor: [schritte.text, schritte.vergleich], clip: ['#vergleich'] },,
+
+  // SONDERFALL: Dieses Bild braucht echten KI-Verkehr und läuft darum gegen die ARBEITSINSTANZ (URL=…:8790),
+  // nicht gegen die Probeinstanz – dort kommt kein Auftrag durch (Knopf bleibt gesperrt, kein Protokoll).
+  // Caspar_D, 15.11.2026: „dann nutze die normale instanz in claude".
+  // Der Text wird NICHT gesetzt: die Lasche braucht ihn nicht, und der offene Stand bleibt unberührt.
+  // Gezeigt wird allein der OBERSTE Eintrag – die älteren enthalten Liedtexte im Klartext und werden ausgeblendet.
+  { name: 'kiverkehr', zeigt: 'die Lasche „KI-Verkehr": ein Auftrag an die KI und ihre Antwort, mit Modell und Dauer',
+    vor: [async K => K.ev(`const l = document.querySelector('[data-lasche="ki"]'); if (!l) return 'Lasche fehlt';
+      l.click(); await new Promise(r => setTimeout(r, 1500));
+      // Der Filter steht beim Laden auf „dieses Lied" – im Aufnahme-Browser ist aber keins geladen, die Lasche
+      // bliebe leer. „diese Sitzung" zeigt den Verkehr des laufenden Servers, unabhängig vom Lied.
+      const sicht = document.getElementById('kvSicht');
+      if (sicht) { sicht.value = 'sitzung'; sicht.dispatchEvent(new Event('change', { bubbles: true })); }
+      // Die Liste wird nachgeladen – warten, bis sie steht, sonst bleibt das Bild leer.
+      for (let i = 0; i < 30; i++) { if (document.querySelectorAll('#kiverkehr .kvlauf').length) break; await new Promise(r => setTimeout(r, 500)); }
+      await new Promise(r => setTimeout(r, 900));
+      // Gezeigt wird der Eintrag IN DER SPRACHE DER OBERFLÄCHE. Seit die Prompts übersetzt sind (ki-prompts.mjs),
+      // ist die Anrede der KlangFeder je Sprache verschieden – daran lässt sich der passende Lauf erkennen.
+      const marke = { de: 'In der KlangFeder wird dir geschrieben', en: 'You are being written to in KlangFeder', ru: 'Вам пишут в KlangFeder' }['${SPR}'] || '';
+      const alle = [...document.querySelectorAll('#kiverkehr .kvlauf')];
+      const treffer = alle.find(e => (e.innerText || '').includes(marke)) || alle[0];
+      alle.forEach(e => { if (e !== treffer) e.style.display = 'none'; });
+      return alle.length + ' Einträge, gezeigt: ' + (treffer ? (treffer.innerText || '').slice(0, 40).replace(/\\n/g, ' ') : 'keiner')`)],
+    clip: ['#kiverkehr'], rand: 14, hoch: 0.40 },
+
+  // Zuletzt, weil die Seite wechselt: die Systemseite zeigt, welche Nachschlagewerke anderer Programme auf diesem
+  // Rechner liegen (fremdwoerterbuecher.mjs). Was davon eingebunden wird, entscheidet der Nutzer.
+  { name: 'eigene', zeigt: 'Systemseite: Wörterbücher anderer Programme auf diesem Rechner, mit Ort und Größe',
+    // Die Orte werden unscharf gezeichnet (Jörg, 15.11.2026: „du könntest es auch blurren"): im Programm stehen sie
+    // im Klartext, im Bild für die öffentliche Seite sagen sie nur noch „hier steht ein Pfad". Den Benutzernamen
+    // kürzt fremdwoerterbuecher.mjs ohnehin mit ~ ab; unscharf bleiben die maschinenlangen Asset-Nummern und die
+    // Frage, welche Sprachwörterbücher gerade auf diesem Rechner liegen.
+    vor: [schritte.seite('/system'),
+          async K => K.ev(`const o = document.querySelectorAll('#fremd .fo');
+            o.forEach(e => { e.style.filter = 'blur(3px)'; e.style.opacity = '0.75'; });
+            return o.length + ' Orte unscharf'`)],
+    clip: ['#fremd'], rand: 18, inBlick: true, hoch: 0.40 }
 ];
 
 // ---------- Lauf ----------
@@ -173,7 +237,17 @@ for (const b of liste) {
           const bb = blatt.getBoundingClientRect();
           const ende = marken[${b.bis}];
           const unten = ende ? ende.getBoundingClientRect().top : bb.bottom;
-          return { x: bb.left + scrollX, y: bb.top + scrollY, w: bb.width, h: Math.max(80, unten - bb.top) }`)
+          // Der Liedtitel steht ÜBER dem Blatt (H2#songtitel, direkt an dessen Oberkante). Bis zum 15.11.2026
+          // begann der Ausschnitt an der Blattkante, und der Rand schnitt quer durch den Titel. Jetzt kommt er
+          // ganz mit: man sieht, an welchem Lied gearbeitet wird.
+          const t = document.querySelector('#songtitel');
+          const tr = t && t.getBoundingClientRect();
+          const oben = tr && tr.bottom <= bb.top + 8 && tr.height > 8 ? tr.top : bb.top;
+          // Die rechte Kante am Inhalt messen, nicht am Kasten: die Spalte mit Hebungen, Reim und Kadenz stand
+          // sonst angeschnitten am Bildrand.
+          const rs = [...blatt.querySelectorAll('*')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0 && r.top < unten);
+          const rechts = Math.max(bb.right, ...rs.map(r => r.right));
+          return { x: bb.left + scrollX, y: oben + scrollY, w: rechts - bb.left, h: Math.max(80, unten - oben) }`)
       : await K.ev(`const es = [...document.querySelectorAll(${J(b.clip.join(','))})]${b.anzahl ? `.slice(0, ${b.anzahl})` : ''};
           if (!es.length) return null;
           const rs = es.map(e => e.getBoundingClientRect());
@@ -191,11 +265,34 @@ for (const b of liste) {
     const h = Math.min(r.h + 2 * m, b.hoch ? w * b.hoch : Infinity);
     // Kleine Kästen bekommen eine höhere Pixeldichte, sonst steht später ein briefmarkengroßes Bild über die
     // halbe Kachelbreite. clip.scale hilft hier nicht – Chrome richtet sich nach dem deviceScaleFactor.
-    // Ohne captureBeyondViewport: das Neurendern außerhalb des Sichtfensters verwirft den Scrollzustand innerer
-    // Listen, und „ersatz" zeigte dann wieder den Anfang der Werkbank statt ihres Endes.
-    const s = await K.sende('Page.captureScreenshot', { format: 'png', fromSurface: true,
-      clip: { x: Math.max(0, r.x - m), y: Math.max(0, r.y - m), width: w, height: h, scale: 1 } });
-    fs.writeFileSync(datei, Buffer.from(s.result.data, 'base64'));
+    // Chrome rendert einen Ausschnitt neu und verwirft dabei den Scrollzustand innerer Listen – „ersatz" zeigte
+    // darum den Anfang der Werkbank statt ihres Endes. Wo der Scrollzustand zählt, wird deshalb das ganze
+    // Fenster aufgenommen (da wird nichts neu gerendert) und erst danach zugeschnitten.
+    // „inBlick": dasselbe für Kästen, die WEITER UNTEN auf der Seite stehen als das Fenster hoch ist. Chrome
+    // rendert beim Zuschneiden nur, was auf dem Schirm steht – „laenge" kam am 15.11.2026 als ganz schwarzes
+    // Bild heraus, obwohl der Kasten seine Zahlen hatte. Darum erst hinscrollen, dann das ganze Fenster nehmen.
+    let x = Math.max(0, r.x - m), y = Math.max(0, r.y - m);
+    if (b.scroll || b.inBlick) {
+      if (b.inBlick) {
+        console.log('    ', await K.ev(`document.querySelector(${J(b.clip[0])})?.scrollIntoView({ block: 'center' });
+          await new Promise(r => setTimeout(r, 700)); return 'gescrollt auf ' + Math.round(scrollY)`));
+        await warte(500);
+      }
+      // Jetzt zählen die Koordinaten IM FENSTER, nicht auf der Seite: das Vollbild zeigt nur das Fenster.
+      const v = await K.ev(`const es = [...document.querySelectorAll(${J(b.clip.join(','))})];
+        if (!es.length) return null; const rs = es.map(e => e.getBoundingClientRect());
+        const x = Math.min(...rs.map(r => r.left)), y = Math.min(...rs.map(r => r.top));
+        return { x, y, w: Math.max(...rs.map(r => r.right)) - x, h: Math.max(...rs.map(r => r.bottom)) - y }`);
+      if (v) { x = Math.max(0, v.x - m); y = Math.max(0, v.y - m); }
+      const voll = await K.bild(`${b.name}-${SPR}-voll`);
+      const d = +(process.env.DPR || 2);
+      execFileSync('magick', [voll, '-crop', `${Math.round(w * d)}x${Math.round(h * d)}+${Math.round(x * d)}+${Math.round(y * d)}`, '+repage', datei]);
+      fs.unlinkSync(voll);
+    } else {
+      const s = await K.sende('Page.captureScreenshot', { format: 'png', fromSurface: true,
+        clip: { x, y, width: w, height: h, scale: 1 } });
+      fs.writeFileSync(datei, Buffer.from(s.result.data, 'base64'));
+    }
   }
   console.log(`    → ${datei}`);
 }

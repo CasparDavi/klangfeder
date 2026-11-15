@@ -10,7 +10,35 @@ echo '{"mitKI":false,"mitTresor":false}' > $A/ablage/einstellungen.json
 KLANGFEDER_PORT=8792 KLANGFEDER_ABLAGE=$A/ablage KLANGFEDER_DATEN=<KlangFeder>/daten node --experimental-sqlite server.mjs
 ```
 
-## Alle Bilder auf einmal (seit 15.11.2026)
+## Alle Bilder, alle Sprachen (der übliche Weg)
+
+`alle-sprachen.sh` nimmt jedes Bild in allen drei Sprachen auf, in beiden Pixeldichten, und wandelt am Ende nach
+webp. Das ist der Aufruf nach einer Programmänderung:
+
+```bash
+A=<Aufnahmeordner> werkzeug/aufnahme/alle-sprachen.sh          # de en ru
+A=<Aufnahmeordner> SPRACHEN="de" werkzeug/aufnahme/alle-sprachen.sh
+```
+
+Erwartet im Ordner `$A`: `ablage/` (mit `{"mitKI":true,"mitTresor":true}`), `erlkoenig.txt`,
+`erlking-en-strophen.txt`. Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
+Ergebnis: `$A/bilder-de/`, `-en/`, `-ru/` mit `<name>-<sprache>.webp`.
+
+## Nach dem Lauf: die Formate prüfen
+
+Das Seitenverhältnis jedes Bildes steht in `FORMAT` (docs/inhalt.js) und **beschneidet** das Bild
+(`object-fit: cover`). Caspar_Ds Regel vom 27.10.2026 – „die Bildunterkanten immer alignieren" – heißt: zwei
+Kacheln einer Reihe haben gleich hohe Bilder, wenn `Breite₁/Verhältnis₁ = Breite₂/Verhältnis₂` (Breite in
+Rasterspalten). `formate.mjs` rechnet beides gegeneinander und sagt, wie viel Prozent der Beschnitt kostet:
+
+```bash
+node werkzeug/aufnahme/formate.mjs <bilderordner>
+```
+
+Mehr als etwa 12 % heißt: Ausschnitt ändern, Kachelbreiten tauschen, oder die Kachel auf `quer`
+(Beschriftung daneben statt darüber).
+
+## Ein Lauf, eine Sprache (alle.mjs)
 
 `alle.mjs` erzeugt jedes Bild der Feature-Seite in einer Sprache. Jedes Bild steht dort in einer Tafel mit drei
 Angaben: was es zeigt, wie der Zustand hergestellt wird, und welcher Ausschnitt genommen wird. Der Ausschnitt wird
