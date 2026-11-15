@@ -35,7 +35,13 @@ const [FB, FH, DPR] = [+(process.env.BREIT || 1600), +(process.env.HOCH || 1000)
 // Beispieltext, den die KlangFeder selbst mitbringt (Schukowski 1818) – dort ist nichts zu laden.
 // Die Liedtexte liegen NICHT im Repo; TEXT_DE und TEXT_EN zeigen auf sie (wie bei werkzeug/aufnahme/erlkoenig.mjs).
 const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: null };
-const WORT = { de: 'Kind', en: 'child', ru: 'Дитя' };       // worauf die Werkbank aufgeht
+// Worauf die Werkbank aufgeht. Gesucht war ein Wort, das von jeder Kategorie etwas liefert, aber von keiner zu
+// viel (Jörg, 15.11.2026). Gemessen an allen Substantiven des Beispieltexts: „Papa" belegt alle neun Kategorien
+// (4 reine · 2 unreine · 120 Assonanzen · 6 Konsonanzen · 80 Anklänge · 6+5 Synonyme · 2 Gegenteile · 3 Wendungen)
+// und hat die wenigsten reinen Reime – so stehen die selteneren Stufen gleich im Bild.
+// Jörgs erste Wahl „Nebel" geht im Deutschen nicht: das Wort steht im Lied nur als „Nebelstreif", und darauf geht
+// die Werkbank als ganzes Wort auf; Zusammensetzungen liefern nichts. Englisch und Russisch behalten den Nebel.
+const WORT = { de: 'Papa', en: 'mist', ru: 'туман' };
 const WENDUNG = { de: 'bei Nacht', en: 'the night', ru: 'лесной царь' };
 
 const laden = () => {
@@ -91,22 +97,22 @@ const BILDER = [
     vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 4 },
 
   { name: 'reimsuche', zeigt: 'die Reimliste der Werkbank: rein, unrein, Assonanz, mit Häufigkeitsskala',
-    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'] },
+    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], hoch: 1.15 },
 
   { name: 'ersatz', zeigt: 'Ersatzwörter: Synonyme, Gegenwörter, Wendungen – mit Maß und Reimhinweis',
-    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'] },
+    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], scroll: 'ende', hoch: 1.0 },
 
   { name: 'luecke', zeigt: 'die Werkbank auf einer Wendung: was an diese Stelle passt',
-    vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'] },
+    vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'], hoch: 1.15 },
 
   { name: 'zaehlen', zeigt: 'Abschnitt „Für Suno": Zeichenzahl gegen Sunos Grenze, Lyrics zum Kopieren',
-    vor: [schritte.text, schritte.abschnitt(5)], clip: ['.sec:has(#suno)'] },
+    vor: [schritte.text, schritte.abschnitt(5)], clip: ['.sec:has(#suno)'], hoch: 0.95 },
 
   { name: 'regie', zeigt: 'Regieanweisungen in eckigen Klammern, wie Suno sie liest',
     vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 3 },
 
   { name: 'ki', zeigt: 'Abschnitt „Schreiben mit KI": Anbieter, Modell, Denktiefe, Aufträge',
-    vor: [schritte.text, schritte.abschnitt(4)], clip: ['.sec:has(#claude)'] },
+    vor: [schritte.text, schritte.abschnitt(4)], clip: ['.sec:has(#claude)'], hoch: 1.05 },
 
   { name: 'laenge', zeigt: 'Länge bei Suno: Spielzeit, Platz je Zeile, Dichte gegen das Archiv',
     vor: [schritte.text, schritte.abschnitt(3), async K => K.ev(`const e = document.getElementById('aLaenge');
@@ -140,6 +146,18 @@ for (const b of liste) {
   // Das Textblatt scrollt in sich; ohne diesen Schritt beginnt der Ausschnitt mitten im Titel.
   await K.ev(`for (const e of document.querySelectorAll('#blatt, #editor, .secbody, #werkbank')) e.scrollTop = 0;
     window.scrollTo(0, 0); return 1`);
+  // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto).
+  // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto) – und sie lädt
+  // beim Scrollen nach, darum in Schleife, bis der Boden steht.
+  if (b.scroll === 'ende') console.log('    ', await K.ev(`const l = document.querySelector('#werkbank .lexikon');
+    if (!l) return 'keine Liste';
+    // zielgenau: den letzten Eintrag in den Blick holen. Reines scrollTop = scrollHeight bleibt stehen, weil die
+    // Liste beim Scrollen nachlädt und der alte Endwert dann nicht mehr das Ende ist.
+    for (let i = 0; i < 10; i++) { l.lastElementChild?.scrollIntoView({ block: 'end' }); await new Promise(r => setTimeout(r, 400)); }
+    const b = l.getBoundingClientRect();
+    const sicht = [...l.querySelectorAll('.lxh')].filter(h => { const r = h.getBoundingClientRect();
+      return r.top >= b.top - 2 && r.top <= b.bottom + 2; }).map(h => h.textContent.trim().slice(0, 40));
+    return l.scrollTop + '/' + (l.scrollHeight - l.clientHeight) + ' · im Blick: ' + (sicht.join(' | ') || '(keine)')`));
   await warte(900);
   const datei = path.join(ZIEL, `${b.name}-${SPR}.png`);
   if (b.ganz) {
@@ -167,10 +185,15 @@ for (const b of liste) {
     // Seitenverhältnis ergibt sich aus dem Inhalt, die Seite skaliert ohnehin.
     // Abschnitte haben einen eigenen Rahmen – dort genügt wenig Luft, sonst schneidet der Nachbar an.
     const m = b.rand ?? (b.clip[0].startsWith('.sec') ? 4 : 14);
-    const w = r.w + 2 * m, h = r.h + 2 * m;
+    const w = r.w + 2 * m;
+    // „hoch" begrenzt das Seitenverhältnis: ein Abschnitt der linken Spalte ist dreimal so hoch wie breit und
+    // würde als Kachelbild zum Streifen. Abgeschnitten wird unten, der Kopf bleibt stehen.
+    const h = Math.min(r.h + 2 * m, b.hoch ? w * b.hoch : Infinity);
     // Kleine Kästen bekommen eine höhere Pixeldichte, sonst steht später ein briefmarkengroßes Bild über die
     // halbe Kachelbreite. clip.scale hilft hier nicht – Chrome richtet sich nach dem deviceScaleFactor.
-    const s = await K.sende('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, fromSurface: true,
+    // Ohne captureBeyondViewport: das Neurendern außerhalb des Sichtfensters verwirft den Scrollzustand innerer
+    // Listen, und „ersatz" zeigte dann wieder den Anfang der Werkbank statt ihres Endes.
+    const s = await K.sende('Page.captureScreenshot', { format: 'png', fromSurface: true,
       clip: { x: Math.max(0, r.x - m), y: Math.max(0, r.y - m), width: w, height: h, scale: 1 } });
     fs.writeFileSync(datei, Buffer.from(s.result.data, 'base64'));
   }
