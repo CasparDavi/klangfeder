@@ -90,13 +90,15 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .k .zahl small{display:block;font-size:14px;font-weight:600;color:var(--leise);margin-top:6px;letter-spacing:0}
 .k .bild{margin-top:auto}
 .bild{position:relative;aspect-ratio:16/10;background:var(--kachel2);overflow:hidden}
-/* Der Lautbaum bringt sein eigenes Seitenverhältnis mit (je Sprache verschieden viele Laute) – ein festes
-   würde ihn oben und unten abschneiden. */
-.k[data-id=lautbaum] > .bild{aspect-ratio:auto;background:none;padding:0 28px 30px}
-.k[data-id=lautbaum] > .bild img{width:100%;height:auto;display:block;border-radius:14px}
 .k.w4 .bild{aspect-ratio:4/3}
 .k.w12 .bild{aspect-ratio:21/9}
 .bild img,.bild video{width:100%;height:100%;object-fit:cover;display:block}
+/* Der Lautbaum bringt sein eigenes Seitenverhältnis mit (je Sprache verschieden viele Laute) – ein festes
+   würde ihn oben und unten abschneiden. Diese Regeln stehen HINTER .k.w12 und .bild img: sie sind gleich
+   spezifisch, und als die Kachel am 15.11.2026 auf die volle Breite ging, gewann sonst das 21/9 der w12-Regel
+   und schnitt den Baum unten ab (Jörg: „die lautbäume sind unten angeschnitten im deutschen"). */
+.k[data-id=lautbaum] > .bild{aspect-ratio:auto;background:none;padding:0 28px 30px}
+.k[data-id=lautbaum] > .bild img{width:100%;height:auto;object-fit:contain;display:block;border-radius:14px}
 .bild.geraete{aspect-ratio:16/11;background:radial-gradient(ellipse at 50% 110%,#3a200c 0%,var(--kachel2) 65%)}
 /* Geraetegruppe (Apple-Trio): Laptop hinten Mitte, Tablet vorn links, Handy vorn rechts; schlichte Rahmen ohne Marke */
 .geraete .lap{position:absolute;left:14%;top:7%;width:72%}
