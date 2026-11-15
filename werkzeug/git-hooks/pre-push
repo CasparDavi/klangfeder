@@ -1,0 +1,17 @@
+#!/bin/sh
+# Vor jedem Push: antworten die Download-Adressen der Feature-Seite noch?
+# (Jörg, 15.11.2026: „de download adressen bitte vor jedem push prüfen".)
+# Eingerichtet mit:  git config core.hooksPath werkzeug/git-hooks
+# Einmal überspringen:  OHNE_DOWNLOADPRUEFUNG=1 git push
+[ -n "$OHNE_DOWNLOADPRUEFUNG" ] && exit 0
+W="$(git rev-parse --show-toplevel)/werkzeug/downloads-pruefen.mjs"
+[ -f "$W" ] || exit 0
+node "$W"
+code=$?
+if [ $code -eq 1 ]; then
+  echo ""
+  echo "Push abgebrochen: die Seite würde auf Adressen zeigen, die es nicht gibt."
+  echo "Wenn das bewusst so ist: OHNE_DOWNLOADPRUEFUNG=1 git push"
+  exit 1
+fi
+exit 0
