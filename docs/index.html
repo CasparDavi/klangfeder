@@ -90,6 +90,10 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .k .zahl small{display:block;font-size:14px;font-weight:600;color:var(--leise);margin-top:6px;letter-spacing:0}
 .k .bild{margin-top:auto}
 .bild{position:relative;aspect-ratio:16/10;background:var(--kachel2);overflow:hidden}
+/* Der Lautbaum bringt sein eigenes Seitenverhältnis mit (je Sprache verschieden viele Laute) – ein festes
+   würde ihn oben und unten abschneiden. */
+.k[data-id=lautbaum] > .bild{aspect-ratio:auto;background:none;padding:0 28px 30px}
+.k[data-id=lautbaum] > .bild img{width:100%;height:auto;display:block;border-radius:14px}
 .k.w4 .bild{aspect-ratio:4/3}
 .k.w12 .bild{aspect-ratio:21/9}
 .bild img,.bild video{width:100%;height:100%;object-fit:cover;display:block}
@@ -307,7 +311,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
 }
 /* Zwei Paare mit Liste daneben: unter 1100 px wird die Liste so hoch, dass ueber dem Bild ein schwarzes Band entsteht */
 @media screen and (max-width:1100px) and (min-width:821px){
-  .k[data-id=blast],.k[data-id=lautmatrix],.k[data-id=geruest],.k[data-id=soll],.k[data-id=buecher],.k[data-id=umfang]{grid-column:span 12}
+  .k[data-id=blast],.k[data-id=lautmatrix],.k[data-id=lautbaum],.k[data-id=geruest],.k[data-id=soll],.k[data-id=buecher],.k[data-id=umfang]{grid-column:span 12}
 }
 @media (pointer:coarse){.sprache button{min-height:44px;min-width:44px}}
 @media print{
