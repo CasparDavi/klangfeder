@@ -61,8 +61,9 @@ for (const [datei, mb] of dateien) {
   const a = await hole(url, 'HEAD');
   if (!a) continue;
   if (a.status !== 200) { console.error(`FEHLER: ${a.status} für ${url}`); kaputt++; continue; }
+  // MB dezimal, wie GitHub und der Browser sie zeigen – die Seite nennt seit 15.11.2026 dieselbe Einheit
   const laenge = +(a.headers.get('content-length') || 0);
-  const istMb = laenge ? laenge / 1048576 : null;
+  const istMb = laenge ? laenge / 1e6 : null;
   if (mb != null && istMb != null && Math.abs(istMb - mb) > Math.max(1.5, mb * 0.08))
     schief.push(`${datei}: die Seite sagt ${mb} MB, die Datei hat ${istMb.toFixed(0)} MB`);
   sag(`  ok ${datei}${istMb ? ` · ${istMb.toFixed(0)} MB` : ''}`);
