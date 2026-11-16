@@ -318,7 +318,7 @@ S.laden = {
       ru:'<b>Системные требования.</b> Около 1,5 ГБ свободного места для программы и словарей. Современный веб-браузер. Другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Без цифровой подписи: в Windows браузер Edge сначала задерживает загрузку — нажмите стрелку рядом с «Удалить» → «Сохранить»; при первом запуске Windows может спросить ещё раз, а macOS блокирует приложение, пока вы не разрешите его в разделе «Конфиденциальность и безопасность» → «Всё равно открыть». После установки колокольчик рядом с «Система» сообщает о новой версии; один клик её устанавливает.'}
 };
 
-const BV = '17';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
+const BV = '18';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
   titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}`, ru: `img/titel-ru.webp?v=${BV}` } },
   schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}`, ru: `img/schreiben-ru.webp?v=${BV}` } },
@@ -471,4 +471,4 @@ const NUR_TEXT = new Set([]);   // Kacheln, die ohne Bild stehen
 const GH = 'github.com/CasparDavi/klangfeder';
 const ghLink = (s) => s.replace(GH, `<a class="gh" href="https://${GH}">${GH}</a>`);
 const KONSOLE = {}, konsole = () => [];
-const FORMAT = { schreiben: '2532/597', reimschema: '2532/1269', reimsuche: '1136/1306', ersatz: '1038/1098', luecke: '776/892', zaehlen: '1328/1262', regie: '2532/933', ki: '1328/1394', laenge: '1244/906', vergleich: '1842/1726', buecher: '1536/1024', gebunden: '874/184', eigene: '1756/702', kiverkehr: '2562/1025' };   /* echte Maße der Aufnahme vom 15.11.2026, gerechnet mit werkzeug/aufnahme/formate.mjs */
+const FORMAT = { schreiben: '2532/597', reimschema: '2532/1269', reimsuche: '1136/1306', ersatz: '1038/1098', luecke: '776/892', zaehlen: '1328/1262', regie: '2532/933', ki: '1328/1394', laenge: '1244/906', vergleich: '2562/1718', buecher: '1536/1024', gebunden: '874/184', eigene: '1756/702', kiverkehr: '2562/1025' };   /* echte Maße der Aufnahme vom 15.11.2026, gerechnet mit werkzeug/aufnahme/formate.mjs */

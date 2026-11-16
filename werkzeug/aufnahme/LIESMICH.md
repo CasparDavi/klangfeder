@@ -24,6 +24,11 @@ Erwartet im Ordner `$A`: `ablage/` (mit `{"mitKI":true,"mitTresor":true}`), `erl
 `erlking-en-strophen.txt`. Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
 Ergebnis: `$A/bilder-de/`, `-en/`, `-ru/` mit `<name>-<sprache>.webp`.
 
+* `vergleich` braucht den KlangTresor NICHT (mehr): der Lauf legt sich seine ältere Fassung selbst an – er fügt den
+  Text so ein, wie ein Nutzer es tut (dabei entsteht die Start-Version), und überarbeitet dann eine Zeile. Ohne das
+  steht links „leer (neuer Text)" und die halbe Ansicht ist leer; genau so waren die Bilder vom 15.11.2026
+  (Caspar_D, 16.11.2026). Welche Zeile je Sprache überarbeitet wird, steht in `FEILEN` in `alle.mjs`.
+
 ## Nach dem Lauf: die Formate prüfen
 
 Das Seitenverhältnis jedes Bildes steht in `FORMAT` (docs/inhalt.js) und **beschneidet** das Bild
@@ -52,7 +57,7 @@ URL=http://127.0.0.1:8792/ SPR=en TEXT_EN=$A/erlking-en.txt node <repo>/werkzeug
 
 * Die Liedtexte liegen **nicht im Repo**; `TEXT_DE` und `TEXT_EN` zeigen auf sie. Russisch braucht keinen: dort
   steht der Beispieltext der KlangFeder im Feld.
-* Für `laenge` und `vergleich` muss in der Ablage `mitTresor` an sein und der KlangTresor laufen, für `ki`
+* Für `laenge` muss in der Ablage `mitTresor` an sein und der KlangTresor laufen, für `ki`
   `mitKI` – die KlangFeder nutzt dafür Claude Code auf diesem Rechner, ein Schlüssel ist nicht nötig:
   `echo '{"mitKI":true,"mitTresor":true}' > $A/ablage/einstellungen.json`
 * Fenster 1600 × 1000 bei doppelter Pixeldichte (`BREIT`, `HOCH`, `DPR`). **Die Kästen der linken Spalte haben

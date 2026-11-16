@@ -56,6 +56,18 @@ const WORT = { de: 'Not', en: 'sight', ru: 'водой' };
 //   garments of gold           48 · 3
 //   the night dark and drear    0 · 0   (nicht jede Folge trägt – vorher prüfen, nicht raten)
 const WENDUNG = { de: 'bei Nacht', en: 'with crown and with train', ru: 'лесной царь' };
+// Für „alt | neu" wird EINE Zeile überarbeitet – sonst hat die Ansicht nichts zu zeigen. Gewählt ist je Sprache eine
+// Zeile, die das Maß des Lieds verfehlt UND im Bildausschnitt liegt; geändert wird nur, was zu viel ist. Gemessen
+// mit /api/analyse (Hebungen je Zeile) am jeweiligen Beispieltext – jede dieser Zeilen geht dabei von 5 auf 4:
+//   de  „'s ist nur" → „es ist"   (dieselbe Überarbeitung wie im Bild vom 12.11.2026)
+//   en  „tightly" gestrichen      (Verse 1, Zeile 3)
+//   ru  „так" gestrichen          (Строфа 2, Zeile 1)
+// Nicht raten: „Look," (en) und „lovely" (en) ändern die Zählung NICHT, die Zeilen bleiben bei 6 bzw. 5.
+const FEILEN = {
+  de: ["Mein Sohn, 's ist nur ein Nebelstreif", 'Mein Sohn, es ist ein Nebelstreif'],
+  en: ["He holdeth the boy tightly clasp'd in his arm,", "He holdeth the boy clasp'd in his arm,"],
+  ru: ['— Дитя, что ко мне ты так робко прильнул?', '— Дитя, что ко мне ты робко прильнул?'],
+};
 
 const laden = () => {
   const p = TEXT[SPR];
@@ -67,7 +79,31 @@ const laden = () => {
 // ---------- Hilfen für die Zustände ----------
 const J = o => JSON.stringify(o);
 const schritte = {
-  // „alt | neu": die ältere Fassung links neben den Text legen. Ohne KlangTresor bleibt die Liste links leer.
+  // Der Ausgang für „alt | neu": es muss eine ÄLTERE Fassung dasein, sonst steht links „leer (neuer Text)" und die
+  // halbe Ansicht ist leer – so geschehen in den Bildern vom 15.11.2026 (Caspar_D, 16.11.: „damit ist die
+  // Zweispaltendarstellung zur Hälfte leer"). Beim Nutzer entsteht sie von selbst: wer einen Text EINFÜGT, bekommt
+  // eine Start-Version (werkBeiEingabe, inputType „insertFromPaste"). schritte.text setzt den Wert dagegen direkt –
+  // dabei entsteht ein Werk, aber keine Fassung. Darum hier derselbe Weg, den das Programm beim Einfügen geht.
+  async ausgang(K) {
+    return K.ev(`const t = document.getElementById('text'), tx = t.value;
+      if (!tx.trim()) return 'kein Text im Feld';
+      werkSetzen({ id: 'frei:' + neueId(), songId: null, titel: titelAus(tx) }, null);
+      gesichert = tx;
+      const f = await standAblegen('start', 'Start-Version ' + jetzt());
+      await new Promise(r => setTimeout(r, 1500));
+      return f ? 'Start-Version abgelegt: ' + (werk && werk.titel || '') : 'KEINE Fassung abgelegt'`);
+  },
+  // … und danach die eine Zeile überarbeiten (FEILEN), damit links das Gestrichene steht und die Kennzahlen sich bewegen.
+  async feilen(K) {
+    const [alt, neu] = FEILEN[SPR];
+    return K.ev(`const t = document.getElementById('text');
+      if (!t.value.includes(${J(alt)})) return 'NICHT im Text: ' + ${J(alt)};
+      t.value = t.value.replace(${J(alt)}, ${J(neu)});
+      t.dispatchEvent(new Event('input', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 4000));
+      return 'überarbeitet: ' + ${J(neu)}`);
+  },
+  // „alt | neu": die ältere Fassung links neben den Text legen (schritte.ausgang muss vorher gelaufen sein).
   async vergleich(K) {
     return K.ev(`const b = document.querySelector('button[data-ansicht="zwei"]'); if (!b) return 'Knopf fehlt';
       b.click(); await new Promise(r => setTimeout(r, 6000));
@@ -147,7 +183,7 @@ const BILDER = [
       return e.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`)], clip: ['#aLaenge'], inBlick: true },
 
   { name: 'vergleich', zeigt: 'alte und neue Fassung nebeneinander, mit Kennzahlen darüber',
-    vor: [schritte.text, schritte.vergleich], clip: ['#vergleich'] },,
+    vor: [schritte.text, schritte.ausgang, schritte.feilen, schritte.vergleich], clip: ['#vergleich'] },
 
   // SONDERFALL: Dieses Bild braucht echten KI-Verkehr und läuft darum gegen die ARBEITSINSTANZ (URL=…:8790),
   // nicht gegen die Probeinstanz – dort kommt kein Auftrag durch (Knopf bleibt gesperrt, kein Protokoll).
