@@ -14,9 +14,9 @@ the words that fit. German, English and Russian. Free, no account, runs on your 
 
 <p align="center">
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (26 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (84 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (87 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (48 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 26 MB · DMG 84 MB (Intel and Apple Silicon) · .deb 48 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 MB</sub>
+<br><sub>Setup.exe 26 MB · DMG 87 MB (Intel and Apple Silicon) · .deb 48 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 MB</sub>
 </p>
 
 **System requirements.** A 64-bit computer with Windows 10 or 11, macOS 11 or newer, or Linux (x86_64). About 1.5 GB

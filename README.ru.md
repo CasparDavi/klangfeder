@@ -14,9 +14,9 @@
 
 <p align="center">
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Скачать для Windows 10/11 (26 МБ)" src="https://img.shields.io/badge/Windows_10%2F11-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Скачать для macOS 11 или новее (84 МБ)" src="https://img.shields.io/badge/macOS_11+-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Скачать для macOS 11 или новее (87 МБ)" src="https://img.shields.io/badge/macOS_11+-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
 <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Скачать для Ubuntu, Debian, Mint (48 МБ)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 26 МБ · DMG 84 МБ (Intel и Apple Silicon) · .deb 48 МБ · другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 МБ</sub>
+<br><sub>Setup.exe 26 МБ · DMG 87 МБ (Intel и Apple Silicon) · .deb 48 МБ · другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 МБ</sub>
 </p>
 
 **Системные требования.** 64-битный компьютер с Windows 10 или 11, macOS 11 или новее либо Linux (x86_64). Около
