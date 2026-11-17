@@ -16,6 +16,8 @@
 #   gedanken.txt                 „Die Gedanken sind frei“
 #   greensleeves.txt             „Greensleeves“ (aus dem englischen Liedkorpus, _klangfeder-bau/genius/en.ndjson.gz)
 #   kalinka-lied.txt             „Калинка“
+# Klangketten, Fluss, Stammreim und Anlaut zeigen je Sprache ein gemeinfreies Gedicht (Caspar_D, 17.11.2026: „gemeinfrei reicht“):
+#   panther.txt (Rilke 1902) · raven.txt (Poe 1845, zwei Strophen) · poslushajte.txt (Majakowski 1914)
 #
 # Vorher müssen laufen: die Probeinstanz auf 8792 (siehe LIESMICH.md) und der KlangTresor auf 8788
 # (für „laenge" und „vergleich"). Ohne KlangTresor bleiben diese zwei Bilder leer.
@@ -28,7 +30,7 @@ SPRACHEN=${SPRACHEN:-"de en ru"}
 # Seit 17.11.2026 haben alle Bilder ein Kachelfeld (FELD in alle.mjs) und denselben Maßstab wie das Titelbild – eine
 # Pixeldichte für alle. Die Reihenfolge ist die der Tafel BILDER; die Zwischenschritte (…-aus, …-zu) gehören dazu.
 # kiverkehr fehlt hier: es braucht echten KI-Verkehr (siehe alle.mjs).
-GROB="titel schreiben reimschema reimsuche ersatz luecke klangfarbe klangfarbe-aus lautschrift lautschrift-zu gebunden zaehlen regie hoerquiz hoerquiz-zu ki laenge vergleich eigene"
+GROB="titel schreiben klangketten fluss reimschema reimsuche ersatz luecke klangfarbe klangfarbe-aus lautschrift lautschrift-zu stammreim anlaut anlaut-aus gebunden zaehlen regie hoerquiz hoerquiz-zu ki laenge vergleich eigene"
 
 for L in $SPRACHEN; do
   Z="$A/bilder-$L"; mkdir -p "$Z"
@@ -37,7 +39,8 @@ for L in $SPRACHEN; do
     set -- $STUFE; D=$1; shift
     echo "--- Pixeldichte $D: $* ---"
     URL="$URL" SPR="$L" DPR="$D" \
-      TEXT_DE="$A/erlkoenig.txt" TEXT_EN="$A/erlking-en-strophen.txt" \
+      TEXT_DE="$A/erlkoenig.txt" TEXT_EN="$A/erlking-en-strophen.txt" TEXT_RU="$A/erlkoenig-ru.txt" \
+      PROBE_DE="$A/panther.txt" PROBE_EN="$A/raven.txt" PROBE_RU="$A/poslushajte.txt" \
       node werkzeug/aufnahme/alle.mjs "$@" --ziel="$Z" || echo "!! $L bei Pixeldichte $D abgebrochen"
   done
   # Die drei Bilder der Kachel „Ansehen" laufen über die ältere Schrittfolge: sie teilen einen Zustand (die Wolke

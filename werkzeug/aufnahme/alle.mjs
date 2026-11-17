@@ -35,7 +35,7 @@ const [FB, FH, DPR] = [+(process.env.BREIT || 1600), +(process.env.HOCH || 1000)
 // Abschnittsköpfen im Suno-Stil versehen, damit dieselben Teile der Oberfläche zu sehen sind. Russisch: der
 // Beispieltext, den die KlangFeder selbst mitbringt (Schukowski 1818) – dort ist nichts zu laden.
 // Die Liedtexte liegen NICHT im Repo; TEXT_DE und TEXT_EN zeigen auf sie (wie bei werkzeug/aufnahme/erlkoenig.mjs).
-const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: null };
+const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: process.env.TEXT_RU || null };   // RU fest seit den Probetexten (17.11.2026) – sonst bliebe Majakowski im Feld
 // Worauf die Werkbank aufgeht. Gewählt sind Zeilenenden, weil dort zusätzlich die Reimpartner stehen und ein Bild
 // so beide Hälften der Werkbank zeigt – Ersatzwörter liefert sie an jeder Stelle der Zeile. (Hier stand bis zum
 // 15.11.2026 das Gegenteil: „nur bei einem Wort am Zeilenende". Das war falsch, geprüft an „Sohn" mitten in der
@@ -75,7 +75,7 @@ const FEILEN = {
 
 const laden = () => {
   const p = TEXT[SPR];
-  if (SPR === 'ru') return null;                      // der Beispieltext der KlangFeder steht schon im Feld
+  if (SPR === 'ru' && !p) return null;               // ohne TEXT_RU: der Beispieltext der KlangFeder steht schon im Feld
   if (!p) { console.error(`Für ${SPR} fehlt der Text: TEXT_${SPR.toUpperCase()}=<Datei> setzen.`); process.exit(2); }
   return fs.readFileSync(p, 'utf8');
 };
@@ -154,7 +154,9 @@ const schritte = {
     const t = fs.readFileSync(f, 'utf8');
     // der echte Titel des Gedichts – sonst bliebe der Titel des vorigen Texts stehen (gesehen beim Raben: „Who rides there …“)
     const titel = { de: 'Der Panther', en: 'The Raven', ru: 'Послушайте!' }[SPR];
-    return K.ev(`const e = document.getElementById('text'); e.value = ${J(t)};
+    // einspaltig: läuft vorher „vergleich“ (alt | neu), bliebe die Ansicht sonst offen und das Blatt verdeckt (Gesamtlauf 17.11.2026)
+    return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
+      const e = document.getElementById('text'); e.value = ${J(t)};
       e.dispatchEvent(new Event('input', { bubbles: true }));
       const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
       await new Promise(r => setTimeout(r, 4500)); return e.value.length + ' Zeichen Probetext · ' + (h && h.textContent)`);
@@ -177,6 +179,12 @@ const schritte = {
         h.style.display = ja ? '' : 'none'; if (g && g.classList.contains('lxg')) g.style.display = ja ? '' : 'none'; if (ja) n++; }
       document.querySelectorAll('#wbInhalt .klangwahl, #wbInhalt .lxbed, #wbUeb').forEach(e => e.style.display = 'none');
       return n + ' Gruppen gezeigt'`),
+  // bestimmte Gruppen der Werkbank für ein Bild ausblenden (Ersatzwörter: Wortfamilie und Stammreime haben ihre eigene Kachel)
+  ohneGruppen: titel => async K => K.ev(`const weg = ${J(titel)}.map(k => (typeof t === 'function' ? t(k, { w: '' }) : k).replace(/[„“«»‚‘"']/g, '').trim().split(' ')[0]);
+      let n = 0; for (const h of document.querySelectorAll('#wbInhalt .lxh')) { if (!weg.some(s => s && h.textContent.startsWith(s))) continue;
+        // ganz heraus statt nur versteckt: „scroll: ende“ holt den LETZTEN Eintrag in den Blick – ein versteckter bliebe stehen
+        const g = h.nextElementSibling; if (g && g.classList.contains('lxg')) g.remove(); h.remove(); n++; }
+      return n + ' Gruppen herausgenommen'`),
   // „Anlaut wie in …“: Pille an, Wort ins Feld
   anlaut: woerter => async K => K.ev(`const f = document.getElementById('wbAnlaut'); if (!f) return 'Anlaut-Feld fehlt';
       f.value = ${J(woerter)}['${SPR}']; f.dispatchEvent(new Event('input', { bubbles: true }));
@@ -210,7 +218,7 @@ const BILDER = [
   { name: 'ersatz', zeigt: 'Ersatzwörter: Synonyme, Gegenwörter, Wendungen – mit Maß und Reimhinweis',
     // nur die Liste, ans Ende gescrollt: dort stehen Wendungen, Synonyme und Gegenteile. Mit dem Kopf darüber
     // reichte der Ausschnitt nie bis dorthin – die Reimlisten sind länger als das Sichtfenster.
-    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank .lexikon'], scroll: 'ende', rand: 8 },
+    vor: [schritte.text, schritte.werkbank(), schritte.ohneGruppen(['lx.familie', 'lx.stamm'])], clip: ['#werkbank .lexikon'], scroll: 'ende', rand: 8 },
 
   { name: 'luecke', zeigt: 'die Werkbank auf einer Wendung: was an diese Stelle passt',
     // rand 0: mit Luft kam oben ein Streifen der Leiste über der Werkbank mit (oranger Anschnitt, Jörg 17.11.2026);
