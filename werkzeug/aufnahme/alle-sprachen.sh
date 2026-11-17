@@ -27,6 +27,11 @@ cd "$(dirname "$0")/../.."
 : "${A:?A=<Aufnahmeordner> setzen}"
 URL=${URL:-http://127.0.0.1:8792/}
 SPRACHEN=${SPRACHEN:-"de en ru"}
+# Texte: fest unter _klangfeder-bau/aufnahme/texte (nicht in git – darin Caspar_Ds Liedtext; Kopie auf dem NAS). Nie wieder
+# nur im Scratchpad (Jörg, 17.11.2026: „sichere dein Aufnahmeinstrumentarium“).
+T_ORT=${T_ORT:-"$(cd "$(dirname "$0")/../../.." && pwd)/aufnahme/texte"}
+for f in erlkoenig.txt erlking-en-strophen.txt erlkoenig-ru.txt panther.txt raven.txt poslushajte.txt gedanken.txt greensleeves.txt kalinka-lied.txt; do
+  [ -e "$T_ORT/$f" ] || { echo "!! Text fehlt: $T_ORT/$f"; exit 2; }; done
 # Seit 17.11.2026 haben alle Bilder ein Kachelfeld (FELD in alle.mjs) und denselben Maßstab wie das Titelbild – eine
 # Pixeldichte für alle. Die Reihenfolge ist die der Tafel BILDER; die Zwischenschritte (…-aus, …-zu) gehören dazu.
 # kiverkehr fehlt hier: es braucht echten KI-Verkehr (siehe alle.mjs).
@@ -39,21 +44,21 @@ for L in $SPRACHEN; do
     set -- $STUFE; D=$1; shift
     echo "--- Pixeldichte $D: $* ---"
     URL="$URL" SPR="$L" DPR="$D" \
-      TEXT_DE="$A/erlkoenig.txt" TEXT_EN="$A/erlking-en-strophen.txt" TEXT_RU="$A/erlkoenig-ru.txt" \
-      PROBE_DE="$A/panther.txt" PROBE_EN="$A/raven.txt" PROBE_RU="$A/poslushajte.txt" \
+      TEXT_DE="$T_ORT/erlkoenig.txt" TEXT_EN="$T_ORT/erlking-en-strophen.txt" TEXT_RU="$T_ORT/erlkoenig-ru.txt" \
+      PROBE_DE="$T_ORT/panther.txt" PROBE_EN="$T_ORT/raven.txt" PROBE_RU="$T_ORT/poslushajte.txt" \
       node werkzeug/aufnahme/alle.mjs "$@" --ziel="$Z" || echo "!! $L bei Pixeldichte $D abgebrochen"
   done
   # Die drei Bilder der Kachel „Ansehen" laufen über die ältere Schrittfolge: sie teilen einen Zustand (die Wolke
   # braucht gut 20 s zum Abkühlen) und schneiden nur die Fläche der Lasche aus. Sie zeigen als einzige NICHT den
   # „Erlkönig“, sondern je Sprache ein berühmtes Volkslied mit Kehrvers (Jörg, 15.11.2026: „Lieder, die tatsächlich
   # Wiederholungen zeigen“) – im „Erlkönig“ kommt keine Zeile zweimal vor, darum blieben Dotplot und Kreis leer.
-  case $L in de) T="$A/gedanken.txt";; en) T="$A/greensleeves.txt";; ru) T="$A/kalinka-lied.txt";; esac
+  case $L in de) T="$T_ORT/gedanken.txt";; en) T="$T_ORT/greensleeves.txt";; ru) T="$T_ORT/kalinka-lied.txt";; esac
   echo "--- Ansehen: Wortwolke, Dotplot, Kreis ---"
   ( cd "$Z" && URL="$URL" SPR="$L" TEXT="$T" \
       node "$OLDPWD/werkzeug/aufnahme/folge.mjs" 1440 900 0 "$OLDPWD/werkzeug/aufnahme/ansehen.mjs" ) \
     || echo "!! $L: Ansehen abgebrochen"
   for N in wolke dotplot kreis; do
-    [ -e "$Z/$N-$L.png" ] && mv "$Z/$N-$L.png" "$Z/ansehen-$N.png"
+    [ -e "$Z/$N-$L.png" ] && mv "$Z/$N-$L.png" "$Z/ansehen-$N-$L.png" && werkzeug/aufnahme/leiste.sh "$Z/ansehen-$N-$L.png"
   done
   echo "--- $L fertig: $(ls "$Z" | wc -l | tr -d ' ') Bilder ---"
 done

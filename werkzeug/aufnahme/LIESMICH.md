@@ -19,6 +19,14 @@ App-Fenster, die linke Leiste (`--leiste`) und die Werkbank auf die nötige Brei
 das Fenster oder das Feld geändert, nie der Maßstab. `FORMAT` in `docs/inhalt.js` trägt dieselben Feldmaße.
 Prüfen danach: höchstens ein Viertel Leere, im Kasten und im Bild (Grenze ein Drittel).
 
+## Wo die Texte liegen (seit 17.11.2026)
+
+Alle Aufnahmetexte stehen fest unter `_klangfeder-bau/aufnahme/texte/` (neben diesem Repo, **nicht in git** – darin Caspar_Ds
+eigener Liedtext), Kopie auf `/Volumes/DatenNFS/Sicherungen/KlangFeder/aufnahme-texte/`. `alle-sprachen.sh` liest sie von dort
+(`T_ORT`) und bricht ab, wenn einer fehlt. Bis dahin lagen sie im Scratchpad und waren nach einem Neustart weg (die drei
+Volkslieder für „Ansehen“ mussten neu angelegt werden). Jedes Bild bekommt die Fensterleiste „KlangFeder“ – `alle.mjs` selbst,
+die Ansehen-Bilder über `leiste.sh`.
+
 ## Alle Bilder, alle Sprachen (der übliche Weg)
 
 `alle-sprachen.sh` nimmt jedes Bild in allen drei Sprachen auf, in beiden Pixeldichten, und wandelt am Ende nach
@@ -29,8 +37,7 @@ A=<Aufnahmeordner> werkzeug/aufnahme/alle-sprachen.sh          # de en ru
 A=<Aufnahmeordner> SPRACHEN="de" werkzeug/aufnahme/alle-sprachen.sh
 ```
 
-Erwartet im Ordner `$A`: `ablage/` (mit `{"mitKI":true,"mitTresor":true}`), `erlkoenig.txt`,
-`erlking-en-strophen.txt`. Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
+Erwartet im Ordner `$A`: `ablage/` (mit `{"mitKI":true,"mitTresor":true}`); die Texte kommen aus `T_ORT` (siehe oben). Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
 Ergebnis: `$A/bilder-de/`, `-en/`, `-ru/` mit `<name>-<sprache>.webp`.
 
 * `vergleich` braucht den KlangTresor NICHT (mehr): der Lauf legt sich seine ältere Fassung selbst an – er fügt den
