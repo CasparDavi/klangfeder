@@ -146,6 +146,41 @@ const schritte = {
       // seit 16.11.2026 steht der Rahmen (#werkbank) immer; ob etwas darin steht, sagt #wbInhalt
       const w = document.getElementById('wbInhalt');
       return (w.hidden ? 'ZU' : 'offen') + ': ' + w.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`),
+  // Probetext je Sprache für Klangketten und Fluss (gemeinfrei; Caspar_D 17.11.2026: „gemeinfrei reicht“): Rilke „Der Panther“,
+  // Poe „The Raven“, Majakowski „Послушайте!“ – gemessen: sie zeigen Mehrsilbenreim, Schlagreim, Zeilensprung, Pause, Drop
+  async probe(K) {
+    const f = { de: process.env.PROBE_DE, en: process.env.PROBE_EN, ru: process.env.PROBE_RU }[SPR];
+    if (!f || !fs.existsSync(f)) return 'KEIN Probetext für ' + SPR;
+    const t = fs.readFileSync(f, 'utf8');
+    // der echte Titel des Gedichts – sonst bliebe der Titel des vorigen Texts stehen (gesehen beim Raben: „Who rides there …“)
+    const titel = { de: 'Der Panther', en: 'The Raven', ru: 'Послушайте!' }[SPR];
+    return K.ev(`const e = document.getElementById('text'); e.value = ${J(t)};
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+      const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
+      await new Promise(r => setTimeout(r, 4500)); return e.value.length + ' Zeichen Probetext · ' + (h && h.textContent)`);
+  },
+  // Klangketten-Pillen setzen: genau diese an (binnen = Binnenreim)
+  ketten: (arten = []) => async K => K.ev(`for (const b of document.querySelectorAll('#ketten [data-kette]')) { if (b.classList.contains('an') !== ${J(arten)}.includes(b.dataset.kette)) b.click(); }
+      await new Promise(r => setTimeout(r, 2500));
+      return [...document.querySelectorAll('#ketten [data-kette].an')].map(b => b.dataset.kette).join(' + ') || 'keine'`),
+  // Werkbank auf ein beliebiges Wort des Texts
+  werkbankAuf: woerter => async K => K.ev(`const t = document.getElementById('text'), s = ${J(woerter)}['${SPR}'];
+      const p = t.value.indexOf(s);
+      // steht das Wort nicht im Text, sucht die Werkbank es über ihr Suchfeld – wie ein Nutzer
+      if (p < 0) { const f = document.getElementById('wbSuchfeld'); f.value = s; f.dispatchEvent(new Event('input', { bubbles: true })); await werkbankSuchen(s); }
+      else { t.setSelectionRange(p + 1, p + 1); await wahlNachMarkierung(p + 1, p + 1); }
+      await new Promise(r => setTimeout(r, 7000));
+      return document.getElementById('wbInhalt').textContent.trim().slice(0, 80).replace(/\\s+/g, ' ')`),
+  // nur bestimmte Gruppen der Werkbank zeigen (für ein Bild), die übrigen ausblenden
+  nurGruppen: titel => async K => K.ev(`const soll = ${J(titel)}.map(x => x.split('{w}')[0]).map(k => typeof t === 'function' ? t(k, { w: '' }) : k);
+      let n = 0; for (const h of document.querySelectorAll('#wbInhalt .lxh')) { const g = h.nextElementSibling, ja = soll.some(s => s && h.textContent.startsWith(s.replace(/[„“«»"]/g, '').trim().split(' ')[0]));
+        h.style.display = ja ? '' : 'none'; if (g && g.classList.contains('lxg')) g.style.display = ja ? '' : 'none'; if (ja) n++; }
+      document.querySelectorAll('#wbInhalt .klangwahl, #wbInhalt .lxbed, #wbUeb').forEach(e => e.style.display = 'none');
+      return n + ' Gruppen gezeigt'`),
+  // „Anlaut wie in …“: Pille an, Wort ins Feld
+  anlaut: woerter => async K => K.ev(`const f = document.getElementById('wbAnlaut'); if (!f) return 'Anlaut-Feld fehlt';
+      f.value = ${J(woerter)}['${SPR}']; f.dispatchEvent(new Event('input', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 5000)); return 'Anlaut: ' + f.value + ' ' + (document.querySelector('.alziel') || {}).textContent`),
   // Klangfarben-Pillen setzen (additiv; leer = alle aus)
   klang: (arten = []) => async K => K.ev(`for (const b of document.querySelectorAll('[data-klang]')) { const soll = ${J(arten)}.includes(b.dataset.klang); if (b.classList.contains('an') !== soll) b.click(); }
       await new Promise(r => setTimeout(r, 2500));
@@ -244,6 +279,22 @@ const BILDER = [
       return q + ' · Tastatur ' + k.offsetWidth + '×' + k.offsetHeight + ' · ' + document.getElementById('wbInhalt').textContent.trim().slice(0, 60)`)] },
   { name: 'lautschrift-zu', zeigt: '(kein Bild – Tastatur zu, Suchfeld leer)', vor: [async K => K.ev(`lautFenster(false); const f = document.getElementById('wbSuchfeld'); f.value = ''; f.blur(); return 'zu'`)], nurSchritt: true },
 
+  // Klangketten: alle Pillen an, das Blatt mit dem Probetext (Zeichen im Text, Pillenzeile darüber)
+  { name: 'klangketten', zeigt: 'Klangketten im Blatt: Zeileneinstieg, Binnen- und Schlagreim, Mehrsilbenreim, Stammreim, Alliteration, Assonanz',
+    vor: [schritte.probe, schritte.ketten(['einstieg', 'binnen', 'multi', 'stamm', 'allit', 'asso'])], clip: ['#kettenzeile', '#blatt'] },
+  // Fluss: Hebungsdiagramm vor dem Text mit Pause, Drop-Haken und Zeilensprung-Pfeil; Klangketten aus (nur Binnenreim bleibt)
+  { name: 'fluss', zeigt: 'Silbenzahl und Hebungsdiagramm vor den Zeilen: Lücke = Pause, Haken = Drop, Pfeil = Zeilensprung',
+    vor: [schritte.probe, schritte.ketten(['binnen'])], clip: ['#blatt'] },
+  // Stammreime und Wortfamilie in der Werkbank (nur diese beiden Gruppen)
+  { name: 'stammreim', zeigt: 'Werkbank: Stammreime (gleiche betonte Silbe) und Wortfamilie eines Wortes',
+    vor: [schritte.probe, schritte.werkbankAuf({ de: 'Nacht', en: 'fire', ru: 'богу' }), schritte.nurGruppen(['lx.stamm', 'lx.familie'])], clip: ['#wbInhalt .lexikon'], rand: 10 },
+  // Anlaut wie in …: Pille an, ein Wort im Feld, die Listen nach dem Anlaut sortiert
+  { name: 'anlaut', zeigt: 'Werkbank: „Anlaut wie in …“ – Wörter mit gleichem oder ähnlichem Stab-Anlaut rücken nach vorn',
+    vor: [schritte.probe, schritte.werkbankAuf({ de: 'Kreise', en: 'door', ru: 'муку' }), schritte.anlaut({ de: 'Pein', en: 'dark', ru: 'мгла' }), async K => K.ev(`document.querySelectorAll('#wbInhalt .klangwahl, #wbInhalt .lxbed').forEach(e => e.style.display = 'none');
+      for (const h of document.querySelectorAll('#wbInhalt .lxh')) if (h.nextElementSibling && h.nextElementSibling.classList.contains('lxbed')) h.style.display = 'none';
+      return 'Klangfarbe und Bedeutung ausgeblendet'`)], clip: ['#wbInhalt .anlautwahl', '#wbInhalt .lexikon'], rand: 10, hoch: 0.62 },
+  { name: 'anlaut-aus', zeigt: '(kein Bild – Anlaut aus)', vor: [async K => K.ev(`const f = document.getElementById('wbAnlaut'); if (f) { f.value = ''; f.dispatchEvent(new Event('input', { bubbles: true })); } if (typeof anlautSchalten === 'function') anlautSchalten(false); return 'aus'`)], nurSchritt: true },
+
   // Meine Laute: das Hörquiz (Pille „Meine Reime …“). In der Aufnahme-Ablage gibt es keine eigene Tafel, die Pille
   // öffnet also das Quiz. Drei Zeilen werden beantwortet, damit man sieht, wie eine Wahl aussieht; abgeschickt wird nichts.
   { name: 'hoerquiz', zeigt: 'das Hörquiz „Meine Reime“: ein Wort, zwei Reimwörter, A · B · gleich, Fortschrittsbalken',
@@ -295,6 +346,11 @@ const FELD = {
   gebunden:    { feld: [750, 370], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#gebunden', abLinks: true, dy: -14, ohneMarke: true, ohneKommentar: true, leisteZu: true, hervor: '#gebunden' },
   zaehlen:     { feld: [365, 520], fenster: [1600, 1100], leiste: 520, anker: '.sec:has(#suno)', dx: -12, dy: -12, einblick: true, ohneMarke: true },
   regie:       { feld: [751, 520], fenster: [1600, 1100], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, ohneMarke: true, leisteZu: true },
+  // neu 17.11.2026: Klangketten (quer, wie „schreiben“), Fluss (w5 neben Versmaß w7), Stammreim und Anlaut (w6, Werkbank)
+  klangketten: { feld: [750, 460], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
+  fluss:       { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: -8, ohneMarke: true, leisteZu: true },
+  stammreim:   { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .lexikon', dy: -10 },
+  anlaut:      { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .anlautwahl', dy: -4 },
   hoerquiz:    { feld: [462, 430], fenster: [1600, 1000], anker: '#ohrFenster .ohrkasten', mitte: true, dy: -12 },
   // KI und Länge sind kleine Kästen der linken Leiste: Leiste auf Feldbreite gezogen, flache Reihe. Die Länge steht unten im
   // Aufbau – „unten“ legt das Feld mit dem Kasten an seinen Fuß, darüber stehen die Abschnitte, aus denen sie gerechnet wird.
