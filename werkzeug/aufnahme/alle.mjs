@@ -49,13 +49,17 @@ const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: null };
 // Jörgs erste Wahl „Nebel" geht nicht: im deutschen Lied steht es nur als „Nebelstreif", und darauf geht die
 // Werkbank als ganzes Wort auf – Zusammensetzungen liefern nichts.
 const WORT = { de: 'Not', en: 'sight', ru: 'водой' };
+// Derbe Wörter (nur für die Unschärfe in den Bildern der Feature-Seite – die App zeigt sie ungefiltert): Wortstämme
+const DERB = '/(fick|fotz|wichs|nutte|hure|scheiß|scheiss|fuck|cunt|shit|bitch|whore|motherf|nigg|пизд|хуй|хуе|хуя|хуё|ебл|ебат|ебан|ёбан|бляд|блят|мудак|муди|залуп|сучк|сука|суки|шлюх|жоп)/';
 // Die Wendung für das Bild „luecke" muss MEHRERE Hebungen haben: die Werkbank sucht dort Wendungen, die über jede
 // Hebung mitreimen. „the night" (15.11.2026) hatte nur eine – das englische Bild zeigte zweimal den Satz „The
 // selection has only one beat" und sonst nichts. Gemessen an /api/reimsuche/zeile und /ketten:
 //   with crown and with train  56 Wendungen · 10 Wortketten   (Bowring, Zeile 12)
 //   garments of gold           48 · 3
 //   the night dark and drear    0 · 0   (nicht jede Folge trägt – vorher prüfen, nicht raten)
-const WENDUNG = { de: 'bei Nacht', en: 'with crown and with train', ru: 'лесной царь' };
+// 17.11.2026: „bei Nacht“ und „лесной царь“ zählten nur noch eine Hebung – das Bild zeigte dann statt Vorschlägen den
+// Hinweis „für einfache Endreime die Zeile anklicken“. Jetzt Wendungen mit sicher zwei Hebungen.
+const WENDUNG = { de: 'Nacht und Wind', en: 'with crown and with train', ru: 'туман над водой' };
 // Für „alt | neu" wird EINE Zeile überarbeitet – sonst hat die Ansicht nichts zu zeigen. Gewählt ist je Sprache eine
 // Zeile, die das Maß des Lieds verfehlt UND im Bildausschnitt liegt; geändert wird nur, was zu viel ist. Gemessen
 // mit /api/analyse (Hebungen je Zeile) am jeweiligen Beispieltext – jede dieser Zeilen geht dabei von 5 auf 4:
@@ -139,8 +143,13 @@ const schritte = {
       t.setSelectionRange(von, bis);
       await wahlNachMarkierung(von, bis);
       await new Promise(r => setTimeout(r, 7000));
-      const w = document.getElementById('werkbank');
+      // seit 16.11.2026 steht der Rahmen (#werkbank) immer; ob etwas darin steht, sagt #wbInhalt
+      const w = document.getElementById('wbInhalt');
       return (w.hidden ? 'ZU' : 'offen') + ': ' + w.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`),
+  // Klangfarben-Pillen setzen (additiv; leer = alle aus)
+  klang: (arten = []) => async K => K.ev(`for (const b of document.querySelectorAll('[data-klang]')) { const soll = ${J(arten)}.includes(b.dataset.klang); if (b.classList.contains('an') !== soll) b.click(); }
+      await new Promise(r => setTimeout(r, 2500));
+      return [...document.querySelectorAll('[data-klang].an')].map(b => b.textContent).join(' + ') || 'keine'`),
 };
 
 // ---------- die Bilder ----------
@@ -152,10 +161,16 @@ const BILDER = [
     vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 2 },
 
   { name: 'reimschema', zeigt: 'die Reimspalte rechts am Text: Hebungsmuster, Reimbuchstabe, Kadenz, Reimwähler je Abschnitt',
-    vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 4 },
+    // Die Kommentarzeile des russischen Beispiels (# Пример: Гёте … Правый клик …) ist ein Bedienhinweis, kein Liedtext; sie läuft
+    // ohne Umbruch und schiebt die Reimspalte weit nach rechts – ein leerer Streifen mitten im Bild. Für dieses Bild aus dem Feld
+    // nehmen (nur in der Probeinstanz). Feld, Fenster und Werkbankbreite: FELD unten.
+    vor: [schritte.text, schritte.abschnitt(3), async K => K.ev(`const t = document.getElementById('text');
+      if (/^#/m.test(t.value)) { t.value = t.value.split('\\n').filter(z => !z.startsWith('#')).join('\\n'); t.dispatchEvent(new Event('input', { bubbles: true })); await new Promise(r => setTimeout(r, 3000)); }
+      return 'ohne Kommentarzeile'`)],
+    clip: ['#blatt'], bis: 7 },
 
   { name: 'reimsuche', zeigt: 'die Reimliste der Werkbank: rein, unrein, Assonanz, mit Häufigkeitsskala',
-    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], hoch: 1.15 },
+    vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank'], hoch: 1.15, rand: 0 },
 
   { name: 'ersatz', zeigt: 'Ersatzwörter: Synonyme, Gegenwörter, Wendungen – mit Maß und Reimhinweis',
     // nur die Liste, ans Ende gescrollt: dort stehen Wendungen, Synonyme und Gegenteile. Mit dem Kopf darüber
@@ -163,7 +178,9 @@ const BILDER = [
     vor: [schritte.text, schritte.werkbank()], clip: ['#werkbank .lexikon'], scroll: 'ende', rand: 8 },
 
   { name: 'luecke', zeigt: 'die Werkbank auf einer Wendung: was an diese Stelle passt',
-    vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'], hoch: 1.15 },
+    // rand 0: mit Luft kam oben ein Streifen der Leiste über der Werkbank mit (oranger Anschnitt, Jörg 17.11.2026);
+    // hoch 0.9: gleich hoch wie das Ersatz-Bild daneben, dessen Text länger ist – sonst bleibt dort ein halber leerer Kasten
+    vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'], hoch: 0.9, rand: 0 },
 
   { name: 'zaehlen', zeigt: 'Abschnitt „Für Suno": Zeichenzahl gegen Sunos Grenze, Lyrics zum Kopieren',
     vor: [schritte.text, schritte.abschnitt(5)], clip: ['.sec:has(#suno)'], hoch: 0.95 },
@@ -206,25 +223,97 @@ const BILDER = [
       const alle = [...document.querySelectorAll('#kiverkehr .kvlauf')];
       const treffer = alle.find(e => (e.innerText || '').includes(marke)) || alle[0];
       alle.forEach(e => { if (e !== treffer) e.style.display = 'none'; });
+      // NICHT „ganz zeigen“: der volle Auftrag schiebt die Antwort der KI aus dem Feld – Auftrag und Antwort gehören beide ins Bild
       return alle.length + ' Einträge, gezeigt: ' + (treffer ? (treffer.innerText || '').slice(0, 40).replace(/\\n/g, ' ') : 'keiner')`)],
     clip: ['#kiverkehr'], rand: 14, hoch: 0.40 },
 
-  // Zuletzt, weil die Seite wechselt: die Systemseite zeigt, welche Nachschlagewerke anderer Programme auf diesem
-  // Rechner liegen (fremdwoerterbuecher.mjs). Was davon eingebunden wird, entscheidet der Nutzer.
-  { name: 'eigene', zeigt: 'Systemseite: Wörterbücher anderer Programme auf diesem Rechner, mit Ort und Größe',
-    // Die Orte werden unscharf gezeichnet (Jörg, 15.11.2026: „du könntest es auch blurren"): im Programm stehen sie
-    // im Klartext, im Bild für die öffentliche Seite sagen sie nur noch „hier steht ein Pfad". Den Benutzernamen
-    // kürzt fremdwoerterbuecher.mjs ohnehin mit ~ ab; unscharf bleiben die maschinenlangen Asset-Nummern und die
-    // Frage, welche Sprachwörterbücher gerade auf diesem Rechner liegen.
+  // Klangfarbe: Pillen „hart“ und „dunkel“ an – danach wieder aus – orange Linie unter jedem Wort, wie stark es passt
+  { name: 'klangfarbe', zeigt: 'Werkbank mit Klangfarben-Pillen: passende Wörter vorn, orange Linie zeigt, wie stark',
+    vor: [schritte.text, schritte.werkbank(), schritte.klang(['hart', 'dunkel'])], clip: ['#wbInhalt .klangwahl', '#wbInhalt .lexikon'], rand: 10, hoch: 0.62 },
+  { name: 'klangfarbe-aus', zeigt: '(kein Bild – Pillen wieder aus)', vor: [schritte.klang([])], nurSchritt: true },
+  // Lautschrift tippen: Suchfeld der Werkbank mit einer Lautschrift-Suche, darunter die Bildschirmtastatur (ə-Knopf), in das
+  // Feld der Werkbank gerückt (Jörg, 17.11.2026: „auch die Lautschrifttastatur hab ich nicht gesehen“)
+  { name: 'lautschrift', zeigt: 'Suchfeld mit Lautschrift, Reime darauf, darunter die Lautschrift-Tastatur mit Erklärung',
+    vor: [schritte.text, async K => K.ev(`const q = ${J({ de: '/ˈnaxt/', en: '/naɪt/', ru: '/ˈnot͡ɕ/' }[SPR])};
+      const f = document.getElementById('wbSuchfeld'); f.focus(); f.value = q; f.dispatchEvent(new Event('input', { bubbles: true }));
+      await werkbankSuchen(q); await new Promise(r => setTimeout(r, 5000));
+      lautFenster(true); await new Promise(r => setTimeout(r, 600));
+      const k = document.getElementById('lautFenster'), w = document.getElementById('werkbank').getBoundingClientRect();
+      k.style.width = (w.width - 40) + 'px'; k.style.left = (w.left + 20) + 'px';
+      k.style.top = (w.top + ${Math.round(560 / (1136 / 1600))} - k.offsetHeight - 18) + 'px';
+      return q + ' · Tastatur ' + k.offsetWidth + '×' + k.offsetHeight + ' · ' + document.getElementById('wbInhalt').textContent.trim().slice(0, 60)`)] },
+  { name: 'lautschrift-zu', zeigt: '(kein Bild – Tastatur zu, Suchfeld leer)', vor: [async K => K.ev(`lautFenster(false); const f = document.getElementById('wbSuchfeld'); f.value = ''; f.blur(); return 'zu'`)], nurSchritt: true },
+
+  // Meine Laute: das Hörquiz (Pille „Meine Reime …“). In der Aufnahme-Ablage gibt es keine eigene Tafel, die Pille
+  // öffnet also das Quiz. Drei Zeilen werden beantwortet, damit man sieht, wie eine Wahl aussieht; abgeschickt wird nichts.
+  { name: 'hoerquiz', zeigt: 'das Hörquiz „Meine Reime“: ein Wort, zwei Reimwörter, A · B · gleich, Fortschrittsbalken',
+    vor: [schritte.text, schritte.werkbank(), async K => K.ev(`// Die Pillen der Reimgrundlage stehen nur bei deutschen und russischen Wörtern; beim englischen Beispiel das Quiz direkt öffnen
+      const p = document.querySelector('[data-matrix="meine"]'); if (p) p.click(); else ohrQuiz(); for (let i = 0; i < 20 && !document.querySelector('.ohrzeile'); i++) await new Promise(r => setTimeout(r, 300));
+      [...document.querySelectorAll('.ohrzeile')].slice(0, 3).forEach((z, i) => z.querySelectorAll('button')[[0, 1, 0][i]].click());
+      return document.getElementById('ohrSeite').textContent + ' · ' + document.querySelectorAll('.ohrzeile').length + ' Zeilen'`)],
+    clip: ['#ohrFenster .ohrkasten'], rand: 0 },
+  { name: 'hoerquiz-zu', zeigt: '(kein Bild – Quiz schließen)', vor: [async K => K.ev(`document.getElementById('ohrZu')?.click(); return 'zu'`)], nurSchritt: true },
+
+  // Zuletzt, weil die Seite wechselt: die Systemseite listet die nutzbaren Korpora auf diesem Rechner (Lexikon des Macs, Word,
+  // LibreOffice) – je mit Haken und eingeklappter Begründung (Jörg, 16.11.2026). Der OpenThesaurus ist aufgeklappt, damit man
+  // sieht, was hinter dem Pfeil steht. Orte zeigt die Liste nicht mehr; unscharf zeichnen ist darum nicht mehr nötig.
+  { name: 'eigene', zeigt: 'Systemseite: nutzbare Korpora auf diesem Rechner – Haken davor, Begründung hinter dem Pfeil',
     vor: [schritte.seite('/system'),
-          async K => K.ev(`const o = document.querySelectorAll('#fremd .fo');
-            o.forEach(e => { e.style.filter = 'blur(3px)'; e.style.opacity = '0.75'; });
-            return o.length + ' Orte unscharf'`)],
-    clip: ['#fremd'], rand: 18, inBlick: true, hoch: 0.40 }
+          async K => K.ev(`const z = [...document.querySelectorAll('#korpora .kz')], b = (z.find(x => /OpenThesaurus/.test(x.querySelector('.kzn b').textContent)) || z[0] || document).querySelector('[data-kqauf]');
+            if (!b) return 'keine Korpora'; b.click(); await new Promise(r => setTimeout(r, 300)); return 'aufgeklappt: ' + b.dataset.kqauf`)],
+    clip: ['#korpora'], rand: 18, inBlick: true, hoch: 0.40 }
 ];
 
 // ---------- Lauf ----------
 fs.mkdirSync(ZIEL, { recursive: true });
+// ---------- Bildkomposition: ein Maßstab für alle ----------
+// Jörg, 17.11.2026: „die Schriften in den Screenshots sind überall anders groß, das ist doch Mist … warum kriegst du es nicht
+// geplant, die einigermaßen platzangepasst in eine Feature-Page zu bekommen?“ und „die Schriftgröße auf dem Titelbild – so
+// muss die überall in den Bildern aussehen“. Bis dahin wurde jedes Bild auf sein Element zugeschnitten und die Seite
+// skalierte es auf die Kachel: Maßstäbe von 0,44 bis 2,26.
+// Jetzt umgekehrt: Jedes Bild hat sein Kachelfeld in Seitenpixeln (feld, bei 1136 px Inhaltsbreite der Feature-Seite).
+// Ausgeschnitten werden genau feld ÷ S CSS-Pixel der App – S ist der Maßstab des Titelbilds (1600 px Fenster auf 1136 px).
+// Das App-Fenster, die Breite der linken Leiste und der Werkbank werden so gezogen, dass der Inhalt das Feld füllt
+// (Jörg: „ziehe das App-Fenster so, dass es in das Format passt; wenn sich herausstellt, das passt nicht, nochmal an der
+// Bildgröße arbeiten und von vorn“). Raster der Seite: w12 1136, w8 751, w7 654, w6 558, w5 462, w4 365 px.
+// Die Höhe ist je Reihe gleich, damit kein Feld halb leer bleibt (Regel: höchstens ein Viertel leer).
+const S = 1136 / 1600;
+const WB = { werkbank: 786, fenster: [1700, 1000], anker: '#werkbank' };
+const FELD = {
+  // Blatt-Bilder: Leiste schmal (185 px), Ausschnitt ab dem linken Fensterrand – so reicht das Feld genau bis zur Reimspalte
+  // (das Blatt allein ist schmaler als das Feld; rechts blieb ein Viertel leer). Ohne die Kommentarzeile des russischen Beispiels.
+  schreiben:   { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, leisteZu: true },
+  reimschema:  { feld: [654, 760], fenster: [1920, 1300], leiste: 340, werkbank: 651, anker: '#blatt', mitTitel: true },
+  reimsuche:   { feld: [462, 760], fenster: [1920, 1300], leiste: 340, werkbank: 651, anker: '#werkbank' },
+  ersatz:      { feld: [558, 560], ...WB },
+  luecke:      { feld: [558, 560], ...WB },
+  klangfarbe:  { feld: [558, 560], ...WB },
+  lautschrift: { feld: [558, 560], ...WB },
+  // gebunden steht quer neben einem langen Text: das Feld ist so hoch wie der Text (sonst schneidet die Seite das Bild zu)
+  // wie die Blatt-Bilder (Jörg 17.11.2026: um die Lichter zentriert zeigte es Anschnitte von Leiste und Werkbank):
+  // ab linkem Rand, oben die Werkzeugzeile mit den Lichtern, darunter das Blatt
+  gebunden:    { feld: [750, 370], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#gebunden', abLinks: true, dy: -14, ohneMarke: true, ohneKommentar: true, leisteZu: true, hervor: '#gebunden' },
+  zaehlen:     { feld: [365, 520], fenster: [1600, 1100], leiste: 520, anker: '.sec:has(#suno)', dx: -12, dy: -12, einblick: true, ohneMarke: true },
+  regie:       { feld: [751, 520], fenster: [1600, 1100], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, ohneMarke: true, leisteZu: true },
+  hoerquiz:    { feld: [462, 430], fenster: [1600, 1000], anker: '#ohrFenster .ohrkasten', mitte: true, dy: -12 },
+  // KI und Länge sind kleine Kästen der linken Leiste: Leiste auf Feldbreite gezogen, flache Reihe. Die Länge steht unten im
+  // Aufbau – „unten“ legt das Feld mit dem Kasten an seinen Fuß, darüber stehen die Abschnitte, aus denen sie gerechnet wird.
+  ki:          { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '.sec:has(#claude)', dx: -12, dy: -12, einblick: true },
+  laenge:      { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '#aLaenge', dx: -24, dy: 14, unten: true, einblick: true },
+  // KI-Verkehr steht in der Blattspalte: Leiste schmal, Werkbank aus, Fenster so breit, dass die Spalte das Feld trägt
+  kiverkehr:   { feld: [558, 330], fenster: [1000, 1000], leiste: 185, werkbank: 0, anker: '#kiverkehr', dx: -10, dy: -10, leisteZu: true },
+  eigene:      { feld: [558, 330], fenster: [800, 1000], anker: '#korpora', einblick: true },
+  vergleich:   { feld: [1136, 600], fenster: [1600, 1100], anker: '#vergleich' },
+};
+// Leiste und Werkbank so breit ziehen, wie das Feld es verlangt (werkbank 0 = ausblenden, fehlt = Vorgabe)
+const lage = (K, F) => K.ev(`const h = document.querySelector('main');
+  ${F.leiste ? `h.style.setProperty('--leiste', '${F.leiste}px');` : `h.style.removeProperty('--leiste');`}
+  const w = document.getElementById('werkbank');
+  if (w) { ${F.werkbank === 0 ? "w.style.display = 'none';" : `w.style.display = ''; try { wbGezogen = ${F.werkbank || 'null'}; wbBreite(); } catch (e) { w.style.width = '${F.werkbank || 568}px'; }`} }
+  dispatchEvent(new Event('resize')); await new Promise(r => setTimeout(r, 900));
+  return 'Lage: Fenster ' + innerWidth + '×' + innerHeight + ', Leiste ' + getComputedStyle(h).gridTemplateColumns.split(' ')[0] + ', Werkbank ' + (w && w.style.display !== 'none' ? Math.round(w.getBoundingClientRect().width) : 'aus')`);
+const fenster = async (K, w, h) => { await K.sende('Emulation.clearDeviceMetricsOverride'); await K.sende('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: DPR, mobile: false }); await warte(900); };
+
 const liste = nurDiese.length ? BILDER.filter(b => nurDiese.includes(b.name)) : BILDER;
 if (!liste.length) { console.error(`kein Bild namens ${nurDiese.join(', ')}`); process.exit(2); }
 
@@ -240,11 +329,33 @@ console.log('Sprache:', await K.ev(`try { spracheSetzen(${J(SPR)}); spracheAnwen
 
 for (const b of liste) {
   console.log(`\n--- ${b.name}: ${b.zeigt}`);
+  const F = FELD[b.name];
+  if (F) { await fenster(K, ...F.fenster); console.log('    ', await lage(K, F)); }
   for (const s of b.vor) console.log('   ', JSON.stringify(await s(K)).slice(0, 170));
+  if (F && F.ohneKommentar) console.log('    ', await K.ev(`const t = document.getElementById('text');
+    if (/^#/m.test(t.value)) { t.value = t.value.split('\\n').filter(z => !z.startsWith('#')).join('\\n'); t.dispatchEvent(new Event('input', { bubbles: true })); await new Promise(r => setTimeout(r, 3000)); return 'Kommentarzeile raus'; } return 'keine Kommentarzeile'`));
+  // leisteZu: in der schmalen Leiste nur die Abschnittsköpfe – aufgeklappt drängt sich ihr Inhalt übereinander
+  if (F && F.leisteZu) console.log('    ', await K.ev(`document.querySelectorAll('.sechd[aria-expanded="true"]').forEach(b => b.click()); await new Promise(r => setTimeout(r, 900));
+    // NICHT Abschnitt 1 aufklappen: mit KlangTresor steht dort die Liedliste des eigenen Archivs (persönlich, nicht auf die Seite)
+    return 'Leiste zu'`));
+  // hervor: ein Element im Bild mit orangem Rahmen hervorheben – nur in der Aufnahme (Jörg 17.11.2026: „mach ein Highlight drauf“)
+  if (F && F.hervor) console.log('    ', await K.ev(`const e = document.querySelector(${J(F.hervor)}); if (!e) return 'hervor: fehlt';
+    Object.assign(e.style, { outline: '2px solid #ff7a1a', outlineOffset: '5px', borderRadius: '6px', boxShadow: '0 0 0 9px rgba(255,122,26,.18)' }); return 'hervorgehoben: ' + ${J(F.hervor)}`));
+  // ohneMarke: die Markierung eines vorigen Werkbank-Bildes (orange hinterlegte Zeilen) schließen
+  if (F && F.ohneMarke) console.log('    ', await K.ev(`document.getElementById('wbzu')?.click(); const t = document.getElementById('text'); t.setSelectionRange(0, 0); t.blur();
+    await new Promise(r => setTimeout(r, 800)); return 'Markierung zu: ' + document.querySelectorAll('#blatt .markiert, #blatt [class*=mark]').length`));
+  if (F) console.log('    ', await lage(K, F));
+  if (b.nurSchritt) continue;   // Zwischenschritt ohne Bild (z. B. Pillen wieder aus)
   // Kleine Kästen bekommen eine höhere Pixeldichte. Chrome beachtet weder clip.scale noch einen Zoom am body
   // zuverlässig; die Emulation muss erst gelöscht und dann neu gesetzt werden, sonst bleibt der alte Wert stehen.
   // Das Textblatt scrollt in sich; ohne diesen Schritt beginnt der Ausschnitt mitten im Titel.
-  await K.ev(`for (const e of document.querySelectorAll('#blatt, #editor, .secbody, #werkbank')) e.scrollTop = 0;
+  // Derbe Wörter gehören in die KlangFeder und werden nie umgangen; NUR in den Bildern der Feature-Seite werden sie unscharf
+  // gezeichnet (Jörg, 17.11.2026: „du darfst sie in der Feature-Seite (und auch nur dort) blurren“).
+  console.log('    ', await K.ev(`const derb = ${DERB}; let n = 0;
+    for (const e of document.querySelectorAll('button.lxe[data-w], .wahl button')) {
+      const t = (e.dataset && e.dataset.w) || e.textContent || ''; if (derb.test(t.toLowerCase())) { e.style.filter = 'blur(5px)'; n++; } }
+    return 'unscharf: ' + n`));
+  await K.ev(`for (const e of document.querySelectorAll('#blatt, #editor, .secbody, #werkbank, #wbInhalt, #wbInhalt .lexikon')) e.scrollTop = 0;
     window.scrollTo(0, 0); return 1`);
   // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto).
   // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto) – und sie lädt
@@ -259,6 +370,28 @@ for (const b of liste) {
       return r.top >= b.top - 2 && r.top <= b.bottom + 2; }).map(h => h.textContent.trim().slice(0, 40));
     return l.scrollTop + '/' + (l.scrollHeight - l.clientHeight) + ' · im Blick: ' + (sicht.join(' | ') || '(keine)')`));
   await warte(900);
+  if (F) {
+    const dateiF = path.join(ZIEL, `${b.name}-${SPR}.png`);
+    const [cw, ch] = [F.feld[0] / S, F.feld[1] / S];
+    const a = await K.ev(`const e = document.querySelector(${J(F.anker)}); if (!e) return null;
+      ${F.einblick ? `e.scrollIntoView({ block: '${F.unten ? 'end' : 'start'}' }); await new Promise(r => setTimeout(r, 600));` : ''}
+      const r = e.getBoundingClientRect(); let y = ${F.unten ? `r.bottom - ${ch}` : 'r.top'};
+      ${F.mitTitel ? "const t = document.querySelector('#songtitel'); if (t) { const q = t.getBoundingClientRect(); if (q.height > 8 && q.bottom <= r.top + 8) y = q.top - 6; }" : ''}
+      const x = ${F.abLinks ? '0' : F.mitte ? `r.left + r.width / 2 - ${cw} / 2` : 'r.left'} + ${F.dx || 0};
+      return { x, y: y + ${F.dy || 0}, iw: innerWidth, ih: innerHeight, ew: r.width, eh: r.height }`);
+    if (!a) { console.log(`    ! ${F.anker} nicht gefunden – übersprungen`); await fenster(K, FB, FH); await lage(K, {}); continue; }
+    // Passt das Feld nicht ins Fenster, wird das gemeldet: dann Fenster oder Feld ändern und von vorn (nie den Maßstab).
+    if (cw > a.iw + 0.5 || ch > a.ih + 0.5) console.log(`    !! Feld ${Math.round(cw)}×${Math.round(ch)} größer als Fenster ${a.iw}×${a.ih}`);
+    const x = Math.max(0, Math.min(a.x, a.iw - cw)), y = Math.max(0, Math.min(a.y, a.ih - ch));
+    if (Math.abs(x - a.x) > 2 || Math.abs(y - a.y) > 2) console.log(`    ! Anker verschoben um ${Math.round(x - a.x)}/${Math.round(y - a.y)} px, damit das Feld im Fenster bleibt`);
+    console.log(`     Feld ${F.feld.join('×')} → App ${Math.round(cw)}×${Math.round(ch)} ab ${Math.round(x)},${Math.round(y)} · Anker ${Math.round(a.ew)}×${Math.round(a.eh)}`);
+    const voll = await K.bild(`${b.name}-${SPR}-voll`);
+    execFileSync('magick', [voll, '-crop', `${Math.round(cw * DPR)}x${Math.round(ch * DPR)}+${Math.round(x * DPR)}+${Math.round(y * DPR)}`, '+repage', dateiF]);
+    fs.unlinkSync(voll);
+    console.log(`    → ${dateiF}`);
+    await fenster(K, FB, FH); await lage(K, {});
+    continue;
+  }
   const datei = path.join(ZIEL, `${b.name}-${SPR}.png`);
   if (b.ganz) {
     const p = await K.bild(`${b.name}-${SPR}`);
@@ -282,7 +415,10 @@ for (const b of liste) {
           // Die rechte Kante am Inhalt messen, nicht am Kasten: die Spalte mit Hebungen, Reim und Kadenz stand
           // sonst angeschnitten am Bildrand.
           const rs = [...blatt.querySelectorAll('*')].map(e => e.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0 && r.top < unten);
-          const rechts = Math.max(bb.right, ...rs.map(r => r.right));
+          // „buendig“: rechts an der letzten Schrift enden statt an der Blattkante – ohne Werkbank ist das Blatt breiter als sein
+          // Inhalt, das rechte Drittel bliebe leer. Gemessen an Elementen ohne Kinder; Rahmen reichen sonst bis zur Kante. Kommentarzeilen
+          // (# …) laufen ohne Umbruch über die Reimspalte hinaus – im Russischen der Hinweis auf Schukowski – und zählen nicht.
+          const rechts = ${b.buendig ? 'Math.max(...[...blatt.querySelectorAll("*")].filter(e => !e.children.length && !e.closest(".kommentar")).map(e => e.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0 && r.top < unten).map(r => r.right)) + 12' : 'Math.max(bb.right, ...rs.map(r => r.right))'};
           return { x: bb.left + scrollX, y: oben + scrollY, w: rechts - bb.left, h: Math.max(80, unten - oben) }`)
       : await K.ev(`const es = [...document.querySelectorAll(${J(b.clip.join(','))})]${b.anzahl ? `.slice(0, ${b.anzahl})` : ''};
           if (!es.length) return null;

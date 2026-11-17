@@ -97,6 +97,9 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
    würde ihn oben und unten abschneiden. Diese Regeln stehen HINTER .k.w12 und .bild img: sie sind gleich
    spezifisch, und als die Kachel am 15.11.2026 auf die volle Breite ging, gewann sonst das 21/9 der w12-Regel
    und schnitt den Baum unten ab (Jörg: „die lautbäume sind unten angeschnitten im deutschen"). */
+/* Bücherfoto füllt sein Feld ganz – es ist ein Foto, kein Screenshot, und darf beschnitten werden (Regel: höchstens ein Viertel leer) */
+.k[data-id=buecher] > .bild{align-self:stretch;aspect-ratio:auto!important;min-height:320px}
+.k[data-id=buecher] > .bild img{position:absolute;inset:0}
 .k[data-id=lautbaum] > .bild{aspect-ratio:auto;background:none;padding:0 28px 30px}
 .k[data-id=lautbaum] > .bild img{width:100%;height:auto;object-fit:contain;display:block;border-radius:14px}
 .bild.geraete{aspect-ratio:16/11;background:radial-gradient(ellipse at 50% 110%,#3a200c 0%,var(--kachel2) 65%)}

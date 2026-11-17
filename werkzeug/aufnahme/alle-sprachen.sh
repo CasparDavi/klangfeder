@@ -20,20 +20,20 @@
 # Vorher müssen laufen: die Probeinstanz auf 8792 (siehe LIESMICH.md) und der KlangTresor auf 8788
 # (für „laenge" und „vergleich"). Ohne KlangTresor bleiben diese zwei Bilder leer.
 #
-# Zwei Durchgänge je Sprache, weil die Kästen der linken Spalte eine feste Breite haben und nicht mit dem Fenster
-# wachsen: sie brauchen vierfache Pixeldichte, sonst sind sie auf der Seite unscharf.
 set -u
 cd "$(dirname "$0")/../.."
 : "${A:?A=<Aufnahmeordner> setzen}"
 URL=${URL:-http://127.0.0.1:8792/}
 SPRACHEN=${SPRACHEN:-"de en ru"}
-FEIN="zaehlen ki laenge gebunden"                 # vierfache Pixeldichte
-GROB="titel schreiben reimschema reimsuche ersatz luecke regie vergleich eigene"
+# Seit 17.11.2026 haben alle Bilder ein Kachelfeld (FELD in alle.mjs) und denselben Maßstab wie das Titelbild – eine
+# Pixeldichte für alle. Die Reihenfolge ist die der Tafel BILDER; die Zwischenschritte (…-aus, …-zu) gehören dazu.
+# kiverkehr fehlt hier: es braucht echten KI-Verkehr (siehe alle.mjs).
+GROB="titel schreiben reimschema reimsuche ersatz luecke klangfarbe klangfarbe-aus lautschrift lautschrift-zu gebunden zaehlen regie hoerquiz hoerquiz-zu ki laenge vergleich eigene"
 
 for L in $SPRACHEN; do
   Z="$A/bilder-$L"; mkdir -p "$Z"
   echo "=============== $L ==============="
-  for STUFE in "2 $GROB" "4 $FEIN"; do
+  for STUFE in "2 $GROB"; do
     set -- $STUFE; D=$1; shift
     echo "--- Pixeldichte $D: $* ---"
     URL="$URL" SPR="$L" DPR="$D" \

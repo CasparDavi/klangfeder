@@ -10,6 +10,15 @@ echo '{"mitKI":false,"mitTresor":false}' > $A/ablage/einstellungen.json
 KLANGFEDER_PORT=8792 KLANGFEDER_ABLAGE=$A/ablage KLANGFEDER_DATEN=<KlangFeder>/daten node --experimental-sqlite server.mjs
 ```
 
+## Ein Maßstab für alle Bilder (seit 17.11.2026)
+
+Jedes App-Bild hat in `FELD` (alle.mjs) sein Kachelfeld in Seitenpixeln (Inhaltsbreite der Feature-Seite 1136 px). Aufgenommen
+werden genau Feld ÷ 0,71 CSS-Pixel der App – 0,71 ist der Maßstab des Titelbilds (1600 px Fenster auf 1136 px). So steht die
+Schrift in allen Bildern so groß wie im Titelbild (Jörg). Damit der Inhalt das Feld füllt, zieht die Aufnahme je Bild das
+App-Fenster, die linke Leiste (`--leiste`) und die Werkbank auf die nötige Breite. Meldet sie „Feld größer als Fenster“, wird
+das Fenster oder das Feld geändert, nie der Maßstab. `FORMAT` in `docs/inhalt.js` trägt dieselben Feldmaße.
+Prüfen danach: höchstens ein Viertel Leere, im Kasten und im Bild (Grenze ein Drittel).
+
 ## Alle Bilder, alle Sprachen (der übliche Weg)
 
 `alle-sprachen.sh` nimmt jedes Bild in allen drei Sprachen auf, in beiden Pixeldichten, und wandelt am Ende nach

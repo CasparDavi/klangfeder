@@ -17,8 +17,8 @@ if (ART === 'luecke') {
 } else if (!text.includes(WORT)) { console.error(`WORT "${WORT}" steht nicht im Text – Abbruch.`); process.exit(2); }
 const setzen = `const t = document.getElementById('text'); t.value = ${JSON.stringify(text)}; t.dispatchEvent(new Event('input', { bubbles: true })); return t.value.length`;
 const oeffnen = ART === 'luecke'
-  ? `const t = document.getElementById('text'), p = t.value.indexOf('___') + 1; t.setSelectionRange(p, p); await lueckeWaehlen(p); return !document.getElementById('werkbank').hidden`
-  : `const t = document.getElementById('text'), p = t.value.indexOf(${JSON.stringify(WORT)}) + 1; t.setSelectionRange(p, p); await wahlNachMarkierung(p, p); return !document.getElementById('werkbank').hidden`;
+  ? `const t = document.getElementById('text'), p = t.value.indexOf('___') + 1; t.setSelectionRange(p, p); await lueckeWaehlen(p); return !document.getElementById('wbInhalt').hidden`
+  : `const t = document.getElementById('text'), p = t.value.indexOf(${JSON.stringify(WORT)}) + 1; t.setSelectionRange(p, p); await wahlNachMarkierung(p, p); return !document.getElementById('wbInhalt').hidden`;
 // bis zur ersten Überschrift mit „Synonym“/„synonym“ rollen (die Werkbank rollt in sich)
 const rollen = `const wb = document.getElementById('werkbank'); const h = [...wb.querySelectorAll('*')].find(e => e.children.length <= 2 && /synonym|ersatz/i.test(e.textContent) && e.textContent.length < 90 && e.getBoundingClientRect().top > 300);
   if (!h) return 'keine Überschrift'; const sc = (n => { while (n && n !== wb && n.scrollHeight <= n.clientHeight + 4) n = n.parentElement; return n || wb; })(h.parentElement);
