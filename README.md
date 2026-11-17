@@ -13,10 +13,10 @@ the words that fit. German, English and Russian. Free, no account, runs on your 
 ## Download
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (24 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (82 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (46 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 24 MB · DMG 82 MB (Intel and Apple Silicon) · .deb 46 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 MB</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Download for Windows 10/11 (26 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Download-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Download for macOS 11 or newer (84 MB)" src="https://img.shields.io/badge/macOS_11+-Download-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Download for Ubuntu, Debian, Mint (48 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Download-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 26 MB · DMG 84 MB (Intel and Apple Silicon) · .deb 48 MB · other Linux systems: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 MB</sub>
 </p>
 
 **System requirements.** A 64-bit computer with Windows 10 or 11, macOS 11 or newer, or Linux (x86_64). About 1.5 GB
@@ -30,7 +30,11 @@ of free space for the program and the dictionaries. A current web browser.
   and cadence, every section its metre.
 - **See the rhymes.** Same colour rhymes. Each section shows its rhyme scheme (alternate, couplets, tail rhyme …) –
   as a finding or as a rule.
-- **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites and phrases. Gaps
+- **See the sound.** Sound chains across the whole verse: line openings, internal and adjacent rhymes, multisyllabic
+  rhymes, root rhymes, alliteration and assonance – each with its own sign, switched on one by one. The stress diagram
+  in front of every line shows the flow: pauses, drop lines, enjambments.
+- **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites, phrases, root
+  rhymes and word families; “Onset as in …” sorts by alliteration, a sound keyboard searches by sound. Gaps
   and placeholders such as `x-X-x-X` are filled with words that fit exactly.
 - **Plan the structure.** Verses, chorus, bridge: lines, beats and rhyme per section, as a plan or taken from the text.
 - **For Suno.** Counts what fits into Suno’s fields (lyrics at most 5,000 characters, styles 1,000) and has both ready

@@ -13,10 +13,10 @@ Und sie findet die Wörter, die passen. Deutsch, Englisch und Russisch. Kostenlo
 ## Herunterladen
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (24 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (82 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (46 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 24 MB · DMG 82 MB (Intel und Apple Silicon) · .deb 46 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 MB</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Herunterladen für Windows 10/11 (26 MB)" src="https://img.shields.io/badge/Windows_10%2F11-Herunterladen-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Herunterladen für macOS 11 oder neuer (84 MB)" src="https://img.shields.io/badge/macOS_11+-Herunterladen-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Herunterladen für Ubuntu, Debian, Mint (48 MB)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-Herunterladen-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 26 MB · DMG 84 MB (Intel und Apple Silicon) · .deb 48 MB · andere Linux-Systeme: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 MB</sub>
 </p>
 
 **Systemanforderungen.** Ein 64-Bit-Rechner mit Windows 10 oder 11, macOS 11 oder neuer oder Linux (x86_64). Rund
@@ -30,7 +30,11 @@ Und sie findet die Wörter, die passen. Deutsch, Englisch und Russisch. Kostenlo
   Kadenz, jeder Abschnitt sein Versmaß.
 - **Reime sehen.** Gleiche Farbe reimt. Das Reimschema steht an jedem Abschnitt (Kreuzreim, Paarreim, Schweifreim …) –
   als Befund oder als Vorgabe.
-- **Wörter finden.** Rechtsklick auf ein Wort: Reime darauf, Ersatzwörter im gleichen Maß, Gegenteile und Wendungen.
+- **Klang sehen.** Klangketten über die ganze Strophe: Zeileneinstieg, Binnen- und Schlagreim, Mehrsilbenreim,
+  Stammreim, Alliteration und Assonanz – jede mit eigenem Zeichen, einzeln zuschaltbar. Das Hebungsdiagramm vor jeder
+  Zeile zeigt den Fluss: Pausen, Drop-Zeilen, Zeilensprünge.
+- **Wörter finden.** Rechtsklick auf ein Wort: Reime darauf, Ersatzwörter im gleichen Maß, Gegenteile, Wendungen,
+  Stammreime und Wortfamilie; „Anlaut wie in …“ sortiert nach dem Stabreim, eine Lauttastatur sucht nach dem Klang.
   Lücken und Platzhalter wie `x-X-x-X` füllt sie mit Wörtern, die genau hineinpassen.
 - **Aufbau planen.** Strophen, Refrain, Bridge: Zeilen, Hebungen und Reim je Abschnitt, als Plan oder aus dem Text.
 - **Für Suno.** Zählt, was in Sunos Felder passt (Lyrics höchstens 5000 Zeichen, Styles 1000), und legt beides zum

@@ -1,4 +1,4 @@
-<a href="https://caspardavi.github.io/klangfeder/?lang=ru"><img src="docs/img/readme-en.jpg" alt="KlangFeder — стихи, которые слышно уже при письме." width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder/?lang=ru"><img src="docs/img/readme-ru.jpg" alt="KlangFeder — стихи, которые слышно уже при письме." width="100%"></a>
 
 <p align="center"><a href="README.de.md">Deutsch</a> · <a href="README.md">English</a> · <b>Русский</b></p>
 
@@ -13,10 +13,10 @@
 ## Скачать
 
 <p align="center">
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Скачать для Windows 10/11 (24 МБ)" src="https://img.shields.io/badge/Windows_10%2F11-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Скачать для macOS 11 или новее (82 МБ)" src="https://img.shields.io/badge/macOS_11+-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
-<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Скачать для Ubuntu, Debian, Mint (46 МБ)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
-<br><sub>Setup.exe 24 МБ · DMG 82 МБ (Intel и Apple Silicon) · .deb 46 МБ · другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 42 МБ</sub>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe"><img alt="Скачать для Windows 10/11 (26 МБ)" src="https://img.shields.io/badge/Windows_10%2F11-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg"><img alt="Скачать для macOS 11 или новее (84 МБ)" src="https://img.shields.io/badge/macOS_11+-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=apple&logoColor=white"></a>
+<a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb"><img alt="Скачать для Ubuntu, Debian, Mint (48 МБ)" src="https://img.shields.io/badge/Ubuntu_%C2%B7_Debian_%C2%B7_Mint-%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-f97b14?style=for-the-badge&logo=linux&logoColor=white"></a>
+<br><sub>Setup.exe 26 МБ · DMG 84 МБ (Intel и Apple Silicon) · .deb 48 МБ · другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a> 44 МБ</sub>
 </p>
 
 **Системные требования.** 64-битный компьютер с Windows 10 или 11, macOS 11 или новее либо Linux (x86_64). Около
@@ -24,13 +24,17 @@
 
 ## Что умеет KlangFeder
 
-<a href="https://caspardavi.github.io/klangfeder/?lang=ru"><img src="docs/img/readme-app-en.jpg" alt="KlangFeder с текстом песни: ударения, ударные слоги, рифмы, слева структура" width="100%"></a>
+<a href="https://caspardavi.github.io/klangfeder/?lang=ru"><img src="docs/img/readme-app-ru.jpg" alt="KlangFeder с текстом песни: ударения, ударные слоги, рифмы, слева структура" width="100%"></a>
 
 - **Видеть ударение.** Ударные слоги светятся, безударные отступают. Каждая строка показывает свои слоги, ударные
   слоги и клаузулу, каждый раздел — свой размер.
 - **Видеть рифмы.** Одинаковый цвет — рифма. У каждого раздела указана схема рифмовки (перекрёстная, парная,
   хвостовая…) — как найденная в тексте или как заданная.
-- **Находить слова.** Правый клик по слову: рифмы к нему, замены того же размера, антонимы и обороты. Пропуски и
+- **Видеть звучание.** Звуковые цепочки через всю строфу: начало строки, внутренняя и соседняя рифма, составная
+  рифма, корневая рифма, аллитерация и ассонанс — у каждой свой знак, каждая включается отдельно. Диаграмма ударений
+  перед каждой строкой показывает поток: паузы, Drop-строки, переносы.
+- **Находить слова.** Правый клик по слову: рифмы к нему, замены того же размера, антонимы, обороты, корневые
+  рифмы и словообразовательное гнездо; «Анлаут как в …» сортирует по аллитерации, клавиатура звуков ищет по звучанию. Пропуски и
   заполнители вроде `x-X-x-X` KlangFeder заполняет словами, которые встают точно.
 - **Планировать структуру.** Куплеты, припев, бридж: строки, ударные слоги и рифма для каждого раздела — как план
   или по тексту.
