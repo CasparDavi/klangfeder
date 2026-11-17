@@ -323,6 +323,26 @@ const BILDER = [
     clip: ['#korpora'], rand: 18, inBlick: true, hoch: 0.40 }
 ];
 
+// ---------- Fensterleiste mit Namen ----------
+// Regel „Kein Bild ohne Namen“ (Jörg, 17.11.2026: „nicht ein einziges Bild zeigt die App mit Titlebar, das geht so nicht“ –
+// „wie will man ein Produkt bekannt machen, wenn man seinen Namen nirgendwo sieht“): Über jedes App-Bild kommt eine schmale
+// Fenster-Titelleiste – drei Punkte links, „KlangFeder“ in der Mitte. Sie ersetzt oben LEISTE Seitenpixel des Ausschnitts,
+// so bleibt das Bild so groß wie sein Kachelfeld (FORMAT in docs/inhalt.js ändert sich nicht).
+const LEISTE = 22;                                  // Seitenpixel (bei 1136 px Inhaltsbreite)
+const NAME = 'KlangFeder';
+function leisteDavor(datei) {
+  const d = +(process.env.DPR || 2), b = +execFileSync('magick', ['identify', '-format', '%w', datei]).toString();
+  const h = Math.round(LEISTE / S * d), r = Math.round(h * 0.17), y = Math.round(h / 2), x0 = Math.round(h * 0.62), dx = Math.round(h * 0.62);
+  const leiste = datei.replace(/\.png$/, '-leiste.png');
+  execFileSync('magick', ['-size', `${b}x${h}`, 'xc:#232326',
+    '-fill', '#ff5f57', '-draw', `circle ${x0},${y} ${x0 + r},${y}`,
+    '-fill', '#febc2e', '-draw', `circle ${x0 + dx},${y} ${x0 + dx + r},${y}`,
+    '-fill', '#28c840', '-draw', `circle ${x0 + 2 * dx},${y} ${x0 + 2 * dx + r},${y}`,
+    '-fill', '#d6d6da', '-font', '/System/Library/Fonts/SFNS.ttf', '-pointsize', String(Math.round(h * 0.46)), '-gravity', 'center', '-annotate', '+0+0', NAME,
+    '-gravity', 'south', '-fill', '#38383d', '-draw', `rectangle 0,${h - Math.max(1, Math.round(d / 2))} ${b},${h}`, leiste]);
+  execFileSync('magick', [leiste, datei, '-append', datei]); fs.unlinkSync(leiste);
+}
+
 // ---------- Lauf ----------
 fs.mkdirSync(ZIEL, { recursive: true });
 // ---------- Bildkomposition: ein Maßstab für alle ----------
@@ -450,7 +470,10 @@ for (const b of liste) {
     if (Math.abs(x - a.x) > 2 || Math.abs(y - a.y) > 2) console.log(`    ! Anker verschoben um ${Math.round(x - a.x)}/${Math.round(y - a.y)} px, damit das Feld im Fenster bleibt`);
     console.log(`     Feld ${F.feld.join('×')} → App ${Math.round(cw)}×${Math.round(ch)} ab ${Math.round(x)},${Math.round(y)} · Anker ${Math.round(a.ew)}×${Math.round(a.eh)}`);
     const voll = await K.bild(`${b.name}-${SPR}-voll`);
-    execFileSync('magick', [voll, '-crop', `${Math.round(cw * DPR)}x${Math.round(ch * DPR)}+${Math.round(x * DPR)}+${Math.round(y * DPR)}`, '+repage', dateiF]);
+    // oben die Leistenhöhe abziehen: der Inhalt beginnt dort, wo er ohne Leiste begann, und endet entsprechend früher
+    const lh = LEISTE / S;
+    execFileSync('magick', [voll, '-crop', `${Math.round(cw * DPR)}x${Math.round((ch - lh) * DPR)}+${Math.round(x * DPR)}+${Math.round(y * DPR)}`, '+repage', dateiF]);
+    leisteDavor(dateiF);
     fs.unlinkSync(voll);
     console.log(`    → ${dateiF}`);
     await fenster(K, FB, FH); await lage(K, {});
@@ -460,6 +483,7 @@ for (const b of liste) {
   if (b.ganz) {
     const p = await K.bild(`${b.name}-${SPR}`);
     fs.copyFileSync(p, datei);
+    leisteDavor(datei);
   } else {
     // Zwei Formen: entweder ganze Elemente (clip) oder ein Streifen des Textblatts von der ersten bis zur
     // n-ten Abschnittsmarke (bis). Die Marken ".abs" haben keine Ausdehnung, nur eine Höhe – sie taugen als

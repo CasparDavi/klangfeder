@@ -42,7 +42,7 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M9 57L55 7M23.9 40.8L25.7 50.6M23.9 40.8L13.9 39.8M31.3 32.7L34.6 50.4M31.3 32.7L13.4 30.9M38.8 24.6L40.6 34.5M38.8 24.6L28.8 23.6M46.2 16.5L49.5 34.2M46.2 16.5L28.3 14.7' stroke='%23fff' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat}
 .held .spruch{font-size:clamp(28px,4vw,48px);line-height:1.1;font-weight:700;letter-spacing:-.01em;color:var(--text);margin:0 0 14px}
 .held p{font-size:clamp(18px,2vw,22px);line-height:1.35;color:var(--leise);max-width:34em;margin:0 auto 40px;font-weight:500}
-.held .bild{aspect-ratio:21/9;border-radius:28px}
+.held .bild{aspect-ratio:auto;border-radius:28px}.held .bild img{height:auto}   /* ganz zeigen, mit Fensterleiste und Kopfzeile – „Kein Bild ohne Namen“ (Jörg, 17.11.2026: im 21:9-Ausschnitt fehlten beide) */
 .held .pdf{display:inline-block;margin:-22px 0 38px;color:var(--akzent);font-size:17px;font-weight:600;text-decoration:none}
 .held .pdf:hover{text-decoration:underline}
 .abschnitt{margin:120px 0 0}
@@ -318,7 +318,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
   .k .text{padding:26px 24px 22px}
   .held{padding:48px 0 28px}
   .held h1{font-size:calc((100vw - 48px) / 6.5 * var(--fit,1))}
-  .held .bild{aspect-ratio:4/3;border-radius:22px}
+  .held .bild{aspect-ratio:auto;border-radius:22px}
   .abschnitt{margin-top:84px}
   .k.w12 .bild{aspect-ratio:4/3}
   .fenster{padding:44px 24px 28px}
@@ -350,7 +350,7 @@ footer a:hover{color:var(--akzent);border-color:var(--akzent)}
   .held h1{font-size:30pt;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--akzent)}
   .held .spruch{font-size:20pt}
   .held p{font-size:12pt;max-width:66.6%;margin:0 0 6mm}
-  .held .bild{aspect-ratio:21/9;border-radius:3mm}
+  .held .bild{aspect-ratio:auto;border-radius:3mm}
   /* Abschnitte: Ueberschrift beginnt eine neue Seite nur, wenn sie sonst allein unten stuende */
   .abschnitt{margin:12mm 0 0;break-before:auto}
   .abschnitt>.kopf{max-width:66.6%;margin:0 0 6mm;break-inside:avoid;break-after:avoid}
