@@ -277,6 +277,22 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .fenster .zu{position:absolute;right:18px;top:18px;width:36px;height:36px;border-radius:50%;border:0;background:#333336;color:var(--text);cursor:pointer;display:grid;place-items:center}
 .fenster .zu svg{width:12px;height:12px}
 .grenzen{margin:120px 0 0;border-top:1px solid var(--linie);padding-top:28px}
+/* Im Vergleich: Tabelle wie Apples Modellvergleich – ruhig, Linien statt Kästen, die eigene Spalte leicht hinterlegt; auf dem
+   Handy rollt nur die Tabelle, die erste Spalte bleibt stehen */
+.vgl-rahmen{overflow-x:auto;margin:0 -4px;padding:0 4px;-webkit-overflow-scrolling:touch}
+.vgl{width:100%;border-collapse:collapse;font-size:15px;min-width:720px}
+.vgl th,.vgl td{padding:12px 10px;border-bottom:1px solid var(--linie);text-align:center;vertical-align:middle}
+.vgl thead th{font-size:13px;font-weight:600;color:var(--leise);line-height:1.25;vertical-align:bottom;hyphens:manual}
+.vgl thead th.wir{color:var(--text)}
+.vgl tbody th{text-align:left;font-weight:400;color:var(--text);position:sticky;left:0;background:var(--bg);min-width:220px;padding-left:0}
+.vgl td.wir{background:var(--kachel)}.vgl thead th.wir{background:var(--kachel);border-radius:14px 14px 0 0}
+.vgl tbody tr:last-child td.wir{border-radius:0 0 14px 14px}
+.vgl td{font-size:17px;color:var(--leise)}.vgl td.z2{color:var(--text)}.vgl td.wir.z2{color:var(--akzent)}.vgl td.z0{color:#5a5a5f}
+.vgl tr.gruppe th{position:static;text-align:left;font-size:13px;font-weight:600;color:var(--leise);padding:26px 0 8px;border-bottom:1px solid var(--linie);background:none}
+.vgl tr.gruppe+tr th{padding-top:12px}
+.vgl tr.ehrlich th{color:var(--leise)}.vgl tr.ehrlich td,.vgl tr.ehrlich th{border-bottom:0;padding-top:18px}
+@media (max-width:600px){.vgl{font-size:14px;min-width:620px}.vgl tbody th{min-width:150px;max-width:150px}.vgl th,.vgl td{padding:10px 6px}}   /* Handy: schmalere Merkmalspalte, die Tabelle rollt seitlich */
+.vgl-fuss{margin:16px 0 0;font-size:13px;line-height:1.5;color:var(--leise);max-width:900px}.vgl-leg{display:block;margin-bottom:6px;color:var(--text)}
 .grenzen h2{font-size:24px;font-weight:700;margin:0 0 12px}
 .grenzen ul{margin:0;padding-left:20px;color:var(--leise);font-size:15px}
 .grenzen li{margin:0 0 6px}
@@ -498,6 +514,12 @@ function bauen(){
   if (S.lieder) { const g = S.lieder;
     h += `<section class="abschnitt lieder"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div><div class="liste">${
       g.liste.map(x => `<a class="lied" href="${x.url}" target="_blank" rel="noopener"><img src="${x.bild}?v=${BV}" alt=""><span class="stil">${x.stil[L]} · ${x.dauer}</span><b>${x.t}</b><span class="hoeren">${g.hoeren[L]} ↗</span></a>`).join('')}</div></section>`; }
+  if (S.vergleich) { const g = S.vergleich, Z = ['–', '◐', '●'];
+    h += `<section class="abschnitt vergleich"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div>
+      <div class="vgl-rahmen"><table class="vgl"><thead><tr><th></th>${g.spalten.map((x, i) => `<th${i ? '' : ' class="wir"'}>${x[L]}</th>`).join('')}</tr></thead>
+      <tbody>${g.zeilen.map(z => z.g ? `<tr class="gruppe"><th colspan="${g.spalten.length + 1}">${z.g[L]}</th></tr>` : `<tr${z.ehrlich ? ' class="ehrlich"' : ''}><th>${z.t[L]}</th>${z.w.map((w, i) => `<td class="z${w}${i ? '' : ' wir'}" title="${g.zeichen[L][w]}">${Z[w]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+      <p class="vgl-fuss"><span class="vgl-leg">● ${g.zeichen[L][2]} · ◐ ${g.zeichen[L][1]} · – ${g.zeichen[L][0]}</span>${g.fuss[L]}</p></section>`;
+  }
   { const g = S.laden;
     h += `<section class="abschnitt laden" id="laden"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div><div class="raster">${
       g.systeme.map(x => `<article class="k w4"><div class="text"><p class="klein">${x.name}</p><h3>${x.typ}</h3><p>${x.zeile[L]}<br>${mbL(x.mb)}</p><a class="knopf" href="${LADEN}${x.datei}">${g.knopf[L]} ↓</a></div></article>`).join('')}</div><p class="anf">${g.anf[L]}</p></section>`; }
