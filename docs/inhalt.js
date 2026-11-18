@@ -332,7 +332,11 @@ const S = {
    eine Kategorie veraltet nicht, und jede Aussage über ein fremdes Produkt müsste nachprüfbar sein. Beispiele und Stand stehen im
    Fuß. Zeilen nach den Abschnitten der Seite gegliedert ({g}: Zwischenkopf; Caspar_D 17.11.2026: „bist du unsere Feature-Seiten tatsächlich durchgegangen … eigene Klangeichung oder eine Lautschrifttastatur“). Zeichen: 2 ja · 1 teilweise oder nur bei einigen · 0 nein. Grundlage: Angaben der Anbieter, recherchiert am 17.11.2026
    (RhymeZone, rifme.net, RhymePad, Lyrcs, RhymeFlux, MasterWriter, Rhyme Genie, LyricStudio, verselab). Die letzte Zeile nennt
-   ehrlich, wo andere vorn liegen. */
+   ehrlich, wo andere vorn liegen.
+   18.11.2026, nach der Recherche je Produkt (_privat/recherche/2026-11-18_mitbewerber-features/README.md, rund 35 Produkte):
+   sechste Spalte „Versmaß-Werkzeuge“ (Tembrica, Prosodic, Metricalizer u. a. – sie benennen Versmaß und Reimschema, Tembrica
+   auch die Kadenz; damit sind diese Zeilen nicht mehr „nur wir“), und 15 Felder der anderen Spalten von „nein“ auf
+   „teilweise“ bzw. einmal auf „ja“ gehoben, wo ein Produkt das Merkmal belegt hat. Kein Feld wurde gesenkt. */
 S.vergleich = {
  augenbraue:{en:'Compared',de:'Im Vergleich',ru:'В сравнении'},
  h:{en:'Built from the craft of verse.',de:'Gebaut aus der Verslehre.',ru:'Построено на стиховедении.'},
@@ -344,44 +348,45 @@ S.vergleich = {
   {en:'Rhyme dictionaries',de:'Reim­wörter­bücher',ru:'Словари рифм'},
   {en:'Rhyme-highlighting apps',de:'Reim-Markier-Apps',ru:'Приложения с подсветкой рифм'},
   {en:'Word-finding tools',de:'Wortschatz-Werkzeuge',ru:'Инструменты для подбора слов'},
-  {en:'AI lyric generators',de:'KI-Text­generatoren',ru:'ИИ-генераторы текстов'}],
+  {en:'AI lyric generators',de:'KI-Text­generatoren',ru:'ИИ-генераторы текстов'},
+  {en:'Metre tools',de:'Versmaß-Werkzeuge',ru:'Анализаторы стиха'}],
  zeilen:[
   {g:{"de": "Schreiben", "en": "Write", "ru": "Писать"}},
-  {t:{"de": "Liest deinen eigenen Text", "en": "Reads your own text", "ru": "Читает ваш собственный текст"},w:[2, 0, 2, 0, 0]},
-  {t:{"de": "Deutsch, Englisch und Russisch, auch gemischt", "en": "German, English and Russian, also mixed", "ru": "Немецкий, английский и русский, даже вперемешку"},w:[2, 1, 0, 0, 1]},
-  {t:{"de": "Betonung jeder Silbe, Hebungsprall", "en": "Stress on every syllable, stress clashes", "ru": "Ударение каждого слога, стык ударений"},w:[2, 0, 1, 0, 0]},
-  {t:{"de": "Versmaß, Vers- und Strophenform benannt", "en": "Metre, line and verse form named", "ru": "Размер, стих и строфа названы"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Kadenz: männlich, weiblich, daktylisch", "en": "Line endings: stressed, unstressed, dactylic", "ru": "Клаузула: мужская, женская, дактилическая"},w:[2, 0, 0, 0, 0]},
+  {t:{"de": "Liest deinen eigenen Text", "en": "Reads your own text", "ru": "Читает ваш собственный текст"},w:[2, 0, 2, 1, 2, 2]},
+  {t:{"de": "Deutsch, Englisch und Russisch, auch gemischt", "en": "German, English and Russian, also mixed", "ru": "Немецкий, английский и русский, даже вперемешку"},w:[2, 1, 0, 0, 1, 1]},
+  {t:{"de": "Betonung jeder Silbe, Hebungsprall", "en": "Stress on every syllable, stress clashes", "ru": "Ударение каждого слога, стык ударений"},w:[2, 0, 1, 0, 0, 1]},
+  {t:{"de": "Versmaß, Vers- und Strophenform benannt", "en": "Metre, line and verse form named", "ru": "Размер, стих и строфа названы"},w:[2, 0, 0, 0, 0, 1]},
+  {t:{"de": "Kadenz: männlich, weiblich, daktylisch", "en": "Line endings: stressed, unstressed, dactylic", "ru": "Клаузула: мужская, женская, дактилическая"},w:[2, 0, 0, 0, 0, 1]},
   {g:{"de": "Reimen", "en": "Rhyme", "ru": "Рифма"}},
-  {t:{"de": "Reimschema je Abschnitt, gefunden oder vorgegeben", "en": "Rhyme scheme per section, found or set", "ru": "Схема рифмовки по разделам, найденная или заданная"},w:[2, 0, 1, 0, 1]},
-  {t:{"de": "Sieben Reimstufen, an der Aussprache gemessen", "en": "Seven rhyme levels, measured on pronunciation", "ru": "Семь степеней рифмы по произношению"},w:[2, 1, 1, 1, 0]},
-  {t:{"de": "Wie oft ein Reimpaar in Liedern und Gedichten steht", "en": "How often a rhyme pair occurs in songs and poems", "ru": "Как часто пара рифм встречается в песнях и стихах"},w:[2, 1, 0, 0, 0]},
-  {t:{"de": "Binnen-, Mehrsilben- und Schlagreime im Text", "en": "Internal, multisyllabic and adjacent rhymes in the text", "ru": "Внутренние, составные и соседние рифмы в тексте"},w:[2, 0, 2, 0, 0]},
-  {t:{"de": "Alliteration, Assonanz, Stammreim, Zeileneinstieg", "en": "Alliteration, assonance, root rhyme, line openings", "ru": "Аллитерация, ассонанс, корневая рифма, начало строки"},w:[2, 1, 1, 0, 0]},
+  {t:{"de": "Reimschema je Abschnitt, gefunden oder vorgegeben", "en": "Rhyme scheme per section, found or set", "ru": "Схема рифмовки по разделам, найденная или заданная"},w:[2, 0, 1, 0, 1, 2]},
+  {t:{"de": "Sieben Reimstufen, an der Aussprache gemessen", "en": "Seven rhyme levels, measured on pronunciation", "ru": "Семь степеней рифмы по произношению"},w:[2, 1, 1, 2, 0, 1]},
+  {t:{"de": "Wie oft ein Reimpaar in Liedern und Gedichten steht", "en": "How often a rhyme pair occurs in songs and poems", "ru": "Как часто пара рифм встречается в песнях и стихах"},w:[2, 1, 0, 1, 0, 0]},
+  {t:{"de": "Binnen-, Mehrsilben- und Schlagreime im Text", "en": "Internal, multisyllabic and adjacent rhymes in the text", "ru": "Внутренние, составные и соседние рифмы в тексте"},w:[2, 0, 2, 0, 1, 0]},
+  {t:{"de": "Alliteration, Assonanz, Stammreim, Zeileneinstieg", "en": "Alliteration, assonance, root rhyme, line openings", "ru": "Аллитерация, ассонанс, корневая рифма, начало строки"},w:[2, 1, 1, 1, 0, 1]},
   {g:{"de": "Finden", "en": "Find", "ru": "Найти"}},
-  {t:{"de": "Ersatzwörter im selben Silbenmaß", "en": "Replacement words in the same syllable pattern", "ru": "Замены с тем же слоговым рисунком"},w:[2, 0, 0, 1, 0]},
-  {t:{"de": "Lücken: Wörter, die genau ins Maß passen", "en": "Gaps: words that fit the metre exactly", "ru": "Пропуски: слова точно по размеру"},w:[2, 0, 0, 0, 1]},
-  {t:{"de": "Klangfarbe: zischend, hart, weich, rau, dunkel, hell", "en": "Sound colour: hissing, hard, soft, rough, dark, bright", "ru": "Окраска звука: шипящая, твёрдая, мягкая, резкая, тёмная, светлая"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Suche in Lautschrift, mit Lauttastatur", "en": "Search in phonetic script, with a sound keyboard", "ru": "Поиск в транскрипции, с клавиатурой звуков"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Wortfamilie, Stammreime, Anlaut „wie in …“", "en": "Word family, root rhymes, onset “as in …”", "ru": "Словообразовательное гнездо, корневые рифмы, начальный звук «как в …»"},w:[2, 0, 0, 0, 0]},
+  {t:{"de": "Ersatzwörter im selben Silbenmaß", "en": "Replacement words in the same syllable pattern", "ru": "Замены с тем же слоговым рисунком"},w:[2, 1, 1, 1, 1, 0]},
+  {t:{"de": "Lücken: Wörter, die genau ins Maß passen", "en": "Gaps: words that fit the metre exactly", "ru": "Пропуски: слова точно по размеру"},w:[2, 0, 0, 0, 1, 0]},
+  {t:{"de": "Klangfarbe: zischend, hart, weich, rau, dunkel, hell", "en": "Sound colour: hissing, hard, soft, rough, dark, bright", "ru": "Окраска звука: шипящая, твёрдая, мягкая, резкая, тёмная, светлая"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Suche in Lautschrift, mit Lauttastatur", "en": "Search in phonetic script, with a sound keyboard", "ru": "Поиск в транскрипции, с клавиатурой звуков"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Wortfamilie, Stammreime, Anlaut „wie in …“", "en": "Word family, root rhymes, onset “as in …”", "ru": "Словообразовательное гнездо, корневые рифмы, начальный звук «как в …»"},w:[2, 1, 0, 1, 0, 0]},
   {g:{"de": "Aufbau und Fluss", "en": "Structure and flow", "ru": "Построение и поток"}},
-  {t:{"de": "Lied- und Gedichtformen als Gerüst, mit Soll und Ist", "en": "Song and poem forms as a frame, with plan and result", "ru": "Формы песен и стихов как каркас, с планом и результатом"},w:[2, 0, 0, 0, 1]},
-  {t:{"de": "frei ↔ streng: wie regelhaft der Text gebaut ist", "en": "loose ↔ strict: how regular the text is", "ru": "свободно ↔ строго: насколько правильно построен текст"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Fluss: Pausen, Drop-Zeilen, Zeilensprung", "en": "Flow: pauses, drop lines, enjambment", "ru": "Поток: паузы, Drop-строки, перенос"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Für Suno: Zeichengrenzen, Regie, Länge", "en": "For Suno: character limits, directions, length", "ru": "Для Suno: лимиты знаков, указания, длительность"},w:[2, 0, 0, 0, 1]},
+  {t:{"de": "Lied- und Gedichtformen als Gerüst, mit Soll und Ist", "en": "Song and poem forms as a frame, with plan and result", "ru": "Формы песен и стихов как каркас, с планом и результатом"},w:[2, 0, 0, 0, 1, 1]},
+  {t:{"de": "frei ↔ streng: wie regelhaft der Text gebaut ist", "en": "loose ↔ strict: how regular the text is", "ru": "свободно ↔ строго: насколько правильно построен текст"},w:[2, 0, 1, 0, 0, 1]},
+  {t:{"de": "Fluss: Pausen, Drop-Zeilen, Zeilensprung", "en": "Flow: pauses, drop lines, enjambment", "ru": "Поток: паузы, Drop-строки, перенос"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Für Suno: Zeichengrenzen, Regie, Länge", "en": "For Suno: character limits, directions, length", "ru": "Для Suno: лимиты знаков, указания, длительность"},w:[2, 0, 0, 0, 1, 0]},
   {g:{"de": "Unter der Haube", "en": "Under the hood", "ru": "Под капотом"}},
-  {t:{"de": "Eigene Klangeichung: ein Hörquiz stimmt die Reime auf dein Ohr", "en": "Your own calibration: a listening quiz tunes rhymes to your ear", "ru": "Собственная настройка: тест на слух подстраивает рифмы под ваше ухо"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Zeigt, wie sie urteilt: Lautmatrix, Lautbaum, Reimausrichtung", "en": "Shows how it judges: sound matrix, sound tree, rhyme alignment", "ru": "Показывает, как она судит: матрица и дерево звуков, выравнивание рифм"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Nutzt eigene Nachschlagewerke auf deinem Rechner", "en": "Uses reference works already on your computer", "ru": "Использует справочники на вашем компьютере"},w:[2, 0, 0, 0, 0]},
+  {t:{"de": "Eigene Klangeichung: ein Hörquiz stimmt die Reime auf dein Ohr", "en": "Your own calibration: a listening quiz tunes rhymes to your ear", "ru": "Собственная настройка: тест на слух подстраивает рифмы под ваше ухо"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Zeigt, wie sie urteilt: Lautmatrix, Lautbaum, Reimausrichtung", "en": "Shows how it judges: sound matrix, sound tree, rhyme alignment", "ru": "Показывает, как она судит: матрица и дерево звуков, выравнивание рифм"},w:[2, 0, 0, 0, 0, 1]},
+  {t:{"de": "Nutzt eigene Nachschlagewerke auf deinem Rechner", "en": "Uses reference works already on your computer", "ru": "Использует справочники на вашем компьютере"},w:[2, 1, 0, 0, 0, 0]},
   {g:{"de": "Mit KI und bei dir", "en": "With AI and at home", "ru": "С ИИ и у вас"}},
-  {t:{"de": "KI schreibt, das Werkzeug misst jede Fassung nach", "en": "AI writes, the tool measures every version", "ru": "ИИ пишет, инструмент проверяет каждую версию"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Jeder KI-Auftrag im vollen Wortlaut einsehbar", "en": "Every AI request readable word for word", "ru": "Каждый запрос к ИИ виден дословно"},w:[2, 0, 0, 0, 0]},
-  {t:{"de": "Auf deinem Rechner, ohne Konto, kostenlos", "en": "On your computer, no account, free", "ru": "На вашем компьютере, без учётной записи, бесплатно"},w:[2, 0, 1, 0, 0]},
-  {t:{"de": "Beat-Raster, Akkorde, Handy-App", "en": "Beat grid, chords, phone app", "ru": "Сетка бита, аккорды, приложение для телефона"},w:[0, 1, 2, 1, 1],ehrlich:true}],
+  {t:{"de": "KI schreibt, das Werkzeug misst jede Fassung nach", "en": "AI writes, the tool measures every version", "ru": "ИИ пишет, инструмент проверяет каждую версию"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Jeder KI-Auftrag im vollen Wortlaut einsehbar", "en": "Every AI request readable word for word", "ru": "Каждый запрос к ИИ виден дословно"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Auf deinem Rechner, ohne Konto, kostenlos", "en": "On your computer, no account, free", "ru": "На вашем компьютере, без учётной записи, бесплатно"},w:[2, 1, 1, 1, 0, 1]},
+  {t:{"de": "Beat-Raster, Akkorde, Handy-App", "en": "Beat grid, chords, phone app", "ru": "Сетка бита, аккорды, приложение для телефона"},w:[0, 1, 2, 1, 1, 1],ehrlich:true}],
  zeichen:{en:['no','partly or only some','yes'],de:['nein','teilweise oder nur bei einigen','ja'],ru:['нет','частично или только у некоторых','да']},
- fuss:{en:'Categories: rhyme dictionaries look up a word (e.g. RhymeZone, rifme.net) · rhyme-highlighting apps colour rhymes in your text (e.g. RhymePad, Lyrcs, RhymeFlux) · word-finding tools offer rhyme families, phrases and synonyms (e.g. MasterWriter, Rhyme Genie) · AI lyric generators write text on request (e.g. LyricStudio, verselab). As of November 2026, based on what the makers state.',
-       de:'Kategorien: Reimwörterbücher schlagen ein Wort nach (z. B. RhymeZone, rifme.net) · Reim-Markier-Apps färben Reime im eigenen Text (z. B. RhymePad, Lyrcs, RhymeFlux) · Wortschatz-Werkzeuge bieten Reimfamilien, Wendungen und Synonyme (z. B. MasterWriter, Rhyme Genie) · KI-Textgeneratoren schreiben Text auf Wunsch (z. B. LyricStudio, verselab). Stand November 2026, nach den Angaben der Anbieter.',
-       ru:'Категории: словари рифм ищут рифмы к слову (например, RhymeZone, rifme.net) · приложения с подсветкой рифм раскрашивают рифмы в вашем тексте (например, RhymePad, Lyrcs, RhymeFlux) · инструменты для подбора слов предлагают гнёзда рифм, обороты и синонимы (например, MasterWriter, Rhyme Genie) · ИИ-генераторы пишут текст по запросу (например, LyricStudio, verselab). По состоянию на ноябрь 2026 года, по данным разработчиков.'}
+ fuss:{en:'Categories: rhyme dictionaries look up a word (e.g. RhymeZone, rifme.net) · rhyme-highlighting apps colour rhymes in your text (e.g. RhymePad, Lyrcs, RhymeFlux) · word-finding tools offer rhyme families, phrases and synonyms (e.g. MasterWriter, Rhyme Genie) · AI lyric generators write text on request (e.g. LyricStudio, verselab) · metre tools work out the stress, metre and rhyme scheme of a poem, mostly for one language (e.g. Tembrica, Prosodic, Metricalizer). As of November 2026, based on what the makers state.',
+       de:'Kategorien: Reimwörterbücher schlagen ein Wort nach (z. B. RhymeZone, rifme.net) · Reim-Markier-Apps färben Reime im eigenen Text (z. B. RhymePad, Lyrcs, RhymeFlux) · Wortschatz-Werkzeuge bieten Reimfamilien, Wendungen und Synonyme (z. B. MasterWriter, Rhyme Genie) · KI-Textgeneratoren schreiben Text auf Wunsch (z. B. LyricStudio, verselab) · Versmaß-Werkzeuge bestimmen Betonung, Versmaß und Reimschema eines Gedichts, meist für eine Sprache (z. B. Tembrica, Prosodic, Metricalizer). Stand November 2026, nach den Angaben der Anbieter.',
+       ru:'Категории: словари рифм ищут рифмы к слову (например, RhymeZone, rifme.net) · приложения с подсветкой рифм раскрашивают рифмы в вашем тексте (например, RhymePad, Lyrcs, RhymeFlux) · инструменты для подбора слов предлагают гнёзда рифм, обороты и синонимы (например, MasterWriter, Rhyme Genie) · ИИ-генераторы пишут текст по запросу (например, LyricStudio, verselab) · анализаторы стиха определяют ударения, размер и схему рифмовки стихотворения, обычно для одного языка (например, Tembrica, Prosodic, Metricalizer). По состоянию на ноябрь 2026 года, по данным разработчиков.'}
 };
 
 /* HERUNTERLADEN – wie im KlangTresor: oben die Knöpfe im Kopf, unten der Abschnitt mit den Anforderungen.
