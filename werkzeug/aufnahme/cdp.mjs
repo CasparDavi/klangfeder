@@ -14,6 +14,11 @@ export async function starte({ w, h, mobile = true, touch = true, coarse = true,
   const c = spawn(CHROME, ['--headless=new', '--mute-audio', `--remote-debugging-port=${port}`, `--user-data-dir=${prof}`,
     '--autoplay-policy=no-user-gesture-required', ...(process.env.SWGL ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] : ['--disable-gpu']), `--window-size=${w},${h}`, 'about:blank'], { stdio: 'ignore' });
   console.log('CHROME_PID', c.pid);
+  // Chrome endet mit diesem Programm – auch bei Abbruch, Fehler oder Strg+C. Vorher blieb er nach jedem abgebrochenen Lauf
+  // unsichtbar liegen: am 18.11.2026 liefen 19 solche Fenster seit bis zu drei Tagen und fragten den Sandkasten weiter ab.
+  const chromeWeg = () => { try { process.kill(c.pid); } catch (e) {} };
+  process.on('exit', chromeWeg);
+  for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.once(s, () => { chromeWeg(); process.exit(130); });
   let ziel;
   for (let i = 0; i < 60 && !ziel; i++) { await warte(200); try { ziel = (await (await fetch(`http://127.0.0.1:${port}/json`)).json()).find((t) => t.type === 'page'); } catch (e) {} }
   const ws = new WebSocket(ziel.webSocketDebuggerUrl); await new Promise((r) => ws.onopen = r);
