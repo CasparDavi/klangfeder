@@ -29,11 +29,13 @@ Und sie findet die Wörter, die passen. Deutsch, Englisch und Russisch. Kostenlo
 - **Betonung sehen.** Betonte Silben leuchten, unbetonte treten zurück. Jede Zeile zeigt ihre Silben, Hebungen und
   Kadenz, jeder Abschnitt sein Versmaß.
 - **Reime sehen.** Gleiche Farbe reimt. Das Reimschema steht an jedem Abschnitt (Kreuzreim, Paarreim, Schweifreim …) –
-  als Befund oder als Vorgabe.
+  als Befund oder als Vorgabe. Im Russischen markiert sie grammatische Reime, die nur über dieselbe Endung reimen.
 - **Klang sehen.** Klangketten über die ganze Strophe: Zeileneinstieg, Binnen- und Schlagreim, Mehrsilbenreim,
   Stammreim, Alliteration und Assonanz – jede mit eigenem Zeichen, einzeln zuschaltbar. Das Hebungsdiagramm vor jeder
-  Zeile zeigt den Fluss: Pausen, Drop-Zeilen, Zeilensprünge.
+  Zeile zeigt den Fluss: Pausen, Drop-Zeilen, Zeilensprünge. Hörfallen zeigen, wo zwei Wörter gesungen wie zwei andere
+  klingen („seid ihr“ / „sei dir“).
 - **Wörter finden.** Rechtsklick auf ein Wort: Reime darauf, Ersatzwörter im gleichen Maß, Gegenteile, Wendungen,
+  Redensarten und Sprichwörter,
   Stammreime und Wortfamilie; „Anlaut wie in …“ sortiert nach dem Stabreim, eine Lauttastatur sucht nach dem Klang.
   Lücken und Platzhalter wie `x-X-x-X` füllt sie mit Wörtern, die genau hineinpassen.
 - **Aufbau planen.** Strophen, Refrain, Bridge: Zeilen, Hebungen und Reim je Abschnitt, als Plan oder aus dem Text.

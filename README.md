@@ -29,11 +29,13 @@ of free space for the program and the dictionaries. A current web browser.
 - **See the stress.** Stressed syllables light up, unstressed ones step back. Every line shows its syllables, beats
   and cadence, every section its metre.
 - **See the rhymes.** Same colour rhymes. Each section shows its rhyme scheme (alternate, couplets, tail rhyme …) –
-  as a finding or as a rule.
+  as a finding or as a rule. In Russian it marks grammatical rhymes that rhyme only through the same ending.
 - **See the sound.** Sound chains across the whole verse: line openings, internal and adjacent rhymes, multisyllabic
   rhymes, root rhymes, alliteration and assonance – each with its own sign, switched on one by one. The stress diagram
-  in front of every line shows the flow: pauses, drop lines, enjambments.
-- **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites, phrases, root
+  in front of every line shows the flow: pauses, drop lines, enjambments. Mondegreens show where two words, sung, sound
+  like two others (“an aim” / “a name”).
+- **Find words.** Right-click a word: rhymes, replacements with the same stress pattern, opposites, phrases, idioms
+  and proverbs, root
   rhymes and word families; “Onset as in …” sorts by alliteration, a sound keyboard searches by sound. Gaps
   and placeholders such as `x-X-x-X` are filled with words that fit exactly.
 - **Plan the structure.** Verses, chorus, bridge: lines, beats and rhyme per section, as a plan or taken from the text.
