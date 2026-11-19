@@ -47,3 +47,9 @@ Nach jeder Änderung an Text oder Seite:
     node werkzeug/sprachseiten.mjs
 
 Titel und Beschreibung je Sprache stehen oben im Werkzeug (`KOPF`).
+
+## Vorschaubild für Links
+
+`docs/img/og-{en,de,ru}.jpg` (1280 × 640, Discord, Messenger, Suchmaschinen) ist der Kopf der Feature-Seite ohne
+Sprachleiste und Knöpfe. Nach Änderungen an Spruch, Kopftext oder Titelbild: `node werkzeug/vorschaubild.mjs`, dann in
+`werkzeug/sprachseiten.mjs` die Version bei `OG` hochzählen und `node werkzeug/sprachseiten.mjs`.

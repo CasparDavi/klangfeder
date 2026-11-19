@@ -16,6 +16,8 @@ const BASIS = 'https://caspardavi.github.io/klangfeder/';
 const DATEI = { en: 'index.html', de: 'de.html', ru: 'ru.html' };
 const ADRESSE = { en: BASIS, de: BASIS + 'de.html', ru: BASIS + 'ru.html' };
 const PORT = 8796;
+const OG = (L) => `${BASIS}img/og-${L}.jpg?v=20261119`;   // Vorschaubild je Sprache (werkzeug/vorschaubild.mjs); v hochzählen, wenn es neu ist
+
 
 const KOPF = {
   en: { titel: 'KlangFeder – rhyming dictionary, stress and metre for song lyrics and poems',
@@ -36,7 +38,7 @@ function kopf(L) {
     description: k.beschr, inLanguage: L, applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Windows 10, Windows 11, macOS 11+, Linux', isAccessibleForFree: true,
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
-    downloadUrl: 'https://github.com/CasparDavi/klangfeder/releases/latest', image: BASIS + 'img/og-en.jpg',
+    downloadUrl: 'https://github.com/CasparDavi/klangfeder/releases/latest', image: OG(L),
     license: 'https://opensource.org/licenses/MIT', author: { '@type': 'Person', name: 'Caspar_D' } };
   /* Startseite: wer Deutsch oder Russisch gewählt hat (oder dessen Browser so eingestellt ist), kommt sofort auf seine
      Sprachseite – vor dem ersten Bild, damit kein englischer Text aufblitzt. Gleiche Reihenfolge wie spracheWaehlen(). */
@@ -56,7 +58,7 @@ ${['en', 'de', 'ru'].map((x) => `<link rel="alternate" hreflang="${x}" href="${A
 <meta property="og:title" content="${esc(k.og)}">
 <meta property="og:description" content="${esc(k.beschr)}">
 <meta property="og:url" content="${ADRESSE[L]}">
-<meta property="og:image" content="${BASIS}img/og-en.jpg">
+<meta property="og:image" content="${OG(L)}">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:image:alt" content="${esc(k.og)}">
