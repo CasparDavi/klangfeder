@@ -37,3 +37,13 @@ sagt es.
 ## Aufnahmen für die Seite
 
 Siehe `werkzeug/aufnahme/LIESMICH.md`.
+
+## Sprachseiten für Suchmaschinen
+
+`docs/index.html` (Englisch), `docs/de.html` und `docs/ru.html` tragen Kopf und Seitentext schon im HTML, dazu
+`docs/sitemap.xml`. Quelle bleibt `docs/index.html` mit `docs/inhalt.js`; de.html und ru.html nie von Hand ändern.
+Nach jeder Änderung an Text oder Seite:
+
+    node werkzeug/sprachseiten.mjs
+
+Titel und Beschreibung je Sprache stehen oben im Werkzeug (`KOPF`).

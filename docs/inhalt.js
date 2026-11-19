@@ -9,9 +9,9 @@ const S = {
  kopf:{
   marke:{en:'KlangFeder',de:'KlangFeder',ru:'KlangFeder'},
   h:{en:'Verse that sounds right while you write it.',de:'Verse, die schon beim Schreiben richtig klingen.',ru:'Стихи, которые звучат верно уже при письме.'},
-  p:{en:'For poems and songs: KlangFeder shows you while you write whether your lines sound right – stress, metre, rhyme. And it finds the words that fit. It speaks German, English and Russian, runs on your own computer and is free.',
-     de:'Für Gedichte und Lieder: Die KlangFeder zeigt dir beim Schreiben, ob deine Zeilen klingen – Betonung, Versmaß, Reim. Und sie findet die Wörter, die passen. Sie versteht Deutsch, Englisch und Russisch, läuft auf deinem Rechner und ist kostenlos.',
-     ru:'Для стихов и песен: KlangFeder прямо во время письма показывает, хорошо ли звучат ваши строки, — ударение, размер, рифма. И находит слова, которые подходят. Она понимает немецкий, английский и русский, работает на вашем компьютере и бесплатна.'},
+  p:{en:'For poems and songs: KlangFeder shows you while you write whether your lines sound right – stress, metre, rhyme. And it finds rhymes and words that fit. It speaks German, English and Russian, runs on your own computer and is free.',
+     de:'Für Gedichte und Lieder: Die KlangFeder zeigt dir beim Schreiben, ob deine Zeilen klingen – Betonung, Versmaß, Reim. Und sie findet Reime und Wörter, die passen. Sie versteht Deutsch, Englisch und Russisch, läuft auf deinem Rechner und ist kostenlos.',
+     ru:'Для стихов и песен: KlangFeder прямо во время письма показывает, хорошо ли звучат ваши строки, — ударение, размер, рифма. И подбирает рифмы и слова, которые подходят. Она понимает немецкий, английский и русский, работает на вашем компьютере и бесплатна.'},
   mehr:{en:'More',de:'Mehr',ru:'Подробнее'}, zu:{en:'Close',de:'Schließen',ru:'Закрыть'}, abspielen:{en:'Play',de:'Abspielen',ru:'Воспроизвести'},
   platz:{en:'Picture follows',de:'Bild folgt',ru:'Изображение будет'}
  },

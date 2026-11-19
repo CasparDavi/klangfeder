@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ru" data-seite="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--kopf-->
+<title>KlangFeder — подбор рифмы, ударения и размер стиха для песен и стихов</title>
+<meta name="description" content="Бесплатная программа для песен и стихов на русском, немецком и английском: ударения, размер и рифма прямо при письме, подбор рифм и подходящих слов.">
+<link rel="canonical" href="https://caspardavi.github.io/klangfeder/ru.html">
+<link rel="alternate" hreflang="en" href="https://caspardavi.github.io/klangfeder/">
+<link rel="alternate" hreflang="de" href="https://caspardavi.github.io/klangfeder/de.html">
+<link rel="alternate" hreflang="ru" href="https://caspardavi.github.io/klangfeder/ru.html">
+<link rel="alternate" hreflang="x-default" href="https://caspardavi.github.io/klangfeder/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KlangFeder">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="KlangFeder — Стихи, которые звучат верно уже при письме.">
+<meta property="og:description" content="Бесплатная программа для песен и стихов на русском, немецком и английском: ударения, размер и рифма прямо при письме, подбор рифм и подходящих слов.">
+<meta property="og:url" content="https://caspardavi.github.io/klangfeder/ru.html">
+<meta property="og:image" content="https://caspardavi.github.io/klangfeder/img/og-en.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="KlangFeder — Стихи, которые звучат верно уже при письме.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"KlangFeder","url":"https://caspardavi.github.io/klangfeder/ru.html","description":"Бесплатная программа для песен и стихов на русском, немецком и английском: ударения, размер и рифма прямо при письме, подбор рифм и подходящих слов.","inLanguage":"ru","applicationCategory":"MultimediaApplication","operatingSystem":"Windows 10, Windows 11, macOS 11+, Linux","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"downloadUrl":"https://github.com/CasparDavi/klangfeder/releases/latest","image":"https://caspardavi.github.io/klangfeder/img/og-en.jpg","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Caspar_D"}}</script>
+<!--/kopf-->
+<style>
+/* Anmutung: Apples Feature-Zusammenfassungen nach Keynotes. Schwarzer Grund, große Schlagzeilen,
+   Kacheln unterschiedlicher Breite, Einzelheiten hinter „+“ in einem Overlay. Text ≥ 7:1. */
+:root{
+  color-scheme:dark;   /* Bildlaufleisten und Formularteile dunkel (sonst zeichnet der Browser sie hell) */
+  --bg:#000; --kachel:#141416; --kachel2:#1c1c1f; --linie:#2a2a2e;
+  --text:#f5f5f7; --leise:#a8a8ad; --akzent:#f97b14; --akzent2:#e31c79; --blau:#0b85fe; --rot:#ff6158;   /* Blau der Lautmatrix (stärkste Stufe): Englisch im Balkendiagramm */   /* Verlauf des KlangFeder-Schriftzugs (web/index.html #markezeichen) */
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.47 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
+.sprache{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;gap:4px;padding:10px 22px;background:rgba(0,0,0,.82);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px)}
+.sprache button{background:none;border:0;color:var(--leise);font:inherit;font-size:13px;padding:4px 10px;border-radius:980px;cursor:pointer}
+.sprache button.an{color:#000;background:var(--text)}
+.held{text-align:center;padding:72px 0 40px}
+.held h1{display:inline-flex;align-items:center;gap:.14em;font-size:calc(clamp(48px,9vw,112px) * var(--fit,1));line-height:1.04;letter-spacing:-.02em;font-weight:700;margin:0 0 10px;
+  background:linear-gradient(90deg,var(--akzent),var(--akzent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Die Feder der App, als Maske auf demselben Verlauf wie der Name */
+.held h1 .rad{width:.9em;height:.9em;flex:0 0 auto;background:linear-gradient(90deg,var(--akzent),var(--akzent2));background-size:800% 100%;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M9 57L55 7M23.9 40.8L25.7 50.6M23.9 40.8L13.9 39.8M31.3 32.7L34.6 50.4M31.3 32.7L13.4 30.9M38.8 24.6L40.6 34.5M38.8 24.6L28.8 23.6M46.2 16.5L49.5 34.2M46.2 16.5L28.3 14.7' stroke='%23fff' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M9 57L55 7M23.9 40.8L25.7 50.6M23.9 40.8L13.9 39.8M31.3 32.7L34.6 50.4M31.3 32.7L13.4 30.9M38.8 24.6L40.6 34.5M38.8 24.6L28.8 23.6M46.2 16.5L49.5 34.2M46.2 16.5L28.3 14.7' stroke='%23fff' stroke-width='5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat}
+.held .spruch{font-size:clamp(28px,4vw,48px);line-height:1.1;font-weight:700;letter-spacing:-.01em;color:var(--text);margin:0 0 14px}
+.held p{font-size:clamp(18px,2vw,22px);line-height:1.35;color:var(--leise);max-width:34em;margin:0 auto 40px;font-weight:500}
+.held .bild{aspect-ratio:auto;border-radius:28px}.held .bild img{height:auto}   /* ganz zeigen, mit Fensterleiste und Kopfzeile – „Kein Bild ohne Namen“ (Jörg, 17.11.2026: im 21:9-Ausschnitt fehlten beide) */
+.held .pdf{display:inline-block;margin:-22px 0 38px;color:var(--akzent);font-size:17px;font-weight:600;text-decoration:none}
+.held .pdf:hover{text-decoration:underline}
+.abschnitt{margin:120px 0 0}
+.abschnitt>.kopf,.fahrt .kopf{max-width:820px;margin:0 0 36px}
+.abschnitt>.kopf .augenbraue,.fahrt .kopf .augenbraue{font-size:17px;font-weight:600;color:var(--akzent);margin:0 0 8px}
+.abschnitt>.kopf h2,.fahrt .kopf h2{font-size:clamp(34px,5vw,56px);line-height:1.07;letter-spacing:-.01em;font-weight:700;margin:0 0 14px}
+.abschnitt>.kopf p,.fahrt .kopf p{font-size:clamp(18px,2vw,21px);color:var(--leise);margin:0;font-weight:500}
+/* Links im Fließtext in der Akzentfarbe, nie browserblau (Caspar_D 12.11.2026: „appimage hat noch einen browserblauen link“) */
+.abschnitt>.kopf p a,.laden .anf a,.fenster a,.k .text a,.grenzen a{color:var(--akzent);text-decoration:none}
+.abschnitt>.kopf p a:hover,.laden .anf a:hover,.fenster a:hover,.k .text a:hover,.grenzen a:hover{text-decoration:underline}
+.raster{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
+.k{position:relative;grid-column:span 6;background:var(--kachel);border-radius:28px;overflow:hidden;display:flex;flex-direction:column}
+.k.w12{grid-column:span 12}.k.w8{grid-column:span 8}.k.w4{grid-column:span 4}.k.w6{grid-column:span 6}.k.w5{grid-column:span 5}.k.w7{grid-column:span 7}
+/* EINE REIHE, EIN RASTER (Caspar_D, 27.10.2026: „die Bildunterkanten immer alignieren und die Überschriften der Unterschriften
+   ebenfalls auf der gleichen Baseline“). Jede Kachel belegt zwei Zeilen des Seitenrasters und erbt sie (subgrid): Textzeile
+   und Bildzeile sind fuer alle Kacheln einer Reihe gleich hoch. Bilder sitzen unten (align-self:end), Texte oben. */
+.raster{grid-auto-rows:auto}
+.k:not(.quer){display:grid;grid-row:span 2;grid-template-rows:subgrid;row-gap:0}
+.k:not(.quer) > *{min-width:0}
+.k:not(.quer) > .text{align-self:start}
+.k:not(.quer) > .bild{align-self:end;margin-top:0}
+.k:not(.quer) > .bild.konsole{align-self:stretch}
+.k:not(.quer) > .filterliste,.k:not(.quer) > .schaubild,.k:not(.quer) > .balken,.k:not(.quer) > .matrix{align-self:end}
+/* Grafik oben, Text darunter (Caspar_D, 27.10.2026: „immer nur den Grafikteil nehmen und einen Text drunterzusetzen“) */
+/* Oben ein schwarzes Feld mit duennem Rahmen im Grau des Schriftfelds; die Grafik reicht von Rand zu Rand und steht unten
+   auf der Teilungslinie, was darueber frei bleibt, bleibt schwarz (Caspar_D, 27.10.2026). Alle Felder einer Reihe gleich hoch. */
+.k.oben > .bild{grid-row:2;align-self:stretch;aspect-ratio:auto!important;margin:0 3px 3px;border-radius:0 0 25px 25px;background:#000;
+  display:flex;align-items:flex-end}
+.k.oben > .bild img{width:100%;height:auto;object-fit:initial}
+/* sichtbare Kante des schwarzen Feldes: zeigt, dass alle Felder einer Reihe gleich gross sind (Caspar_D, 27.10.2026) */
+.k.oben > .bild{position:relative}
+.k.oben > .bild::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1.5px var(--kachel);pointer-events:none}
+/* Hell nur beim Nachbarschafts-Diagramm (Caspar_D: „der sollte nur einmal beim Diagramm hell sein, ansonsten Hintergrundfarbe des Textpanels darüber“) */
+.k[data-id=nachbar] > .bild::after{box-shadow:inset 0 0 0 1.5px #4a4a52}
+.k.oben > .text{grid-row:1}
+.k.oben .text{padding-bottom:22px}
+/* das „+“ ins Schriftfeld, sonst verdeckt es die Achsenbeschriftung der Grafik */
+.k.oben .plus{top:18px;bottom:auto}
+.k .text{padding:30px 32px 26px}
+.k .klein{font-size:15px;font-weight:600;color:var(--akzent);margin:0 0 6px}
+.k h3{font-size:clamp(24px,2.6vw,32px);line-height:1.12;letter-spacing:-.005em;font-weight:700;margin:0 0 10px}
+.k p{margin:0;color:var(--leise);font-size:17px;font-weight:500}
+.k p b{color:var(--text);font-weight:600}
+.k .zahl{display:block;margin:16px 0 0;font-size:40px;line-height:1;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.k .zahl small{display:block;font-size:14px;font-weight:600;color:var(--leise);margin-top:6px;letter-spacing:0}
+.k .bild{margin-top:auto}
+.bild{position:relative;aspect-ratio:16/10;background:var(--kachel2);overflow:hidden}
+.k.w4 .bild{aspect-ratio:4/3}
+.k.w12 .bild{aspect-ratio:21/9}
+.bild img,.bild video{width:100%;height:100%;object-fit:cover;display:block}
+/* Der Lautbaum bringt sein eigenes Seitenverhältnis mit (je Sprache verschieden viele Laute) – ein festes
+   würde ihn oben und unten abschneiden. Diese Regeln stehen HINTER .k.w12 und .bild img: sie sind gleich
+   spezifisch, und als die Kachel am 15.11.2026 auf die volle Breite ging, gewann sonst das 21/9 der w12-Regel
+   und schnitt den Baum unten ab (Jörg: „die lautbäume sind unten angeschnitten im deutschen"). */
+/* Bücherfoto füllt sein Feld ganz – es ist ein Foto, kein Screenshot, und darf beschnitten werden (Regel: höchstens ein Viertel leer) */
+.k[data-id=buecher] > .bild{align-self:stretch;aspect-ratio:auto!important;min-height:320px}
+.k[data-id=buecher] > .bild img{position:absolute;inset:0}
+.k[data-id=lautbaum] > .bild{aspect-ratio:auto;background:none;padding:0 28px 30px}
+.k[data-id=lautbaum] > .bild img{width:100%;height:auto;object-fit:contain;display:block;border-radius:14px}
+.bild.geraete{aspect-ratio:16/11;background:radial-gradient(ellipse at 50% 110%,#3a200c 0%,var(--kachel2) 65%)}
+/* Geraetegruppe (Apple-Trio): Laptop hinten Mitte, Tablet vorn links, Handy vorn rechts; schlichte Rahmen ohne Marke */
+.geraete .lap{position:absolute;left:14%;top:7%;width:72%}
+.geraete .schirm{background:#0b0b0c;border:solid #2a2a2d;border-width:8px 8px 11px;border-radius:12px 12px 0 0;aspect-ratio:16/10;overflow:hidden}
+.geraete .fuss{height:9px;margin:0 -6%;background:linear-gradient(#3a3a3e,#1e1e20);border-radius:0 0 10px 10px}
+.geraete .tab{position:absolute;left:5%;bottom:5%;height:66%;aspect-ratio:1640/2360;background:#0b0b0c;border:7px solid #2a2a2d;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.geraete .hand{position:absolute;right:7%;bottom:5%;height:52%;aspect-ratio:780/1688;background:#0b0b0c;border:5px solid #2a2a2d;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.geraete img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+@media screen and (max-width:820px){.geraete .schirm{border-width:5px 5px 7px;border-radius:8px 8px 0 0}.geraete .tab{border-width:4px;border-radius:10px}.geraete .hand{border-width:3px;border-radius:11px}}
+.k .bild.konsole,.bild.konsole{aspect-ratio:auto;flex:1;min-height:220px;margin:0 22px 0;border-radius:12px 12px 0 0;background:#0a0a0b;border:1px solid #2c2c30;border-bottom:0}
+.konsole .leiste{display:flex;align-items:center;gap:7px;padding:10px 12px;background:#18181b;border-bottom:1px solid #2c2c30}
+.konsole .leiste i{width:11px;height:11px;border-radius:50%;background:#3a3a3e}
+.konsole .leiste span{margin-left:auto;margin-right:auto;font-size:12px;color:#b0b0b5;transform:translateX(-27px)}
+.konsole pre{margin:0;padding:14px 16px;font:calc(13px * var(--fit,1))/1.55 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#b9b9be;white-space:pre;overflow:hidden}
+.konsole pre b{color:var(--akzent);font-weight:600}
+.konsole pre u{text-decoration:none;color:#e6e6ea}
+.schaubild{display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;column-gap:22px;padding:6px 32px 34px}
+/* Ueberschriften in EINER Zeile des Rasters: gleiche Grundlinie (Caspar_D, 27.10.2026) */
+.schaubild .sk{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
+.schaubild .l{text-align:right}
+.schaubild .sl{font-size:17px;line-height:1.75;color:var(--text);align-self:center}
+.schaubild .sl i{font-style:normal;color:var(--leise)}
+.schaubild .sm{display:grid;grid-template-columns:56px auto 56px;align-items:center;align-self:center;row-gap:8px}
+.schaubild .sm i{height:1px;background:linear-gradient(90deg,transparent,#e31c79)}
+.schaubild .sm i:last-of-type{background:linear-gradient(90deg,#e31c79,transparent)}
+.schaubild .knopf{width:80px;height:80px;border-radius:50%;border:1.5px solid #e31c79aa;background:#e31c7922;display:grid;place-items:center}
+.schaubild .knopf svg{width:38px;height:38px;fill:#e31c79}
+.schaubild .sm b{grid-column:2;text-align:center;color:#ff7fb3;font-size:13px;font-weight:600}
+/* Die Kombischaltfläche der KlangFeder (web/index.html .modi), Werte 1:1 aus dem Programm, nur um 1,2 vergrößert */
+.schaubild .sm.um{display:flex;justify-content:center}
+.schaubild .modi{display:flex;gap:2px;background:#161618;border:1px solid #333336;border-radius:999px;padding:2px}
+.schaubild .modi span{font-size:15px;line-height:1.35;padding:4px 14px;border-radius:999px;color:#c4c4c9}
+.schaubild .modi .an{background:#242427;color:#ececed;box-shadow:inset 0 0 0 1px #ff7a1a}
+@media screen and (max-width:820px){.schaubild{padding:4px 16px 26px;column-gap:10px}.schaubild .sl{font-size:14px;line-height:1.6}.schaubild .sm{grid-template-columns:18px auto 18px}.schaubild .knopf{width:56px;height:56px}.schaubild .knopf svg{width:26px;height:26px}}
+/* Querkachel: Text links, Bild rechts */
+.k.quer{flex-direction:row;align-items:stretch}
+.k.quer .text{flex:0 0 34%;align-self:center}
+.k.quer .bild{flex:1;margin-top:0}
+.k.quer .bild img{object-position:left top}   /* Querkachel: ist der Rahmen niedriger als das Bild, fehlt unten etwas, nicht oben (sonst fehlte die erste Zeile mit dem Pfeil) */
+@media screen and (max-width:820px){.k.quer{flex-direction:column}.k.quer .text{flex:none}}
+
+.filterliste{padding:4px 32px 30px;margin-top:auto}
+.filterliste .fk{margin:16px 0 4px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
+.filterliste .fw{margin:0;font-size:16px;line-height:1.55;color:var(--text)}
+.filterliste .fw b{font-weight:700;color:var(--akzent)}
+.filterliste .fl{margin:0;padding:0;list-style:none;font-size:16px;line-height:1.5;color:var(--leise)}
+.filterliste .fl li{margin:0 0 12px}
+.filterliste .fl b,.filterliste .fl span,.filterliste .fl small{display:block}
+.filterliste .fl b{color:var(--text);font-weight:600}
+.filterliste .fl small{font-size:13px;color:var(--leise)}
+.k > .filterliste,.k > .balken{padding-bottom:64px}   /* Platz für den Plus-Knopf unten rechts */
+.matrix{display:grid;grid-template-columns:1fr;align-items:center;row-gap:14px;padding:0 32px 64px;margin-top:auto}   /* Legende unter der Matrix: die Matrix bekommt die volle Breite (Buchstaben neben den Lauten) */
+.matrix svg{display:block;height:auto;width:100%;max-width:520px;justify-self:center}
+.matrix svg text{font:var(--ms,13px)/1 ui-monospace,"SF Mono",Menlo,monospace;fill:var(--leise)}
+.matrix svg text.sb{fill:#8b8b90}   /* Buchstaben zum Lautzeichen, rechts neben dem Diagonalfeld seiner Zeile: einen Ton dunkler als das Zeichen (Kontrast > 5 : 1) */
+.matrix .ml{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:3px;font-size:13px;color:var(--leise)}
+.matrix .ml span{margin:0 6px}
+.matrix .ml i{width:18px;height:13px;border-radius:2px;display:block}
+.matrix .ml.haelften{font-size:12px;opacity:.85;margin-top:-6px;gap:10px}
+.matrix .ml .leer{display:flex;align-items:center;gap:6px;margin:0 0 0 14px}
+.matrix .ml .leer i{background:#0a3fb5}   /* dieselbe Farbe wie die Felder ohne Beleg */
+.ausr{padding:4px 32px 64px;margin-top:auto}
+/* Spaltenzahl kommt aus den Daten (--n = Kästchen je Zeile): die russischen und englischen Paare haben drei Laute,
+   die deutschen vier. Fest verdrahtete 4 Spalten verschoben die zweite Zeile um eine Stelle. */
+.ausr .ar{display:grid;grid-template-columns:86px repeat(var(--n,4),54px) 1fr;column-gap:7px;row-gap:7px;align-items:center;margin:0 0 22px}
+.ausr .aw{font-size:16px;color:var(--text)}
+.ausr .al{display:grid;place-items:center;height:44px;border-radius:8px;font:20px/1 ui-monospace,"SF Mono",Menlo,monospace;color:var(--text)}
+.ausr .al.gl{box-shadow:inset 0 0 0 1.5px #c9c9cd}
+.ausr .al.ae{box-shadow:inset 0 0 0 1.5px #8b8b90}
+.ausr .al.an{box-shadow:inset 0 0 0 1px #6a6a70;color:var(--leise)}
+.ausr .al.au{color:#8b8b90}
+.ausr .ap{padding-left:12px;font-size:15px;color:var(--leise);line-height:1.5}
+.ausr .ap b{font-size:24px;color:var(--text);font-weight:700}
+.ausr .ap i{display:block;font-style:normal;font-weight:600;font-size:15px}
+.ausr .aleg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:4px 0 0;font-size:13px;color:var(--leise)}
+.ausr .aleg .al{display:inline-block;width:18px;height:14px;border-radius:3px}
+.k:not(.quer) > .ausr{align-self:end}
+.sollbild{display:grid;grid-template-columns:auto auto 14px 1fr;align-items:end;column-gap:14px;row-gap:12px;padding:6px 32px 64px;margin-top:auto}
+.sollbild .st{margin:0;font-size:17px;color:var(--text);white-space:nowrap}
+.sollbild .st.muster{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:15px;color:var(--leise)}
+.sollbild .st b{color:var(--akzent);font-weight:600}
+.sollbild .sb{display:flex;align-items:flex-end;gap:2px;height:14px;padding-bottom:3px}
+.sollbild .sb i{width:6px;border-radius:1px 1px 0 0;background:#c9c9cd}
+.sollbild .sb i.w{background:#6a6a70}
+.sollbild .sb i.um{background:none!important;box-shadow:inset 0 0 0 1.2px #8b8b90}
+.sollbild .sb i.zv{background:var(--akzent)!important}
+.sollbild .sr{font-size:16px;padding-bottom:1px}
+.sollbild .sn{font-size:14px;color:var(--leise);padding-bottom:1px}
+.k:not(.quer) > .sollbild{align-self:end}
+   /* Platz für den Plus-Knopf unten rechts */
+.k.w12 > .filterliste{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:28px}
+.balken{padding:4px 32px 30px;margin-top:auto}
+.balken .bz{margin:0 0 9px}
+.balken .bn{margin:0 0 3px;font-size:15px;font-weight:600;color:var(--text)}
+.balken .bn small{font-weight:400;color:var(--leise)}
+.balken .bk{margin:2px 0 6px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--akzent)}
+.balken .bz + .bk{margin-top:14px}
+.balken .bb{position:relative;height:15px}
+.balken .bb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.balken i.ges{background:color-mix(in srgb,var(--akzent) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--akzent)}
+.balken i.neu{background:var(--akzent)}
+.balken .blau i.ges{background:color-mix(in srgb,var(--blau) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--blau)}
+.balken .blau i.neu{background:var(--blau)}
+.balken .bk.blau{color:var(--blau)}
+/* Achse endet bei g.bruch (750 000); längere Säulen gebrochen: volle Breite mit Lücke kurz vor dem Ende (Caspar_D 13.11.2026) */
+.balken i.bruch{-webkit-mask:linear-gradient(90deg,#000 0 86%,transparent 86% 87.5%,#000 87.5% 89%,transparent 89% 90.5%,#000 90.5%);mask:linear-gradient(90deg,#000 0 86%,transparent 86% 87.5%,#000 87.5% 89%,transparent 89% 90.5%,#000 90.5%)}
+.balken .rot i.ges{background:color-mix(in srgb,var(--rot) 22%,transparent);box-shadow:inset 0 0 0 1.5px var(--rot)}
+.balken .rot i.neu{background:var(--rot)}
+.balken .bk.rot{color:var(--rot)}
+.balken .bl i.ges{background:color-mix(in srgb,#c9c9cd 22%,transparent);box-shadow:inset 0 0 0 1.5px #c9c9cd}   /* Legende neutral: Farbe = Sprache, die Legende erklärt nur Umriss/gefüllt */
+.balken .bl i.neu{background:#c9c9cd;box-shadow:none}
+.balken .bw{margin:3px 0 0;font-size:14px;color:var(--leise)}
+.balken .bw b{color:var(--text)}
+.balken .bl{display:flex;gap:18px;margin:4px 0 0;font-size:13px;color:var(--leise)}
+.balken .bl i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:0}
+.bild.trip{display:flex;justify-content:center;align-items:center;gap:4%;padding:5% 6% 0;aspect-ratio:21/11;background:radial-gradient(ellipse at 50% 120%,#3a2410 0%,var(--kachel2) 70%)}
+.bild.trip img{width:auto;height:100%;max-width:28%;object-fit:contain;border-radius:22px 22px 0 0;border:6px solid #2b2b2e;border-bottom:0;box-shadow:0 0 0 1px #3a3a3e}
+@media screen and (max-width:820px){.bild.trip{aspect-ratio:4/3;gap:3%;padding:6% 3% 0}.bild.trip img{border-radius:14px 14px 0 0;border-width:4px}}
+.bild.reihe{aspect-ratio:auto;background:none;overflow:visible;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:0 32px 64px}   /* unten Platz für den Plus-Knopf */
+.reihe figure{margin:0;min-width:0}
+.reihe figcaption{font-size:15px;font-weight:600;color:var(--text);margin:0 0 8px}
+.reihe img{width:100%;height:auto;aspect-ratio:1;object-fit:contain;display:block;border-radius:8px;background:#0c0c0d}
+@media screen and (max-width:820px){.bild.reihe{grid-template-columns:1fr;padding:0 24px 64px;gap:18px}}
+.bild .platz{position:absolute;inset:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--leise);font-size:14px;border:1px dashed #3a3a40;border-radius:16px}
+.plus{position:absolute;right:18px;bottom:18px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:rgba(66,66,69,.78);backdrop-filter:blur(10px);color:var(--text);cursor:pointer;display:grid;place-items:center}
+.plus svg{width:14px;height:14px}
+.plus:hover{background:rgba(90,90,94,.9)}
+.k .druck{display:none}
+/* Leicht gedimmt; das Fenster geht am Plus auf, sein Kreuz liegt dort, wo das Plus war (Lage setzt lage()). */
+.overlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.38);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none;overflow:auto}
+.overlay.auf{display:block}
+.abspielen{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;z-index:3;border:0;border-radius:50%;background:rgba(20,20,22,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--text);cursor:pointer;display:grid;place-items:center}
+.abspielen svg{width:28px;height:28px;margin-left:3px}
+.fahrt .fbild > .abspielen{inset:auto;left:50%;top:50%;width:64px;height:64px;display:grid}
+/* Fahrt (Scrollytelling): Die Kachel bleibt stehen, das Scrollen führt dasselbe Bild durch seine Stufen
+   (Cover → Tiefenkarte → Clip), danach scrollt die Seite weiter. Ohne Bewegungswunsch und im Druck: die Einzelkacheln. */
+.fahrt{display:none;grid-column:span 12;height:calc(var(--n) * 100svh)}
+@media screen and (prefers-reduced-motion:no-preference){.fahrt{display:block}.k.in-fahrt{display:none}.mit-fahrt>.kopf{display:none}
+  /* Steht eine Nachbarkachel nach der Fahrt allein, nimmt sie die volle Breite, ihre Liste läuft in Spalten. */
+  .k.fahrt-w12{grid-column:span 12}.k.fahrt-w8{grid-column:span 8}
+  /* Zimmer neben dem Skizzenbuch: etwas höher als sein Bild – seitlich anschneiden statt Streifen (Lampe links bleibt) */
+  .k.fahrt-w8 > .bild img{height:100%;object-fit:cover;object-position:30% 50%}.k.fahrt-w12 > .filterliste{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));column-gap:28px}}
+.fahrt .halt{position:sticky;top:64px}   /* top setzt fahren(): Kachel mittig unter der Sprachleiste; unten schließt sie bündig ab */
+.fahrt .buehne{position:relative;width:100%;display:flex;background:var(--kachel);border-radius:28px;overflow:hidden}
+.fahrt .ftext{flex:1;padding:30px 32px 26px;display:flex;flex-direction:column}
+.fahrt .schritte{font-size:15px;font-weight:600;color:var(--leise);margin:0 0 6px;padding-right:44px}
+.fahrt .schritte span{transition:color .3s;white-space:nowrap}
+.fahrt .schritte span.an{color:var(--akzent)}
+.fahrt .schritte i{font-style:normal;color:#55555a}
+.fahrt .stufen{display:grid}
+.fahrt .stufe{grid-area:1/1;opacity:0;transition:opacity .35s}
+.fahrt .stufe.an{opacity:1}
+.fahrt .stufe h3{font-size:clamp(24px,2.6vw,32px);line-height:1.12;letter-spacing:-.005em;font-weight:700;margin:0 0 10px}
+.fahrt .stufe p{margin:0;color:var(--leise);font-size:17px;font-weight:500}
+.fahrt .plus{top:18px;right:18px;bottom:auto}
+.fahrt .fbild{position:relative;flex:0 0 auto;width:min(64%,calc(var(--bildhoehe,600px) * var(--seite)));aspect-ratio:var(--seite);margin:3px;border-radius:25px;overflow:hidden;background:#000}
+.fahrt .fbild > *{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.fahrt .fbild .welt{overflow:hidden}
+.fahrt .welt img{position:absolute;display:block;max-width:none}
+.fahrt .welt .nah{opacity:0}
+.fahrt .fbild .linie{inset:auto;left:0;width:100%;height:2px;background:var(--akzent);box-shadow:0 0 12px var(--akzent);opacity:0}
+/* Gestapelt nur im Hochformat; ein Handy quer bekommt Text neben dem Bild, sonst steht das Bild allein unter dem Text */
+@media screen and (max-width:820px) and (orientation:portrait){
+  .fahrt .buehne{flex-direction:column}
+  .fahrt .ftext{padding:22px 22px 18px}
+  .fahrt .fbild{width:min(100% - 6px,calc(var(--bildhoehe,600px) * var(--seite)));align-self:center}
+}
+.fenster{position:absolute;max-width:640px;width:calc(100% - 32px);box-shadow:0 18px 60px rgba(0,0,0,.6),0 0 0 1px var(--linie);background:var(--kachel2);border-radius:28px;padding:48px 48px 40px}
+.fenster .klein{font-size:15px;font-weight:600;color:var(--akzent);margin:0 0 6px}
+.fenster h4{font-size:clamp(26px,3vw,36px);line-height:1.12;font-weight:700;margin:0 0 22px}
+.fenster ul{margin:0;padding:0;list-style:none}
+.fenster li{padding:14px 0;border-top:1px solid var(--linie);color:#b4b4b9;font-size:17px}
+.fenster li b{color:var(--text);font-weight:600}
+.fenster .zu{position:absolute;right:18px;top:18px;width:36px;height:36px;border-radius:50%;border:0;background:#333336;color:var(--text);cursor:pointer;display:grid;place-items:center}
+.fenster .zu svg{width:12px;height:12px}
+.grenzen{margin:120px 0 0;border-top:1px solid var(--linie);padding-top:28px}
+/* Im Vergleich: Tabelle wie Apples Modellvergleich – ruhig, Linien statt Kästen, die eigene Spalte leicht hinterlegt; auf dem
+   Handy rollt nur die Tabelle, die erste Spalte bleibt stehen */
+.vgl-rahmen{overflow-x:auto;margin:0 -4px;padding:0 4px;-webkit-overflow-scrolling:touch}
+.vgl{width:100%;border-collapse:collapse;font-size:15px;min-width:840px}
+.vgl th,.vgl td{padding:12px 10px;border-bottom:1px solid var(--linie);text-align:center;vertical-align:middle}
+.vgl thead th{font-size:13px;font-weight:600;color:var(--leise);line-height:1.25;vertical-align:bottom;hyphens:manual}
+.vgl thead th.wir{color:var(--text)}
+.vgl tbody th{text-align:left;font-weight:400;color:var(--text);position:sticky;left:0;background:var(--bg);min-width:220px;padding-left:0}
+.vgl td.wir{background:var(--kachel)}.vgl thead th.wir{background:var(--kachel);border-radius:14px 14px 0 0}
+.vgl tbody tr:last-child td.wir{border-radius:0 0 14px 14px}
+.vgl td{font-size:17px;color:var(--leise)}.vgl td.z2{color:var(--text)}.vgl td.wir.z2{color:var(--akzent)}.vgl td.z0{color:#5a5a5f}
+.vgl tr.gruppe th{position:static;text-align:left;font-size:13px;font-weight:600;color:var(--leise);padding:26px 0 8px;border-bottom:1px solid var(--linie);background:none}
+.vgl tr.gruppe+tr th{padding-top:12px}
+.vgl tr.ehrlich th{color:var(--leise)}.vgl tr.ehrlich td,.vgl tr.ehrlich th{border-bottom:0;padding-top:18px}
+@media (max-width:600px){.vgl{font-size:14px;min-width:710px}.vgl tbody th{min-width:150px;max-width:150px}.vgl th,.vgl td{padding:10px 6px}}   /* Handy: schmalere Merkmalspalte, die Tabelle rollt seitlich */
+.vgl-fuss{margin:16px 0 0;font-size:13px;line-height:1.5;color:var(--leise);max-width:900px}.vgl-leg{display:block;margin-bottom:6px;color:var(--text)}
+.grenzen h2{font-size:24px;font-weight:700;margin:0 0 12px}
+.grenzen ul{margin:0;padding-left:20px;color:var(--leise);font-size:15px}
+.grenzen li{margin:0 0 6px}
+h1,h2,h3,h4{text-wrap:balance}
+.k p,.held p,.kopf p,.fenster li,.grenzen li{text-wrap:pretty}
+/* Soundtrack: vier Songs, je Kachel das erste Bild des Bewegtbild-Covers, verlinkt zu Suno */
+.lieder .liste{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.lieder .lied{display:block;background:var(--kachel);border-radius:28px;padding:16px 16px 22px;color:var(--text);text-decoration:none}
+.lieder .lied img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block;margin-bottom:16px}
+.lieder .stil{display:block;font-size:14px;font-weight:600;color:var(--akzent);margin:0 4px 4px}
+.lieder b{display:block;font-size:19px;line-height:1.2;font-weight:700;margin:0 4px}
+.lieder .hoeren{display:block;margin:8px 4px 0;font-size:14px;color:var(--leise)}
+.lieder .lied:hover .hoeren{color:var(--text)}
+@media screen and (max-width:1100px){.lieder .liste{grid-template-columns:1fr 1fr}}
+@media screen and (max-width:480px){.lieder .liste{gap:12px}.lieder .lied{padding:10px 10px 16px;border-radius:20px}.lieder b{font-size:16px}}
+footer{margin:40px 0 0;color:var(--leise);font-size:13px;line-height:1.9}
+footer a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--leise);white-space:nowrap}
+footer a:hover{color:var(--akzent);border-color:var(--akzent)}
+@media screen and (max-width:820px){
+  .raster{gap:14px}
+  .k,.k.w4,.k.w5,.k.w6,.k.w7,.k.w8{grid-column:span 12}
+  .k .text{padding:26px 24px 22px}
+  .held{padding:48px 0 28px}
+  .held h1{font-size:calc((100vw - 48px) / 6.5 * var(--fit,1))}
+  .held .bild{aspect-ratio:auto;border-radius:22px}
+  .abschnitt{margin-top:84px}
+  .k.w12 .bild{aspect-ratio:4/3}
+  .fenster{padding:44px 24px 28px}
+  .k h3{padding-right:40px}
+  .grenzen{margin-top:84px}
+  .filterliste{padding-bottom:64px}
+}
+@media screen and (max-width:480px){
+  .schaubild{grid-template-columns:1fr;row-gap:14px;padding-bottom:64px}
+  .schaubild .l,.schaubild .r{text-align:left}
+  .schaubild .sm{justify-self:center}
+}
+/* Zwei Paare mit Liste daneben: unter 1100 px wird die Liste so hoch, dass ueber dem Bild ein schwarzes Band entsteht */
+@media screen and (max-width:1100px) and (min-width:821px){
+  .k[data-id=blast],.k[data-id=lautmatrix],.k[data-id=lautbaum],.k[data-id=geruest],.k[data-id=soll],.k[data-id=buecher],.k[data-id=umfang]{grid-column:span 12}
+}
+@media (pointer:coarse){.sprache button{min-height:44px;min-width:44px}}
+@media print{
+  /* Druck (Caspar_D, 28.10.2026): A4, ein Satzspiegel mit Rand zum Atmen; Schrift auf zwei Dritteln der Breite,
+     Bilder ueber die ganze Satzbreite. Dieselbe Seite, nur anders gesetzt. Der Rand liegt als Innenabstand auf main
+     und wiederholt sich je Seite (clone), damit er schwarz bleibt statt weiss wie ein @page-Rand. */
+  @page{size:A4;margin:0}
+  html,body{background:#000}
+  body{font-size:10.5pt;line-height:1.45}
+  main{max-width:none;padding:18mm 20mm 16mm;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .sprache,.plus,.overlay,.held .pdf,.lieder{display:none!important}
+  /* Kopf */
+  .held{padding:0 0 6mm;text-align:left}
+  .held h1{font-size:30pt;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--akzent)}
+  .held .spruch{font-size:20pt}
+  .held p{font-size:12pt;max-width:66.6%;margin:0 0 6mm}
+  .held .bild{aspect-ratio:auto;border-radius:3mm}
+  /* Abschnitte: Ueberschrift beginnt eine neue Seite nur, wenn sie sonst allein unten stuende */
+  .abschnitt{margin:12mm 0 0;break-before:auto}
+  .abschnitt>.kopf{max-width:66.6%;margin:0 0 6mm;break-inside:avoid;break-after:avoid}
+  .abschnitt>.kopf .augenbraue{font-size:10pt}
+  .abschnitt>.kopf h2{font-size:24pt}
+  .abschnitt>.kopf p{font-size:12pt}
+  /* Kacheln untereinander, ohne Kachelflaeche: Text, darunter das Bild */
+  .raster{display:block}
+  .k,.k.quer,.k:not(.quer){display:block;background:none;border-radius:0;overflow:visible;margin:0 0 9mm;break-inside:avoid}
+  .k .text,.k.oben .text,.k.quer .text{max-width:66.6%;padding:0 0 3.5mm}
+  .k .klein{font-size:9.5pt;margin:0 0 1mm}
+  .k h3{font-size:15pt;margin:0 0 1.5mm}
+  .k p{font-size:10.5pt}
+  .k .zahl{font-size:22pt;margin:3mm 0 0}
+  .k .druck{display:block;margin:2.5mm 0 0;padding:0 0 0 4mm;color:var(--leise);font-size:9.5pt}
+  .k .druck li{margin:0 0 1mm}
+  .k .druck b{color:var(--text)}
+  /* Bilder: volle Satzbreite in ihrem eigenen Format; hohe Bilder hoechstens 110 mm hoch, damit Text und Bild meist zu zweit auf eine Seite passen */
+  .k .bild,.k.oben > .bild,.k.w4 .bild,.k.w12 .bild{aspect-ratio:auto!important;margin:0;border-radius:3mm;background:none;display:block}
+  .k.oben > .bild::after{display:none}
+  .k .bild img,.k .bild video{width:100%;height:auto;max-height:110mm;width:auto;max-width:100%;object-fit:contain;object-position:left top;border-radius:3mm}
+  .k .bild.trip,.k .bild.geraete{aspect-ratio:21/11!important}
+  .k .bild.konsole{min-height:0;margin:0;max-width:66.6%;border-radius:2mm;border:1px solid #2c2c30}
+  .konsole pre{font-family:Menlo,Consolas,monospace;font-size:8.5pt}
+  .filterliste,.schaubild{padding:0;max-width:100%}
+  .grenzen{margin:12mm 0 0;break-inside:avoid}
+  footer{break-before:avoid}
+}
+/* Abstand Teaser → Knöpfe wie auf der KlangTresor-Feature-Seite (dort 77 px samt Broschüren-Link; Caspar_D 13.11.2026) */
+.held .knoepfe{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:77px 0 38px}
+.held .knoepfe a,.laden a.knopf{display:inline-block;padding:9px 20px;border-radius:980px;background:var(--akzent);color:#000;font-weight:600;font-size:16px;text-decoration:none}
+.held .knoepfe a:hover,.laden a.knopf:hover{background:#ffa255}
+.held .knoepfe a small{font-weight:500;opacity:.75;margin-left:6px}
+.laden .k{display:flex;flex-direction:column}
+.laden .k .text{display:flex;flex-direction:column;flex:1;padding:30px 32px 30px}
+.laden a.knopf{align-self:flex-start;margin-top:auto;padding:10px 22px;font-size:17px}
+.laden .k p{margin-bottom:20px}
+.laden .anf{max-width:900px;margin:28px 0 0;color:var(--leise);font-size:15px;text-wrap:pretty}
+.laden .anf b{color:var(--text)}
+/* Handy (steht zuletzt, damit es die allgemeinen Regeln überstimmt): die neuen Kachelarten mit dem Seitenrand der Texte (24 px) und ohne feste Breiten */
+@media screen and (max-width:820px){
+  .balken,.filterliste,.matrix,.ausr,.sollbild{padding-left:24px;padding-right:24px}
+  .ausr .ar{grid-template-columns:52px repeat(4,minmax(0,1fr));column-gap:5px}
+  .ausr .al{height:38px;font-size:17px}
+  .ausr .ap{grid-column:2 / -1;grid-row:3!important;padding:2px 0 0}
+  .sollbild{grid-template-columns:minmax(0,1fr) auto 14px;column-gap:10px}
+  .sollbild .st{white-space:normal;min-width:0;font-size:16px}
+  .sollbild .sn{grid-column:1 / -1;padding:0 0 6px}
+  .matrix{grid-template-columns:1fr}
+  .matrix svg{height:auto;width:100%;justify-self:stretch}
+  .matrix .ml{flex-direction:row;flex-wrap:wrap;align-items:center}
+}
+</style>
+<link rel="icon" href="data:,">
+</head>
+<body>
+<!-- erzeugt von werkzeug/sprachseiten.mjs aus index.html – nicht von Hand ändern -->
+<nav class="sprache" aria-label="Language">
+  <button data-l="de">DE</button><button data-l="en">EN</button><button data-l="ru" title="Перевод частично создан ИИ и ещё дорабатывается">RU*</button>
+</nav>
+<main id="seite"><!--seite--><section class="held"><h1 style="--fit: 1;"><span class="rad" aria-hidden="true"></span>KlangFeder</h1><p class="spruch">Стихи, которые звучат верно уже при письме.</p><p>Для стихов и песен: KlangFeder прямо во время письма показывает, хорошо ли звучат ваши строки, — ударение, размер, рифма. И подбирает рифмы и слова, которые подходят. Она понимает немецкий, английский и русский, работает на вашем компьютере и бесплатна.</p><div class="knoepfe"><a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe">Windows ↓<small>26 МБ</small></a><a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg">macOS ↓<small>84 МБ</small></a><a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb">Linux ↓<small>48 МБ</small></a></div><div class="bild"><img src="img/titel-ru.webp?v=27" alt="" loading="lazy"></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Писать</p><h2>Вы видите, верно ли стоят ударения.</h2><p>Каждый слог показывает своё ударение, каждая строка — свой размер. Если стих спотыкается, вы увидите это раньше, чем его кто-нибудь споёт или прочтёт вслух.</p></div><div class="raster"><article class="k w12 quer" data-id="schreiben"><div class="text"><p class="klein">Ударение и размер</p><h3>Светлое — ударное.</h3><p>Ударные слоги светятся, безударные отступают. Перед каждой строкой её ударные слоги показаны полосками, справа стоят их число и рифма.</p><ul class="druck"><li><b>Немецкий, английский и русский</b> могут стоять даже вперемешку в одном тексте; язык KlangFeder определяет строка за строкой.</li><li><b>Словари произношения</b> знают больше 3 миллионов русских, 740 000 немецких и 228 000 английских словоформ.</li><li><b>Слева стоит число слогов</b>, справа — ударные слоги и клаузула: ударный конец строки — мужская, безударный — женская, два безударных — дактилическая.</li><li><b>Вы видите столько, сколько хотите:</b> маленькие переключатели включают и выключают диаграмму, поток и каждую звуковую цепочку — там, где они действуют.</li><li><b>KlangFeder знает особенности поэтического языка:</b> е вместо ё и поставленные знаки ударения она читает так, как они написаны, и различает за́мок и замо́к.</li></ul></div>
+        <div class="bild" style="aspect-ratio:750/420"><img src="img/schreiben-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="schreiben" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="versmass"><div class="text"><p class="klein">Размер</p><h3>Ямб, онегинская строфа, сонет — распознаны.</h3><p>По ударным слогам каждой строки KlangFeder определяет стопу, форму стиха и строфу — по классической теории стиха.</p><ul class="druck"><li><b>Стихи измеряются строго, песни — свободно:</b> в песне два безударных подряд и анакруза (безударный слог перед первым ударным) не считаются ошибкой.</li><li><b>Каталог форм</b> в справке показывает каждую форму картинкой из ударных и безударных слогов.</li></ul></div>
+        <div class="filterliste"><div><p class="fk">Стопы</p><p class="fw">ямб: ру·<b>ка</b> · хорей: <b>ма</b>·ма · дактиль: <b>ко</b>·ло·кол · анапест: со·ло·<b>вей</b></p></div><div><p class="fk">Формы стиха</p><p class="fw">дольник · тактовик · раёшный стих · белый стих · александрийский стих · свободные ритмы</p></div><div><p class="fk">Строфы</p><p class="fw">онегинская строфа · одическая строфа · частушка · сонет · октава · терцины · и ещё 9</p></div></div>
+        <button class="plus" data-k="versmass" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12 quer" data-id="fluss"><div class="text"><p class="klein">Поток</p><h3>Где сбивается поток.</h3><p>Диаграмма ударений перед каждой строкой показывает и поток: промежуток обозначает паузу, крючок — Drop-строку, а стрелка — место, где фраза переходит в следующую строку.</p><ul class="druck"><li><b>Drop-строка</b> заметно короче остальных строк своего раздела.</li><li><b>Перенос</b> KlangFeder узнаёт по тому, что в конце строки нет знака препинания, а следующая начинается со строчной.</li><li><b>Плотность ударений</b> в подсказке показывает число ударений на слог: высокая звучит плотно, низкая — плавно.</li><li><b>На картинке</b> — «Послушайте!» Владимира Маяковского (1914).</li></ul></div>
+        <div class="bild" style="aspect-ratio:750/420"><img src="img/fluss-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="fluss" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Рифмовать</p><h2>Одинаковый цвет — одна рифма.</h2><p>KlangFeder узнаёт рифмы по звучанию, а не по написанию. И находит новые.</p></div><div class="raster"><article class="k w7" data-id="reimschema"><div class="text"><p class="klein">Схема рифмовки</p><h3>Каждый раздел знает свою схему.</h3><p>Цветные буквы показывают, какие строки рифмуются. Рядом с каждым заголовком стоит схема: распознанная в тексте или заданная вами.</p><ul class="druck"><li><b>Для строф из четырёх, шести или восьми строк</b> на выбор есть перекрёстная рифма ABAB, парная AABB, хвостовая AABCCB, октава ABABABCC; любую схему можно и ввести вручную.</li><li><b>«авто»</b> берёт схему, которая лучше всего подходит к разделам этого типа.</li></ul></div>
+        <div class="bild" style="aspect-ratio:654/760"><img src="img/reimschema-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="reimschema" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w5" data-id="reimsuche"><div class="text"><p class="klein">Поиск рифм</p><h3>Правый клик или поиск — и рифмы на месте.</h3><p>В Мастерской стоят рифмы к слову, степень за степенью и с их частотой. Слова, выделенные жирным, подходят по размеру. Поле поиска вверху находит и придуманные сочетания букв, и знаки транскрипции.</p><ul class="druck"><li><b>Там же, в Мастерской, есть</b> замены в том же ритме, более общие и более частные понятия, связанные слова, антонимы, обороты — и перевод, если слово на другом языке, чем интерфейс.</li><li><b>Батарейка</b> рядом с каждым словом показывает, насколько оно подходит именно на это место в строке: полная означает, что слово точно попадает в ударные слоги этого места.</li><li><b>Как часто пара слов уже использовалась как рифма,</b> подсчитано примерно по 450 000 немецких, 790 000 английских и 1,1 миллиона русских рифм.</li><li><b>Поле поиска</b> при вводе подсвечивает это сочетание букв по всему тексту; «Поиск» читает придуманное слово как знакомое с тем же окончанием. Рядом со словом стоит его транскрипция, а клавиатура транскрипции показывает пример к каждому знаку.</li></ul></div>
+        <div class="bild" style="aspect-ratio:462/760"><img src="img/reimsuche-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="reimsuche" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="reimstufen"><div class="text"><p class="klein">Степени рифмы</p><h3>Семь степеней, у каждой свой цвет.</h3><p>Насколько хорошо рифмуются два слова, KlangFeder определяет по их произношению. Цветная полоска стоит у каждого списка рифм. Первые три группы и последняя действительно рифмуются в русских стихах и песнях; три средние там как рифмы не встречаются — это так называемые соседства:</p><ul class="druck"><li><b>Неточные рифмы</b> по правилам стихосложения (глаза / тебя, любовь / слов) засчитываются в схеме рифмовки. Ассонанс KlangFeder узнаёт и у родственных гласных (немецкие Nebel / Mädel).</li><li><b>Список рифм</b> начинается с точных рифм и идёт до простого созвучия; тавтологические стоят в самом конце. Колёсико мыши решает, насколько далеко.</li></ul></div>
+        <div class="filterliste"><div><p class="fk" style="color:#4a8fff">точная</p><p class="fw">нет / свет · одинаково, начиная с ударного гласного</p></div><div><p class="fk" style="color:#45c26a">почти точная</p><p class="fw">жить / любить · и после ж звучит как ы</p></div><div><p class="fk" style="color:#e6d23e">неточная</p><p class="fw">глаза / тебя · ударный гласный немного другой</p></div><div><p class="fk" style="color:#f08a24">ассонанс</p><p class="fw">ночь / ложь · совпадают только гласные</p></div><div><p class="fk" style="color:#c0646c">консонанс</p><p class="fw">день / конь · совпадают только согласные</p></div><div><p class="fk" style="color:#76767b">созвучие</p><p class="fw">ночь / очи · звучит похоже, но число слогов другое</p></div><div><p class="fk" style="color:#6f6f75">тавтологическая</p><p class="fw">свет / ответ · совпадает даже согласный перед ударным гласным</p></div></div>
+        <button class="plus" data-k="reimstufen" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12 quer" data-id="klangketten"><div class="text"><p class="klein">Звуковые цепочки</p><h3>Звук, который проходит через строфу.</h3><p>Шесть переключателей над листом показывают, что звучит вместе, — у каждой своё выделение, один цвет — одна цепочка. Включайте только то, что нужно сейчас.</p><ul class="druck"><li><b>В начале строки</b> строки, которые начинаются одинаково или чьи первые слова рифмуются, выделены цветом своей цепочки.</li><li><b>Внутренняя рифма</b> подчёркнута; два рифмующихся соседних слова связывает дуга, как лига в нотах.</li><li><b>Составная рифма</b> — одна и та же последовательность гласных в трёх и более слогах — подсвечена.</li><li><b>Корневую рифму</b> показывает черта над словом, <b>аллитерацию</b> — точка перед ним, <b>ассонанс</b> — волна над гласным.</li><li><b>На картинке</b> — «Послушайте!» Владимира Маяковского (1914).</li></ul></div>
+        <div class="bild" style="aspect-ratio:750/460"><img src="img/klangketten-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="klangketten" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="verhoerer"><div class="text"><p class="klein">Ослы́шки</p><h3>Два прочтения, один звук посередине.</h3><p>В пении граница между словами размывается: «на двор» звучит как «над вор», «о друг» — как «от рук». Такие места могут привести к недоразумениям. KlangFeder отмечает их двумя жёлтыми уголками: сверху одно прочтение, снизу другое; звук под обоими переходит из слова в слово.</p><ul class="druck"><li><b>Отмечается то, чего ожидают исследования границы слов:</b> конечный согласный переходит к слову, начинающемуся с гласного, или граница сдвигается перед ударный слог (Cutler &amp; Butterfield 1992). Всегда участвует короткое слово — предлог, местоимение или частица.</li><li><b>Оба прочтения</b> видны рядом, если навести на маленький уголок справа; Мастерская называет их у слова.</li></ul></div>
+        <div class="bild"><img src="img/verhoerer-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="verhoerer" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="gramm"><div class="text"><p class="klein">Грамматическая рифма</p><h3>Рифмуется только окончание?</h3><p>Два слова часто рифмуются только одинаковым окончанием — любил / ходил, столом / окном. Стиховедение называет это слабой рифмой. KlangFeder подчёркивает такие рифмы точками и говорит почему; оставить ли их — решаете вы.</p><ul class="druck"><li><b>Два случая:</b> два глагола в одной форме или одинаковое ударное падежное окончание. Если рифмуется и основа — день / тень, — это не считается.</li><li><b>В Мастерской</b> рифмы в той же форме стоят отдельной группой после остальных. Основа — почти 900 000 словоформ из Викисловаря.</li></ul></div>
+        <div class="bild"><img src="img/gramm-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="gramm" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Найти</p><h2>Нужное слово — в нужном размере.</h2><p>Синонимы, антонимы и обороты — у каждого есть знак, насколько он подходит именно к нужному месту вашей строки. KlangFeder заполняет даже пропуски.</p></div><div class="raster"><article class="k w6" data-id="ersatz"><div class="text"><p class="klein">Замены</p><h3>Тот же смысл,<br>то же ударение.</h3><p>Синонимы с тем же слоговым рисунком стоят первыми. Маленькая батарейка у каждого предложения показывает, насколько оно подходит именно к этому месту строки; вверху стоит строка с её ударными слогами, выделение отмечено.</p><ul class="druck"><li><b>Полная батарейка</b> означает ровно ударные слоги этого места. Три четверти — слогом больше или меньше, половина — строка спотыкается, четверть — ударный слог на безударном месте, а пустая батарейка значит, что в строке станет другое число ударных.</li><li><b>Русские предложения</b> — из русского Викисловаря; <b>немецкие</b> — из OpenThesaurus и Викисловаря, с более общими и частными понятиями и связанными словами, специальные термины — отдельной группой в конце; <b>английские</b> — из Open English WordNet.</li><li><b>«рифмуется»</b> отмечает синонимы, которые к тому же рифмуются с парной строкой.</li><li><b>С учётом части речи</b> (немецкий): если слово может быть глаголом или прилагательным — weiß в «ich weiß» (я знаю) или в «ist weiß» (белый), — KlangFeder угадывает по контексту; один клик переключает.</li><li><b>Фразеологизмы и пословицы</b> со словом стоят отдельными группами — для немецкого более 10 000 оборотов и 760 пословиц из немецкого Викисловаря.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/560"><img src="img/ersatz-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="ersatz" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="luecke"><div class="text"><p class="klein">Пропуски</p><h3>Три черты — и слова встают на место.</h3><p>Напишите ___ или шаблон вроде x-X-x-X там, где не хватает слова. Правый клик покажет слова ровно этого размера — в конце строки сразу с рифмой.</p><ul class="druck"><li><b>Размер</b> берётся из парной строки (той, с которой ваша должна рифмоваться), рифма — из схемы рифмовки.</li><li><b>В заполнителях</b> вроде x-X-x-X строчная буква обозначает безударный слог, прописная — ударный; в конце может стоять созвучие рифмы (например x-x-ОЧЬ — ночь, помочь).</li><li><b>Один клик</b> ставит предложение на место пропуска.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/560"><img src="img/luecke-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="luecke" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="klangfarbe"><div class="text"><p class="klein">Окраска звука</p><h3>Слова с нужным звучанием.</h3><p>Шипящие, твёрдые, мягкие, рокочущие, тёмные или светлые: выберите одну или несколько окрасок — и в каждом списке результатов подходящие слова выйдут вперёд. Линия под словом показывает, насколько хорошо оно подходит.</p><ul class="druck"><li><b>Шипящие</b> — фрикативные и шипящие (с, ш, ф, х): шёпот, шум; <b>твёрдые</b> — взрывные (п, т, к), а в немецком вполсилы и твёрдый приступ перед гласной; <b>мягкие</b> — м, н, л; <b>рокочущие</b> — р; <b>тёмные</b> — у и о, <b>светлые</b> — и и е.</li><li><b>В сценическом немецком</b> каждый r раскатистый — и в Herz, и в Schmerz — и тогда считается рокочущим.</li><li><b>Ничего не пропадает:</b> окраска сортирует и показывает, но не отбрасывает.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/560"><img src="img/klangfarbe-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="klangfarbe" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="lautschrift"><div class="text"><p class="klein">Транскрипция</p><h3>Поиск по звучанию.</h3><p>Впишите в поле поиска Мастерской слово, часть слова или транскрипцию между косыми чертами: /ˈnot͡ɕ/ найдёт рифмы на звук — и для придуманных слов. Знаки лежат на экранной клавиатуре для русского, немецкого и английского; наведите на клавишу — и сразу появится пример именно с этим звуком.</p><ul class="druck"><li><b>Поле поиска</b> при вводе подсвечивает эту последовательность букв по всему тексту.</li><li><b>Правый клик</b> по слову в тексте открывает это слово в Мастерской.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/560"><img src="img/lautschrift-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="lautschrift" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="stammreim"><div class="text"><p class="klein">Корневая рифма и гнездо</p><h3>Родство по звуку и по слову.</h3><p>К каждому слову Мастерская даёт корневые рифмы — слова с тем же ударным слогом и другим окончанием — и словообразовательное гнездо: бог, божий, богиня.</p><ul class="druck"><li><b>Корневые рифмы</b> KlangFeder находит по звучанию — поэтому среди них есть и слова, которые только звучат родственно.</li><li><b>Гнёзда</b> взяты из Викисловаря, для немецкого и русского (лёд · ледяной).</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/400"><img src="img/stammreim-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="stammreim" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="anlaut"><div class="text"><p class="klein">Начальный звук</p><h3>Одинаковое начало — аллитерация.</h3><p>Включите «Анлаут» и впишите звук или слово: в каждом списке результатов вперёд выходят слова, чей ударный слог начинается с этого звука, — в том числе с похожих звуков, как т и д или к и г.</p><ul class="druck"><li><b>Считается начальный звук ударного слога</b> — именно он создаёт аллитерацию.</li><li><b>Клавиатура звуков</b> тоже пишет в это поле; гласные аллитерируют между собой.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/400"><img src="img/anlaut-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="anlaut" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Структура</p><h2>Сначала форма, потом слова.</h2><p>Каркас песни или стихотворения, записанный на рабочий лист заполнителями. Вы пишете поверх, а план остаётся на виду.</p></div><div class="raster"><article class="k w6" data-id="geruest"><div class="text"><p class="klein">Каркасы</p><h3>Песня или стихотворение.</h3><p>Один переключатель выбирает между формами песен и классическими формами стихов. Каждая форма приходит на лист со строками, ударными слогами и схемой рифмовки.</p><ul class="druck"><li><b>Для песен</b> есть поп с предприпевом, куплет–припев–бридж, AABA, баллада, блюз, рэп и другие — или структура ваших образцов.</li><li><b>Для стихов</b> есть онегинская строфа, одическая строфа, частушка, сонет, октава, терцины, триолет, газель, античные строфы, хайку.</li><li><b>В структуре</b> можно изменить любой раздел: строки, ударные слоги, рифму, клаузулу.</li></ul></div>
+        <div class="schaubild"><p class="sk l">Песня</p><span></span><p class="sk r">Стихотворение</p><div class="sl l">поп<br>куплет · припев<br>AABA<br>баллада<br>блюз<br>рэп</div><div class="sm um"><div class="modi"><span class="an">Песня</span><span>Стихотворение</span></div></div><div class="sl r">сонет<br>октава<br>терцины<br>онегинская строфа<br>частушка<br>хайку</div></div>
+        <button class="plus" data-k="geruest" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="soll"><div class="text"><p class="klein">План и результат</p><h3>План остаётся.</h3><p>Рядом с каждой строкой контур показывает, чего требует каркас. Чего не хватает — остаётся пустым; что лишнее — светится.</p><ul class="druck"><li><b>Стихи</b> измеряются слог за слогом, <b>песни</b> — только по ударным слогам.</li><li><b>Буква рифмы</b> стоит курсивом, пока строка действительно не зарифмуется.</li></ul></div>
+        <div class="sollbild"><p class="st muster">x-X-x-X-x-X-x-X-x</p><span class="sb"><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i></span><b class="sr" style="color:#4a8fff">A</b><span class="sn">каркас</span><p class="st">Мой дядя самых честных правил</p><span class="sb"><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i></span><b class="sr" style="color:#4a8fff">A</b><span class="sn">подходит</span><p class="st">Когда не в шутку занемог</p><span class="sb"><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i></span><b class="sr" style="color:#45c26a">B</b><span class="sn">подходит</span><p class="st">Он уважать себя <b>так</b> заставил</p><span class="sb"><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="zv w" style="height:4px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i></span><b class="sr" style="color:#4a8fff">A</b><span class="sn">лишний слог</span><p class="st">И лучше вы▏</p><span class="sb"><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="w" style="height:4px"></i><i class="" style="height:13px"></i><i class="um w" style="height:4px"></i><i class="um" style="height:13px"></i><i class="um w" style="height:4px"></i><i class="um" style="height:13px"></i></span><b class="sr" style="color:#45c26a;font-style:italic;font-weight:500">B</b><span class="sn">остаток контуром</span></div>
+        <button class="plus" data-k="soll" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12 quer" data-id="gebunden"><div class="text"><p class="klein">свободно ↔ строго</p><h3>Десять огней показывают, насколько строго построен текст.</h3><p>Вверху посередине стоят десять огней между «свободно» и «строго». Они взвешивают поровну четыре вещи: насколько чисты рифмы, насколько точно выдержана схема рифмовки, следует ли число ударных слогов постоянному ходу и насколько ровно чередуются ударные и безударные слоги.</p><ul class="druck"><li><b>Ни правильно, ни неправильно.</b> Народная песня построена строго, говорной стих — свободно, и то и другое намеренно. Огни говорят лишь о том, где ваш текст стоит сейчас.</li><li><b>Откуда вы пришли:</b> огонь с тонкой рамкой отмечает исходную точку — оригинал или первую версию, в сравнении — левый текст. Как только текст сдвинулся, число появляется с той стороны, куда он сдвинулся: «строже +3» справа, «−2 свободнее» слева.</li><li><b>Это показание, а не регулятор.</b> Здесь нечего тянуть: огни следуют за текстом, а не наоборот.</li></ul></div>
+        <div class="bild" style="aspect-ratio:750/370"><img src="img/gebunden-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="gebunden" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Для Suno</p><h2>Готово к вставке.</h2><p>Если вы пишете для Suno — сервиса, который из текста и стиля делает песню, — KlangFeder готовит текст и стиль так, как их ждёт Suno: подсчитанными и готовыми к копированию.</p></div><div class="raster"><article class="k w4" data-id="zaehlen"><div class="text"><p class="klein">Подсчёт знаков</p><h3>Вы видите, помещается ли текст.</h3><p>Поля «Lyrics» и «Styles» считаются отдельно — против пределов Suno в 5000 и 1000 знаков. Одна кнопка копирует каждое поле.</p><ul class="druck"><li><b>Стиль-промпт</b> (описание стиля для Suno) сохраняется с каждой версией вашего текста.</li></ul></div>
+        <div class="bild" style="aspect-ratio:365/520"><img src="img/zaehlen-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="zaehlen" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w8" data-id="regie"><div class="text"><p class="klein">Указания</p><h3>[Скобки] — для Suno.</h3><p>То, что стоит в квадратных скобках, — указания: разделы, настроение, инструменты. KlangFeder читает их как членение текста и не включает в размер.</p><ul class="druck"><li><b>Разделы</b> вроде [Verse], [Chorus], [Bridge] членят текст; схема рифмовки и размер действуют для каждого раздела.</li><li><b># в начале строки</b> — заметка для вас, в Suno она не уходит.</li><li><b>Строки до первой скобки</b> считаются вступлением (пояснения, благодарности) и не измеряются.</li></ul></div>
+        <div class="bild" style="aspect-ratio:751/520"><img src="img/regie-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="regie" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Под капотом</p><h2>Рифмы, разобранные методами биоинформатики.</h2><p>Как биология сравнивает последовательности белков и ДНК, так KlangFeder сравнивает цепочки звуков: выравнивает их, как BLAST — инструмент поиска для генов и белков, — и оценивает по матрице замен, выученной на рифмах.</p></div><div class="raster"><article class="k w7" data-id="blast"><div class="text"><p class="klein">Как находятся рифмы</p><h3>Рифмы, выровненные как гены.</h3><p>Каждое слово становится цепочкой звуков и выравнивается от конца, звук против звука. Три настоящих выравнивания из KlangFeder: одинаковые звуки дают полные баллы, похожие — меньше, а то, что стоит до рифмы, не считается.</p><ul class="druck"><li><b>Выравнивание закреплено в конце и открыто влево</b> (как в BLAST): оно растёт, пока набираются баллы.</li><li><b>Таблица пар звуков</b> (матрица замен, как BLOSUM для белков) даёт баллы парам звуков, которые встречаются на месте рифмы чаще, чем предсказывает случай.</li><li><b>У слогов есть вес:</b> недостающий безударный слог стоит мало, ударный — много. Поэтому свет не рифмуется со светофором.</li><li><b>По чему судить о рифме, выбираете вы:</b> как в стихах, как в песнях, по обоим, только по звучанию звуков — или по вашему слуху. Короткий тест на слух («Мои рифмы …») спрашивает, какое слово рифмуется лучше, и строит из ответов вашу таблицу звуков.</li></ul></div>
+        <div class="ausr"><div class="ar" style="--n:3"><span class="aw">любовь</span><span class="al au">b</span><span class="al gl">o</span><span class="al ae">fʲ</span><span class="ap" style="grid-row:span 2"><b>4,0</b> из 12,0<i style="color:#e6d23e">неточная</i></span><span class="aw">слов</span><span class="al au">sɫ</span><span class="al gl">o</span><span class="al ae">f</span></div><div class="ar" style="--n:3"><span class="aw">ночь</span><span class="al au">n</span><span class="al gl">o</span><span class="al an">t͡ɕ</span><span class="ap" style="grid-row:span 2"><b>3,0</b> из 6,0<i style="color:#f08a24">ассонанс</i></span><span class="aw">ложь</span><span class="al au">ɫ</span><span class="al gl">o</span><span class="al an">ʂ</span></div><div class="ar" style="--n:3"><span class="aw">нет</span><span class="al au">nʲ</span><span class="al gl">e</span><span class="al gl">t</span><span class="ap" style="grid-row:span 2"><b>6,0</b> из 6,0<i style="color:#4a8fff">точная</i></span><span class="aw">свет</span><span class="al au">svʲ</span><span class="al gl">e</span><span class="al gl">t</span></div><p class="aleg"><span class="al gl"></span>одинаковые<span class="al ae"></span>похожие<span class="al an"></span>разные<span class="al au"></span>до рифмы</p></div>
+        <button class="plus" data-k="blast" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w5" data-id="hoerquiz"><div class="text"><p class="klein">Мои звуки</p><h3>Решает ваш слух.</h3><p>Короткий тест на слух: одно слово, два слова-рифмы — какое рифмуется лучше? Вопросы только там, где стихи и фонетика расходятся. Из ваших ответов строится ваша таблица звуков, и поиск рифм работает по вашему слуху.</p><ul class="druck"><li><b>Тест идёт по страницам, и прервать его можно в любой момент:</b> × откладывает его, в следующий раз он продолжится с того же места.</li><li><b>Хватает немногих ответов:</b> основа — таблица, выученная на стихах и песнях; ваши ответы сдвигают только те пары звуков, о которых спрашивали.</li><li><b>Откалибровать заново</b> можно в любой момент на странице «Система». Пока только для немецкого.</li></ul></div>
+        <div class="bild" style="aspect-ratio:462/430"><img src="img/hoerquiz-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="hoerquiz" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="lautmatrix"><div class="text"><p class="klein">Матрица звуков</p><h3>Какие гласные рифмуются.</h3><p>Квадрат отвечает на один вопрос двумя способами. <b>Внизу слева</b> — что поэты делают на самом деле в стихах: как часто два гласных стоят рядом на месте рифмы, подсчитано по 22 500 русским стихотворениям и 35 000 песням. <b>Вверху справа</b> — насколько похоже звучат эти два звука, только по тому, как их образует рот, без единого стихотворения. Красный в обеих половинах значит «годится для рифмы», синий — «не годится». <b>Самый тёмный синий</b> — пары, которые ни разу не встретились в рифме; дальше друг от друга уже некуда.</p><ul class="druck"><li><b>Например:</b> ударные и и ы рифмуются (жить / любить), е и э — тоже; а безударные а/о и и в рифме почти не встречаются вместе — их поле внизу самого тёмного синего цвета. В немецком такой же случай ещё нагляднее: безударные -e и -er звучат почти одинаково, и расчёт считает их близкими, но среди 4 842 засвидетельствованных рифменных пар с этими окончаниями они не срифмовались ни разу.</li><li><b>Как считается левая половина:</b> если бы рифме был безразличен гласный, два звука встречались бы ровно столько раз, сколько даёт их собственная частота. Всё, что сверх этого, поэты искали намеренно — именно это и стоит в таблице, пересчитанное так, что каждый звук с самим собой даёт 1 (поточечная взаимная информация, PMI).</li><li><b>Верхней половине стихи не нужны.</b> Она сравнивает только то, как образуются два звука: положение языка, губы, долгота. Поэтому КлангФедер может судить и о тех парах гласных, которые ни в одном стихотворении не встретились.</li><li><b>Для конечных согласных</b> есть такая же таблица — но она почти везде одинакова: из 22 715 засвидетельствованных немецких рифменных пар 22 662 имеют один и тот же конечный согласный. <i>Другой</i> согласный в конце практически исключён. А вот <i>пропущенный</i> допустим, и цена зависит от звука.</li></ul></div>
+        <div class="matrix"><svg viewBox="0 85.19999999999999 303.2 238" role="img" aria-label="годится для рифмы" style="--ms: 13.0px;"><text class="sb" x="65.19999999999999" y="104.69999999999999" text-anchor="end">и</text><text x="83.19999999999999" y="104.69999999999999" text-anchor="end">i</text><text x="99.69999999999999" y="315.2" text-anchor="middle">i</text><rect x="90.19999999999999" y="90.19999999999999" width="19" height="19" rx="2" fill="#ff6158"><title>i (и) / i (и): 1,00</title></rect><rect x="111.19999999999999" y="90.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>i (и) / ɨ (ы, и): -0,56 (рассчитано)</title></rect><rect x="132.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#76accb"><title>i (и) / e (е): -0,21 (рассчитано)</title></rect><rect x="153.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>i (и) / ɛ (е, э): -0,56 (рассчитано)</title></rect><rect x="174.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>i (и) / a (а, я): -1,63 (рассчитано)</title></rect><rect x="195.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>i (и) / o (о, ё): -1,45 (рассчитано)</title></rect><rect x="216.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>i (и) / u (у, ю): -0,74 (рассчитано)</title></rect><rect x="237.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#c9a284"><title>i (и) / ɪ (е, и): 0,29 (рассчитано)</title></rect><rect x="258.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>i (и) / ʊ (у, ю): -1,10 (рассчитано)</title></rect><rect x="279.2" y="90.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>i (и) / ə (о, а, я): -1,63 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="125.69999999999999" text-anchor="end">ы, и</text><text x="83.19999999999999" y="125.69999999999999" text-anchor="end">ɨ</text><text x="120.69999999999999" y="315.2" text-anchor="middle">ɨ</text><rect x="90.19999999999999" y="111.19999999999999" width="19" height="19" rx="2" fill="#c9a284"><title>ɨ (ы, и) / i (и): 0,26 (подсчитано)</title></rect><rect x="111.19999999999999" y="111.19999999999999" width="19" height="19" rx="2" fill="#ff6158"><title>ɨ (ы, и) / ɨ (ы, и): 1,00</title></rect><rect x="132.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>ɨ (ы, и) / e (е): -1,27 (рассчитано)</title></rect><rect x="153.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#0b85fe"><title>ɨ (ы, и) / ɛ (е, э): -1,63 (рассчитано)</title></rect><rect x="174.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>ɨ (ы, и) / a (а, я): -0,56 (рассчитано)</title></rect><rect x="195.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#76accb"><title>ɨ (ы, и) / o (о, ё): -0,39 (рассчитано)</title></rect><rect x="216.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#e68a65"><title>ɨ (ы, и) / u (у, ю): 0,65 (рассчитано)</title></rect><rect x="237.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>ɨ (ы, и) / ɪ (е, и): -0,92 (рассчитано)</title></rect><rect x="258.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#afafaf"><title>ɨ (ы, и) / ʊ (у, ю): -0,03 (рассчитано)</title></rect><rect x="279.2" y="111.19999999999999" width="19" height="19" rx="2" fill="#529beb"><title>ɨ (ы, и) / ə (о, а, я): -0,56 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="146.7" text-anchor="end">е</text><text x="83.19999999999999" y="146.7" text-anchor="end">e</text><text x="141.7" y="315.2" text-anchor="middle">e</text><rect x="90.19999999999999" y="132.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>e (е) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="132.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>e (е) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="132.2" width="19" height="19" rx="2" fill="#ff6158"><title>e (е) / e (е): 1,00</title></rect><rect x="153.2" y="132.2" width="19" height="19" rx="2" fill="#c9a284"><title>e (е) / ɛ (е, э): 0,29 (рассчитано)</title></rect><rect x="174.2" y="132.2" width="19" height="19" rx="2" fill="#529beb"><title>e (е) / a (а, я): -0,92 (рассчитано)</title></rect><rect x="195.2" y="132.2" width="19" height="19" rx="2" fill="#529beb"><title>e (е) / o (о, ё): -0,74 (рассчитано)</title></rect><rect x="216.2" y="132.2" width="19" height="19" rx="2" fill="#0b85fe"><title>e (е) / u (у, ю): -1,45 (рассчитано)</title></rect><rect x="237.2" y="132.2" width="19" height="19" rx="2" fill="#529beb"><title>e (е) / ɪ (е, и): -0,56 (рассчитано)</title></rect><rect x="258.2" y="132.2" width="19" height="19" rx="2" fill="#0b85fe"><title>e (е) / ʊ (у, ю): -1,80 (рассчитано)</title></rect><rect x="279.2" y="132.2" width="19" height="19" rx="2" fill="#529beb"><title>e (е) / ə (о, а, я): -0,92 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="167.7" text-anchor="end">е, э</text><text x="83.19999999999999" y="167.7" text-anchor="end">ɛ</text><text x="162.7" y="315.2" text-anchor="middle">ɛ</text><rect x="90.19999999999999" y="153.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɛ (е, э) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="153.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɛ (е, э) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="153.2" width="19" height="19" rx="2" fill="#e68a65"><title>ɛ (е, э) / e (е): 0,65 (подсчитано)</title></rect><rect x="153.2" y="153.2" width="19" height="19" rx="2" fill="#ff6158"><title>ɛ (е, э) / ɛ (е, э): 1,00</title></rect><rect x="174.2" y="153.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ɛ (е, э) / a (а, я): -1,27 (рассчитано)</title></rect><rect x="195.2" y="153.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ɛ (е, э) / o (о, ё): -1,10 (рассчитано)</title></rect><rect x="216.2" y="153.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ɛ (е, э) / u (у, ю): -1,80 (рассчитано)</title></rect><rect x="237.2" y="153.2" width="19" height="19" rx="2" fill="#76accb"><title>ɛ (е, э) / ɪ (е, и): -0,21 (рассчитано)</title></rect><rect x="258.2" y="153.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ɛ (е, э) / ʊ (у, ю): -1,45 (рассчитано)</title></rect><rect x="279.2" y="153.2" width="19" height="19" rx="2" fill="#529beb"><title>ɛ (е, э) / ə (о, а, я): -0,56 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="188.7" text-anchor="end">а, я</text><text x="83.19999999999999" y="188.7" text-anchor="end">a</text><text x="183.7" y="315.2" text-anchor="middle">a</text><rect x="90.19999999999999" y="174.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>a (а, я) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="174.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>a (а, я) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="174.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>a (а, я) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="174.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>a (а, я) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="174.2" width="19" height="19" rx="2" fill="#ff6158"><title>a (а, я) / a (а, я): 1,00</title></rect><rect x="195.2" y="174.2" width="19" height="19" rx="2" fill="#afafaf"><title>a (а, я) / o (о, ё): -0,03 (рассчитано)</title></rect><rect x="216.2" y="174.2" width="19" height="19" rx="2" fill="#529beb"><title>a (а, я) / u (у, ю): -0,74 (рассчитано)</title></rect><rect x="237.2" y="174.2" width="19" height="19" rx="2" fill="#0b85fe"><title>a (а, я) / ɪ (е, и): -1,98 (рассчитано)</title></rect><rect x="258.2" y="174.2" width="19" height="19" rx="2" fill="#0b85fe"><title>a (а, я) / ʊ (у, ю): -1,10 (рассчитано)</title></rect><rect x="279.2" y="174.2" width="19" height="19" rx="2" fill="#76accb"><title>a (а, я) / ə (о, а, я): -0,21 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="209.7" text-anchor="end">о, ё</text><text x="83.19999999999999" y="209.7" text-anchor="end">o</text><text x="204.7" y="315.2" text-anchor="middle">o</text><rect x="90.19999999999999" y="195.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>o (о, ё) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="195.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>o (о, ё) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="195.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>o (о, ё) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="195.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>o (о, ё) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="195.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>o (о, ё) / a (а, я): -4,28 (ни разу не рифмовались)</title></rect><rect x="195.2" y="195.2" width="19" height="19" rx="2" fill="#ff6158"><title>o (о, ё) / o (о, ё): 1,00</title></rect><rect x="216.2" y="195.2" width="19" height="19" rx="2" fill="#76accb"><title>o (о, ё) / u (у, ю): -0,21 (рассчитано)</title></rect><rect x="237.2" y="195.2" width="19" height="19" rx="2" fill="#0b85fe"><title>o (о, ё) / ɪ (е, и): -1,80 (рассчитано)</title></rect><rect x="258.2" y="195.2" width="19" height="19" rx="2" fill="#529beb"><title>o (о, ё) / ʊ (у, ю): -0,56 (рассчитано)</title></rect><rect x="279.2" y="195.2" width="19" height="19" rx="2" fill="#afafaf"><title>o (о, ё) / ə (о, а, я): -0,03 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="230.7" text-anchor="end">у, ю</text><text x="83.19999999999999" y="230.7" text-anchor="end">u</text><text x="225.7" y="315.2" text-anchor="middle">u</text><rect x="90.19999999999999" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / a (а, я): -4,28 (ни разу не рифмовались)</title></rect><rect x="195.2" y="216.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>u (у, ю) / o (о, ё): -4,28 (ни разу не рифмовались)</title></rect><rect x="216.2" y="216.2" width="19" height="19" rx="2" fill="#ff6158"><title>u (у, ю) / u (у, ю): 1,00</title></rect><rect x="237.2" y="216.2" width="19" height="19" rx="2" fill="#0b85fe"><title>u (у, ю) / ɪ (е, и): -1,10 (рассчитано)</title></rect><rect x="258.2" y="216.2" width="19" height="19" rx="2" fill="#c9a284"><title>u (у, ю) / ʊ (у, ю): 0,29 (рассчитано)</title></rect><rect x="279.2" y="216.2" width="19" height="19" rx="2" fill="#529beb"><title>u (у, ю) / ə (о, а, я): -0,74 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="251.7" text-anchor="end">е, и</text><text x="83.19999999999999" y="251.7" text-anchor="end">ɪ</text><text x="246.7" y="315.2" text-anchor="middle">ɪ</text><rect x="90.19999999999999" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / ɨ (ы, и): -4,28 (ни разу не рифмовались)</title></rect><rect x="132.2" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / a (а, я): -4,28 (ни разу не рифмовались)</title></rect><rect x="195.2" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / o (о, ё): -4,28 (ни разу не рифмовались)</title></rect><rect x="216.2" y="237.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ɪ (е, и) / u (у, ю): -4,28 (ни разу не рифмовались)</title></rect><rect x="237.2" y="237.2" width="19" height="19" rx="2" fill="#ff6158"><title>ɪ (е, и) / ɪ (е, и): 1,00</title></rect><rect x="258.2" y="237.2" width="19" height="19" rx="2" fill="#529beb"><title>ɪ (е, и) / ʊ (у, ю): -0,74 (рассчитано)</title></rect><rect x="279.2" y="237.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ɪ (е, и) / ə (о, а, я): -1,27 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="272.7" text-anchor="end">у, ю</text><text x="83.19999999999999" y="272.7" text-anchor="end">ʊ</text><text x="267.7" y="315.2" text-anchor="middle">ʊ</text><rect x="90.19999999999999" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="258.2" width="19" height="19" rx="2" fill="#529beb"><title>ʊ (у, ю) / ɨ (ы, и): -0,55 (подсчитано)</title></rect><rect x="132.2" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / a (а, я): -4,28 (ни разу не рифмовались)</title></rect><rect x="195.2" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / o (о, ё): -4,28 (ни разу не рифмовались)</title></rect><rect x="216.2" y="258.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ʊ (у, ю) / u (у, ю): -4,28 (ни разу не рифмовались)</title></rect><rect x="237.2" y="258.2" width="19" height="19" rx="2" fill="#529beb"><title>ʊ (у, ю) / ɪ (е, и): -0,66 (подсчитано)</title></rect><rect x="258.2" y="258.2" width="19" height="19" rx="2" fill="#ff6158"><title>ʊ (у, ю) / ʊ (у, ю): 1,00</title></rect><rect x="279.2" y="258.2" width="19" height="19" rx="2" fill="#76accb"><title>ʊ (у, ю) / ə (о, а, я): -0,39 (рассчитано)</title></rect><text class="sb" x="65.19999999999999" y="293.7" text-anchor="end">о, а, я</text><text x="83.19999999999999" y="293.7" text-anchor="end">ə</text><text x="288.7" y="315.2" text-anchor="middle">ə</text><rect x="90.19999999999999" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / i (и): -4,28 (ни разу не рифмовались)</title></rect><rect x="111.19999999999999" y="279.2" width="19" height="19" rx="2" fill="#529beb"><title>ə (о, а, я) / ɨ (ы, и): -0,72 (подсчитано)</title></rect><rect x="132.2" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / e (е): -4,28 (ни разу не рифмовались)</title></rect><rect x="153.2" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / ɛ (е, э): -4,28 (ни разу не рифмовались)</title></rect><rect x="174.2" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / a (а, я): -4,28 (ни разу не рифмовались)</title></rect><rect x="195.2" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / o (о, ё): -4,28 (ни разу не рифмовались)</title></rect><rect x="216.2" y="279.2" width="19" height="19" rx="2" fill="#0a3fb5"><title>ə (о, а, я) / u (у, ю): -4,28 (ни разу не рифмовались)</title></rect><rect x="237.2" y="279.2" width="19" height="19" rx="2" fill="#0b85fe"><title>ə (о, а, я) / ɪ (е, и): -4,28 (подсчитано)</title></rect><rect x="258.2" y="279.2" width="19" height="19" rx="2" fill="#529beb"><title>ə (о, а, я) / ʊ (у, ю): -0,52 (подсчитано)</title></rect><rect x="279.2" y="279.2" width="19" height="19" rx="2" fill="#ff6158"><title>ə (о, а, я) / ə (о, а, я): 1,00</title></rect></svg><div class="ml"><span>не годится для рифмы</span><i style="background:#0b85fe"></i><i style="background:#529beb"></i><i style="background:#76accb"></i><i style="background:#afafaf"></i><i style="background:#c9a284"></i><i style="background:#e68a65"></i><i style="background:#ff6158"></i><span>годится для рифмы</span><span class="leer"><i></i>ни разу не рифмовались</span></div><div class="ml haelften"><span>внизу слева: как рифмует лирика на самом деле</span><span>вверху справа: насколько похожи звуки</span></div></div>
+        <button class="plus" data-k="lautmatrix" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="lautbaum"><div class="text"><p class="klein">Дерево звуков</p><h3>Два порядка одних и тех же звуков.</h3><p>Одни и те же звуки, упорядоченные дважды. <b>Слева</b> — так, как их действительно рифмует лирика; <b>справа</b> — так, как их образует рот. Чем дальше к краю сходятся две ветви, тем менее похожи звуки. Линии в середине соединяют один и тот же звук на обеих сторонах: там, где они идут прямо, оба порядка согласны. В русском это одна пара — веса для правого дерева подобраны по немецким суждениям о рифме. <b>По краям</b> у каждого дерева к каждому звуку дано слово, в котором он слышен: жирным выделены буквы, которые его несут, рядом — остальные написания, самое частое первым.</p><ul class="druck"><li><b>До 15 ноября 2026 года почти все линии здесь пересекались.</b> Ни одна немецкая пара звуков не имела в обоих деревьях одного и того же соседа, и между двумя порядками не было измеримой связи. Причина была в расчёте: он считал 22 признака звука одинаково важными, в том числе огубленность. Для рифмы же это самое дешёвое различие — <i>Liebe / trübe</i> рифмуется столько, сколько существует немецкая лирика.</li><li><b>Откуда взялись новые веса:</b> из 70 суждений Каспара_Д. Одно слово и два рифмующихся слова с одинаковыми конечными согласными, так что решает только гласный. Одни и те же пары звуков спрашивались несколько раз с разными словами; шесть из них дали противоречивые ответы и остались за бортом — там решает слово, а не звук. Вышло: место во рту весит больше всего, подъём языка почти столько же, огубленность — шестую часть от этого.</li><li><b>Русский держится в стороне.</b> Веса подобраны по немецкому слуху, а русские неточные рифмы устроены иначе — здесь оба порядка сходятся лишь в одной паре. Это тоже результат: насколько похожи два гласных для рифмы — вопрос, на который в каждом языке свой ответ.</li><li><b>Чего дерево показать не может:</b> оно заставляет каждый звук попасть ровно в одну ветвь. Матрица рядом показывает и те пары, которые лежат поперёк ветвей, — там каждая пара стоит сама по себе.</li></ul></div>
+        <div class="bild"><img src="img/lautbaum-ru.svg?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="lautbaum" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="ansehen"><div class="text"><p class="klein">Смотреть</p><h3>Песня как картина.</h3><p>Отдельная вкладка показывает текст как облако слов, как точечную матрицу и как круг его повторов.</p><ul class="druck"><li><b>В облаке слов</b> площадь каждого слова соответствует его весу; слова сдвигаются так плотно, как только можно.</li><li><b>Точечная матрица</b> сопоставляет текст с самим собой, слог за слогом в транскрипции; повторы становятся диагоналями, как при сравнении двух последовательностей ДНК.</li><li><b>В круге</b> песня идёт по часовой стрелке; ленты соединяют места, которые звучат одинаково, — как диаграмма Circos в геномике.</li><li><b>На картинке</b> — «Калинка» (Иван Ларионов, 1860) — припев повторяется четыре раза, поэтому видны повторы.</li></ul></div>
+        <div class="bild reihe"><figure><figcaption>Облако слов</figcaption><img src="img/ansehen-wolke-ru.webp?v=27" alt="Облако слов" loading="lazy"></figure><figure><figcaption>Точечная матрица</figcaption><img src="img/ansehen-dotplot-ru.webp?v=27" alt="Точечная матрица" loading="lazy"></figure><figure><figcaption>Круг</figcaption><img src="img/ansehen-kreis-ru.webp?v=27" alt="Круг" loading="lazy"></figure></div>
+        <button class="plus" data-k="ansehen" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">По желанию</p><h2>Хорошо и в одиночку.<br>Вместе — ещё лучше.</h2><p>KlangFeder работает полностью самостоятельно. Если включить, вместе с вами пишет ИИ, а KlangTresor приносит ваш архив Suno как мерило.</p></div><div class="raster"><article class="k w6" data-id="ki"><div class="text"><p class="klein">С ИИ</p><h3>Claude или ChatGPT пишут вместе с вами.</h3><p>ИИ предлагает сюжеты, пишет текст в стиле ваших образцов или перерабатывает строки — через вашу собственную учётную запись в Anthropic или OpenAI.</p><ul class="druck"><li><b>Ваша учётная запись:</b> KlangFeder использует Claude Code или Codex на вашем компьютере; страница «Система» помогает войти.</li><li><b>Рифму, ударные слоги и структуру</b> ИИ получает как заданные правила.</li><li><b>Если ИИ выключен,</b> всё, что к нему относится, скрыто, а не затемнено.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/300"><img src="img/ki-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="ki" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="laenge"><div class="text"><p class="klein">С KlangTresor</p><h3>Ваш архив как мерило.</h3><p>Если запущен KlangTresor, KlangFeder знает ваши песни: оценивает, как долго Suno будет петь текст и насколько плотно, — в сравнении с вашим архивом.</p><ul class="druck"><li><b>Образцы:</b> песни из KlangTresor, отмеченные как образцы, показывают свой стиль — размер, рифму, структуру — и служат ИИ примером.</li><li><b>Длительность</b> оценивается лишь приблизительно (в среднем ±12 %); плотность говорит больше.</li><li><b>KlangTresor</b> — отдельная свободная программа для вашего архива Suno: <a href="https://github.com/CasparDavi/klangtresor">github.com/CasparDavi/klangtresor</a>.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/300"><img src="img/laenge-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="laenge" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="kiverkehr"><div class="text"><p class="klein">Обмен с ИИ</p><h3>Вы видите, что ушло к ИИ.</h3><p>Отдельная вкладка показывает каждый запрос и каждый ответ целиком — что KlangFeder отправила и что вернулось. В случае сомнений можно прочитать, какие именно сведения покинули ваш компьютер.</p><ul class="druck"><li><b>Запись остаётся у вас:</b> она лежит в собственной папке KlangFeder, не в сети. Удалите KlangFeder — исчезнет и она.</li><li><b>Запись ведётся по песням:</b> к каждой песне сохраняются последние сто записей, в том числе между сеансами, — обмен по вчерашней песне никуда не денется.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/330"><img src="img/kiverkehr-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="kiverkehr" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w6" data-id="eigene"><div class="text"><p class="klein">Собственные справочники</p><h3>Больше находок при поиске слова.</h3><p>KlangFeder использует и справочники, которые уже есть на вашем компьютере. На странице «Система» они перечислены — у каждого флажок и пояснение, что он даёт. На Mac это, например, Duden в «Словаре» с типичными сочетаниями (туман густой, серый, клубится), Ожегов для значений русских слов и двуязычные словари для переводов.</p><ul class="druck"><li><b>Решение за вами.</b> KlangFeder не приносит с собой чужих произведений и не передаёт их дальше; она лишь спрашивает то, что и так есть на вашем компьютере.</li></ul></div>
+        <div class="bild" style="aspect-ratio:558/330"><img src="img/eigene-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="eigene" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">Источники</p><h2>Старые словари и свободные корпуса, прочитанные заново.</h2><p>Произношение, рифмы и обороты KlangFeder берёт из свободных словарей и свободных собраний текстов (корпусов). Где они не знают слова — или не отмечают его побочное ударение, — помогают два словаря произношения в общественном достоянии, обработанные специально для этого.</p></div><div class="raster"><article class="k w7" data-id="buecher"><div class="text"><p class="klein">Muret-Sanders 1900 · Viëtor 1921</p><h3>Ударение, как оно напечатано.</h3><p>Muret-Sanders ставит над каждым слогом дугу или черту — для главного и побочного ударения; Viëtor записывает каждое слово транскрипцией. Отсюда и берётся ударение, с которым работает KlangFeder.</p><ul class="druck"><li><b>Зачем?</b> Редкие и старые слова, сложные слова и имена получают ударение из словаря, а не по правилу — <b>Un</b>wert, <b>Ur</b>kraft, pia<b>nis</b>simo.</li><li><b>И английский:</b> англо-немецкая часть добавляет больше 100 000 слов, которых не знает американский словарь (CMUdict), — с ударением и созвучием рифмы.</li><li><b>Данные Viëtor</b> опубликованы в открытом доступе: <a href="https://github.com/CasparDavi/vietor-1921">github.com/CasparDavi/vietor-1921</a>.</li><li><b>Оба труда</b> находятся в общественном достоянии; сканы взяты из Internet Archive.</li><li><b>По желанию KlangFeder ставит ударение, как на сцене около 1900 года:</b> по-немецки unge<b>sagt</b> вместо <b>un</b>gesagt, по-английски <b>ac</b>cessory вместо ac<b>ces</b>sory.</li></ul></div>
+        <div class="bild" style="aspect-ratio:1536/1024"><img src="img/buecher.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="buecher" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w5" data-id="umfang"><div class="text"><p class="klein">Объём</p><h3>Слова с ударением.</h3><p>В таком порядке KlangFeder ищет слова. Каждая полоса показывает слова одного словаря; закрашенная часть показывает, сколько из них не знали предыдущие.</p><ul class="druck"><li><b>Muret-Sanders</b>, «Энциклопедический словарь», немецко-английская часть, Langenscheidt 1900: два тома, около 2500 страниц.</li><li><b>Muret-Sanders</b>, англо-немецкая часть, Langenscheidt: два тома, около 2550 страниц.</li><li><b>Viëtor</b>, Deutsches Aussprachewörterbuch, 3-е издание, 1921: около 500 страниц.</li></ul></div>
+        <div class="balken"><p class="bk">Немецкий</p><div class="bz"><p class="bn">Wiktionary</p><div class="bb"><i class="ges" style="width:94.0%"></i><i class="neu" style="width:94.0%"></i></div><p class="bw"><b>705&nbsp;180</b> · все новые</p></div><div class="bz"><p class="bn">Viëtor 1921</p><div class="bb"><i class="ges" style="width:4.9%"></i><i class="neu" style="width:1.5%"></i></div><p class="bw">36&nbsp;779 · <b>11&nbsp;223</b> из них новые</p></div><div class="bz"><p class="bn">Muret-Sanders 1900 <small>немецко-английская часть</small></p><div class="bb"><i class="ges" style="width:8.3%"></i><i class="neu" style="width:3.5%"></i></div><p class="bw">62&nbsp;047 · <b>26&nbsp;322</b> из них новые</p></div><p class="bk blau">Английский</p><div class="bz blau"><p class="bn">CMUdict</p><div class="bb"><i class="ges" style="width:16.8%"></i><i class="neu" style="width:16.8%"></i></div><p class="bw"><b>126&nbsp;052</b> · все новые</p></div><div class="bz blau"><p class="bn">Muret-Sanders 1900 <small>англо-немецкая часть</small></p><div class="bb"><i class="ges" style="width:18.2%"></i><i class="neu" style="width:13.6%"></i></div><p class="bw">136&nbsp;592 · <b>101&nbsp;946</b> из них новые</p></div><p class="bk rot">Русский</p><div class="bz rot"><p class="bn">Wiktionary <small>словоформы с ударением</small></p><div class="bb"><i class="ges bruch" style="width:100.0%"></i><i class="neu bruch" style="width:100.0%"></i></div><p class="bw"><b>3&nbsp;037&nbsp;570</b> · все новые</p></div><p class="bl"><span><i class="ges"></i>слова</span><span><i class="neu"></i>из них новые</span></p></div>
+        <button class="plus" data-k="umfang" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article><article class="k w12" data-id="korpora"><div class="text"><p class="klein">Свободные источники</p><h3>На чём учится KlangFeder.</h3><p>У каждого источника указана лицензия; полные тексты лицензий и указания авторства — в пакете данных (QUELLEN.md).</p><ul class="druck"><li><b>Производные данные</b> — транскрипция, пары рифм, обороты — сохраняют лицензию своего источника.</li><li><b>Источников, чья лицензия не подходит к пакету,</b> в нём нет; если они вам нужны, вы загружаете их сами.</li></ul></div>
+        <div class="filterliste"><div><p class="fk">Корпуса</p><ul class="fl"><li><b>TextGrid / Zeno.org</b><span>около 61 000 немецких стихотворений</span><small>CC BY 3.0 DE</small></li><li><b>Gutenberg Poetry Corpus</b><span>около 3 миллионов строк английских стихов</span><small>CC0</small></li><li><b>Wikisource</b><span>около 22 500 русских стихотворений в общественном достоянии</span><small>общественное достояние</small></li><li><b>Genius (через Hugging Face)</b><span>пары рифм примерно из 180 000 русских песен — только пары и их число, без текстов</span><small>лицензия не указана</small></li><li><b>Wortschatz Leipzig</b><span>новости, Википедия и веб-тексты, по 1 миллиону предложений</span><small>CC BY</small></li><li><b>FrequencyWords</b><span>50 000 самых частых слов каждого языка, по субтитрам</span><small>CC BY-SA</small></li></ul></div><div><p class="fk">Словари</p><ul class="fl"><li><b>Wiktionary</b><span>немецкие словоформы с транскрипцией</span><small>CC BY-SA</small></li><li><b>CMUdict</b><span>английские слова с ударением</span><small>BSD</small></li><li><b>OpenThesaurus</b><span>группы близких по смыслу немецких слов, а также более общие и частные понятия, ассоциации и антонимы</span><small>LGPL / CC BY-SA</small></li><li><b>Викисловарь (немецкий)</b><span>русские переводы примерно к 30 000 немецких слов, со значением</span><small>CC BY-SA</small></li><li><b>Open English WordNet</b><span>английские синонимы и антонимы</span><small>CC BY 4.0</small></li><li><b>Wiktionary (русский)</b><span>три миллиона русских словоформ с ударением, а также синонимы, антонимы и словоизменение</span><small>CC BY-SA</small></li><li><b>Wiktionary (через kaikki.org)</b><span>словообразовательные гнёзда: 61 680 немецких и 47 656 русских слов с производными</span><small>CC BY-SA</small></li></ul></div><div><p class="fk">По запросу</p><ul class="fl"><li><b>Songkorpus (IDS Mannheim)</b><span>обороты из немецких текстов песен — не входят в пакет, их можно загрузить при настройке на странице «Система»</span><small>CC BY-NC 4.0, только для некоммерческого использования</small></li></ul></div></div>
+        <button class="plus" data-k="korpora" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt"><div class="kopf"><p class="augenbraue">У вас</p><h2>Ваши стихи остаются у вас.</h2><p>KlangFeder работает на вашем компьютере, без учётной записи и без облака.</p></div><div class="raster"><article class="k w12" data-id="vergleich"><div class="text"><p class="klein">Версии</p><h3>Каждая версия сохранена.</h3><p>«Сохранить» сохраняет версию с датой и временем. «старая | новая» кладёт её рядом с текстом и показывает, что изменилось, — в том числе в размере.</p><ul class="druck"><li><b>В цифрах</b> видны строки с одинаковым числом ударных, конечные рифмы, ударные концы строк и знаки — до и после.</li><li><b>Вычеркнутое</b> отмечено слева; справа вы пишете дальше.</li><li><b>У песен из KlangTresor</b> слева стоит оригинал.</li></ul></div>
+        <div class="bild" style="aspect-ratio:1136/600"><img src="img/vergleich-ru.webp?v=27" alt="" loading="lazy"></div>
+        <button class="plus" data-k="vergleich" aria-label="Подробнее"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"></path></svg></button></article></div></section><section class="abschnitt vergleich"><div class="kopf"><p class="augenbraue">В сравнении</p><h2>Построено на стиховедении.</h2><p>Большинство инструментов для текстов песен ищут рифмы или пишут текст за вас. KlangFeder читает ваши собственные строки — и знает немецкий и русский так же, как английский.</p></div>
+      <div class="vgl-rahmen"><table class="vgl"><thead><tr><th></th><th class="wir">KlangFeder</th><th>Словари рифм</th><th>Приложения с подсветкой рифм</th><th>Инструменты для подбора слов</th><th>ИИ-генераторы текстов</th><th>Анализаторы стиха</th></tr></thead>
+      <tbody><tr class="gruppe"><th colspan="7">Писать</th></tr><tr><th>Читает ваш собственный текст</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z2" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z2" title="да">●</td><td class="z2" title="да">●</td></tr><tr><th>Немецкий, английский и русский, даже вперемешку</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Ударение каждого слога, стык ударений</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Размер, стих и строфа названы</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Клаузула: мужская, женская, дактилическая</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Ослышки на границе слов: два прочтения</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr class="gruppe"><th colspan="7">Рифма</th></tr><tr><th>Схема рифмовки по разделам, найденная или заданная</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z2" title="да">●</td></tr><tr><th>Семь степеней рифмы по произношению</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z2" title="да">●</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Как часто пара рифм встречается в песнях и стихах</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Внутренние, составные и соседние рифмы в тексте</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z2" title="да">●</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td></tr><tr><th>Аллитерация, ассонанс, корневая рифма, начало строки</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr class="gruppe"><th colspan="7">Найти</th></tr><tr><th>Замены с тем же слоговым рисунком</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td></tr><tr><th>Пропуски: слова точно по размеру</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td></tr><tr><th>Окраска звука: шипящая, твёрдая, мягкая, резкая, тёмная, светлая</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Поиск в транскрипции, с клавиатурой звуков</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Словообразовательное гнездо, корневые рифмы, начальный звук «как в …»</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr class="gruppe"><th colspan="7">Построение и поток</th></tr><tr><th>Формы песен и стихов как каркас, с планом и результатом</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>свободно ↔ строго: насколько правильно построен текст</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Поток: паузы, Drop-строки, перенос</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Для Suno: лимиты знаков, указания, длительность</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td></tr><tr class="gruppe"><th colspan="7">Под капотом</th></tr><tr><th>Собственная настройка: тест на слух подстраивает рифмы под ваше ухо</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Показывает, как она судит: матрица и дерево звуков, выравнивание рифм</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr><th>Использует справочники на вашем компьютере</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr class="gruppe"><th colspan="7">С ИИ и у вас</th></tr><tr><th>ИИ пишет, инструмент проверяет каждую версию</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>Каждый запрос к ИИ виден дословно</th><td class="z2 wir" title="да">●</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td><td class="z0" title="нет">–</td></tr><tr><th>На вашем компьютере, без учётной записи, бесплатно</th><td class="z2 wir" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z0" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td></tr><tr class="ehrlich"><th>Сетка бита, аккорды, приложение для телефона</th><td class="z0 wir" title="нет">–</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z2" title="да">●</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td><td class="z1" title="частично или только у некоторых">◐</td></tr></tbody></table></div>
+      <p class="vgl-fuss"><span class="vgl-leg">● да · ◐ частично или только у некоторых · – нет</span>Категории: словари рифм ищут рифмы к слову (например, RhymeZone, rifme.net) · приложения с подсветкой рифм раскрашивают рифмы в вашем тексте (например, RhymePad, Lyrcs, RhymeFlux) · инструменты для подбора слов предлагают гнёзда рифм, обороты и синонимы (например, MasterWriter, Rhyme Genie) · ИИ-генераторы пишут текст по запросу (например, LyricStudio, verselab) · анализаторы стиха определяют ударения, размер и схему рифмовки стихотворения, обычно для одного языка (например, Tembrica, Prosodic, Metricalizer). По состоянию на ноябрь 2026 года, по данным разработчиков.</p></section><section class="abschnitt laden" id="laden"><div class="kopf"><p class="augenbraue">Скачать</p><h2>Для вашего компьютера.</h2><p>Вы скачиваете один файл и запускаете его двойным кликом. Словари KlangFeder потом загружает сама, с индикатором прогресса.</p></div><div class="raster"><article class="k w4"><div class="text"><p class="klein">Windows</p><h3>Setup.exe</h3><p>Windows 10 / 11 · 64 бит<br>26 МБ</p><a class="knopf" href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-Setup.exe">Скачать ↓</a></div></article><article class="k w4"><div class="text"><p class="klein">macOS</p><h3>DMG</h3><p>macOS 11 или новее · Intel и Apple Silicon<br>84 МБ</p><a class="knopf" href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder.dmg">Скачать ↓</a></div></article><article class="k w4"><div class="text"><p class="klein">Linux</p><h3>.deb</h3><p>Ubuntu, Debian, Mint · 64 бит<br>48 МБ</p><a class="knopf" href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-amd64.deb">Скачать ↓</a></div></article></div><p class="anf"><b>Системные требования.</b> Около 1,5 ГБ свободного места для программы и словарей. Современный веб-браузер. Другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Без цифровой подписи: в Windows браузер Edge сначала задерживает загрузку — нажмите стрелку рядом с «Удалить» → «Сохранить»; при первом запуске Windows может спросить ещё раз, а macOS блокирует приложение, пока вы не разрешите его в разделе «Конфиденциальность и безопасность» → «Всё равно открыть». После установки колокольчик рядом с «Система» сообщает о новой версии; один клик её устанавливает.</p></section><section class="grenzen"><h2>Полезно знать</h2><ul><li>KlangFeder предлагает, но не решает. Ударение, размер и рифмы рассчитаны и могут ошибаться; оценка остаётся за вами.</li><li>Ваши тексты остаются на вашем компьютере. Только если вы поручаете ИИ написать или переработать текст, текст и ваша просьба уходят в Claude или ChatGPT — через вашу собственную учётную запись там.</li></ul></section><footer>KlangFeder — бесплатная программа от Caspar_D; код под лицензией MIT, данные — под лицензиями их источников · <a class="gh" href="https://github.com/CasparDavi/klangfeder">github.com/CasparDavi/klangfeder</a></footer><!--/seite--></main>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true"><div class="fenster" id="fenster"></div></div>
+<script src="inhalt.js?s=20261121a"></script>   <!-- Stand der Datenstruktur: hochzählen, wenn inhalt.js neue Felder bekommt -->
+<script>
+const PLUS = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg>';
+const KREUZ = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg>';
+
+/* Feste Sprachseiten (19.11.2026, Auffindbarkeit): index.html Englisch, de.html, ru.html – jede trägt ihren Text schon im
+   HTML (werkzeug/sprachseiten.mjs), damit Suchmaschinen ohne JavaScript ihn lesen. Die Startseite leitet nach gemerkter Wahl,
+   ?lang= oder Browsersprache weiter; die Sprachseiten bleiben bei ihrer Sprache. */
+const SEITE = document.documentElement.dataset.seite || 'en';
+const DATEI = { en: './', de: 'de.html', ru: 'ru.html' };
+function spracheWaehlen(){
+  if (SEITE !== 'en') return SEITE;
+  try { const s = localStorage.getItem('kf-seite-sprache'); if (s && S.kopf.h[s]) return s; } catch(e){}
+  const q = new URLSearchParams(location.search).get('lang'); if (q && S.kopf.h[q]) return q;
+  for (const l of (navigator.languages || [navigator.language || 'en'])) { const k = (l||'').slice(0,2); if (S.kopf.h[k]) return k; }
+  return 'en';
+}
+function bild(id, L){
+  let q = BILDER[id];
+  if (q && q.sprachen) q = q.sprachen[L] || q.sprachen.en;   /* Bild je Sprache, sonst Englisch */
+  if (q && q.schaubild){ const g = q.schaubild;
+    return `<div class="schaubild"><p class="sk l">${g.links[L]}</p><span></span><p class="sk r">${g.rechts[L]}</p>`
+      + `<div class="sl l">${g.von[L].join('<br>')}</div>`
+      + (g.umschalter ? `<div class="sm um"><div class="modi"><span class="an">${g.links[L]}</span><span>${g.rechts[L]}</span></div></div>`
+        : `<div class="sm"><i></i><div class="knopf"><svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></div><i></i><b>${g.knopf[L]}</b></div>`)
+      + `<div class="sl r">${g.bei[L].join('<br>')}</div></div>`; }
+  if (q && q.liste) return `<div class="filterliste">${q.liste.map(g => `<div><p class="fk"${g.f ? ` style="color:${g.f}"` : ''}>${g.k[L]}</p>${typeof g.w[L][0] === 'object' ? `<ul class="fl">${g.w[L].map(x => `<li><b>${x.n}</b><span>${x.b}</span><small>${x.l}</small></li>`).join('')}</ul>` : `<p class="fw">${g.w[L].join(' · ')}</p>`}</div>`).join('')}</div>`;   /* Einträge mit Name, Beschreibung, Lizenz: je eine Zeile */
+  /* liegende Säulen: je Werk die gelesene Menge (Fläche gedämpft, Kontur voll), davon neu (voll) */
+  if (q && q.balken){ const g = q.balken, max = g.bruch || Math.max(...g.zeilen.filter(z => z.ges).map(z => z.ges)), z3 = n => n.toLocaleString(L === 'de' ? 'de-DE' : L === 'ru' ? 'ru-RU' : 'en-US');
+    let gruppe = '';   // Farbe der Gruppe (kopf.farbe), gilt für die Zeilen darunter – Englisch blau wie die Lautmatrix, Russisch rot (ihr anderes Ende)
+    return `<div class="balken">${g.zeilen.map(z => z.kopf ? `<p class="bk${(gruppe = z.farbe || '') ? ' ' + gruppe : ''}">${z.kopf[L]}</p>` : `<div class="bz${gruppe ? ' ' + gruppe : ''}"><p class="bn">${z.n}${z.zus ? ` <small>${z.zus[L]}</small>` : ''}</p><div class="bb"><i class="ges${z.ges > max ? ' bruch' : ''}" style="width:${Math.max(0.6, Math.min(100, 100 * z.ges / max)).toFixed(1)}%"></i>${z.neu ? `<i class="neu${z.neu > max ? ' bruch' : ''}" style="width:${Math.min(100, 100 * z.neu / max).toFixed(1)}%"></i>` : ''}</div><p class="bw">${z.neu === z.ges ? `<b>${z3(z.ges)}</b> · ${g.leg.alle[L]}` : `${z3(z.ges)}${z.neu ? ` · <b>${z3(z.neu)}</b> ${g.leg.neu[L]}` : ''}`}</p></div>`).join('')}`
+      + `<p class="bl"><span><i class="ges"></i>${g.leg.ges[L]}</span><span><i class="neu"></i>${g.leg.neu[L]}</span></p></div>`; }
+  /* Ausrichtung zweier Lautketten wie in einem Alignment-Betrachter: je Laut ein Kästchen; | gleich, : ähnlich, · verschieden,
+     leer = vor dem Reim (zählt nicht); rechts Punkte und Reimstufe in ihrer Farbe */
+  if (q && q.ausrichtung){ const g = q.ausrichtung, art = { '|': 'gl', ':': 'ae', '·': 'an', ' ': 'au' };
+    return `<div class="ausr">${g.zeilen.map(z => { const st = g.stufen[z.st];
+      return `<div class="ar" style="--n:${z.s.length}"><span class="aw">${z.a}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[0]}</span>`).join('')}<span class="ap" style="grid-row:span 2"><b>${L === 'en' ? z.pe : z.p}</b> ${g.von[L]} ${L === 'en' ? z.maxe : z.max}<i style="color:${st.f}">${st[L]}</i></span>`
+        + `<span class="aw">${z.b}</span>${z.s.map(x => `<span class="al ${art[x[2]]}">${x[1]}</span>`).join('')}</div>`; }).join('')}`
+      + `<p class="aleg"><span class="al gl"></span>${g.leg.gleich[L]}<span class="al ae"></span>${g.leg.aehnlich[L]}<span class="al an"></span>${g.leg.anders[L]}<span class="al au"></span>${g.leg.aussen[L]}</p></div>`; }
+  /* Das Quadrat beidseits (Jörg, 15.11.2026): unten links das an Gedichten Gemessene, oben rechts das aus den
+     Lautmerkmalen Gerechnete. Beide in derselben Einheit (Beitrag zur Reimpunktzahl, gleicher Laut = 1), darum eine
+     Farbskala – divergente 7 Stufen von Jörg, grau = Zufall (0), Diagonale = 1. Die Buchstaben zum Lautzeichen stehen
+     links, weil die obere Hälfte jetzt Daten trägt. */
+  if (q && q.matrix){ const g = q.matrix, n = g.laute.length, c = 21, sb = g.schreibung || null, F = ['#0b85fe','#529beb','#76accb','#afafaf','#c9a284','#e68a65','#ff6158'], NIE = '#0a3fb5';   /* NIE: eine Stufe jenseits des stärksten Blaus, für Paare ohne jeden Beleg */
+    const sbT = a => (sb && sb[a]) || '';
+    const breit = sb ? Math.max(...g.laute.map(a => sbT(a).length)) * 7.6 + 10 : 0;   /* Monospace: ~7,6 px je Zeichen */
+    const r0 = 10 + breit + Math.max(...g.laute.map(a => a.length)) * 8 + 8;
+    const mitB = a => sb && sb[a] ? `${a} (${sb[a]})` : a;   /* Lautzeichen mit seinen Buchstaben, für den Tooltip */
+    const stufe = x => x < -1 ? 0 : x < -0.5 ? 1 : x < -0.15 ? 2 : x <= 0.15 ? 3 : x <= 0.5 ? 4 : x < 0.95 ? 5 : 6;
+    const hol = (t, a, b) => { if (!t) return null; const k1 = a + '|' + b, k2 = b + '|' + a; return k1 in t ? t[k1] : k2 in t ? t[k2] : null; };
+    const HER = { de: ['nachgezählt', 'berechnet'], ru: ['подсчитано', 'рассчитано'], en: ['counted', 'worked out'] }[L] || ['nachgezählt', 'berechnet'];
+    let z = '';
+    g.laute.forEach((a, i) => { const y = r0 + i * c + c / 2 + 5;
+      z += (sbT(a) ? `<text class="sb" x="${10 + breit - 8}" y="${y}" text-anchor="end">${sbT(a)}</text>` : '')
+        + `<text x="${r0 - 6}" y="${y}" text-anchor="end">${a}</text><text x="${r0 + i * c + c / 2}" y="${r0 + n * c + 16}" text-anchor="middle">${a}</text>`;
+      for (let j = 0; j < n; j++) { const b = g.laute[j], unten = j <= i;
+        let w = unten ? hol(g.werte, a, b) : hol(g.gerechnet, a, b), nie = false;
+        /* kein Beleg in der gezählten Hälfte: der Kern rechnet dort mit g.rest, und genau das zeigt das Feld –
+           in NIE, einer Stufe jenseits des stärksten Blaus, damit es nicht mit echten Messwerten verschmilzt */
+        if (w == null && unten && g.rest != null) { w = g.rest; nie = true; }
+        if (w == null) continue;
+        const e = 1;
+        z += `<rect x="${r0 + j * c + e}" y="${r0 + i * c + e}" width="${c - 2 * e}" height="${c - 2 * e}" rx="2" fill="${nie ? NIE : F[stufe(w)]}"><title>${mitB(a)} / ${mitB(b)}: ${w.toFixed(2).replace('.', L !== 'en' ? ',' : '.')}${i === j ? '' : nie ? ` (${g.leg.leer[L]})` : ` (${unten ? HER[0] : HER[1]})`}</title></rect>`; } });
+    const W = r0 + n * c + 4, H = r0 + n * c + 24;
+    return `<div class="matrix"><svg viewBox="0 ${r0 - 4} ${W} ${H - r0 + 4}" role="img" aria-label="${g.leg.rechts[L]}">${z}</svg>`
+      + `<div class="ml"><span>${g.leg.links[L]}</span>${F.map(f => `<i style="background:${f}"></i>`).join('')}<span>${g.leg.rechts[L]}</span>`
+      + (g.leg.leer ? `<span class="leer"><i></i>${g.leg.leer[L]}</span>` : '')
+      + (g.leg.unten || g.leg.oben ? `</div><div class="ml haelften"><span>${g.leg.unten?.[L] || ''}</span><span>${g.leg.oben?.[L] || ''}</span></div></div>` : `</div></div>`); }
+  /* Soll und Ist (Aufbau): je Zeile Text, Balken wie im Programm, Reimbuchstabe, Erklärung */
+  if (q && q.sollbild){ const z = q.sollbild[L] || q.sollbild.en, F = { A: '#4a8fff', B: '#45c26a' };
+    const balken = m => [...m].map(c => `<i class="${[c === '!' ? 'zv' : /[WS]/.test(c) ? 'um' : '', /[sS]/.test(c) ? '' : 'w'].filter(Boolean).join(' ')}" style="height:${/[sS]/.test(c) ? 13 : 4}px"></i>`).join('');
+    return `<div class="sollbild">${z.map(x => `<p class="st${x.platz ? ' muster' : ''}">${x.t}</p><span class="sb">${balken(x.m)}</span><b class="sr" style="color:${F[x.r]}${x.blass ? ';font-style:italic;font-weight:500' : ''}">${x.r}</b><span class="sn">${x.n}</span>`).join('')}</div>`; }
+  if (q && q.konsole) return `<div class="bild konsole"><div class="leiste"><i></i><i></i><i></i><span>KlangTresor</span></div><pre>${konsole(L).map(z => z.replace(/^  (KlangTresor (läuft|is running|работает))$/, '  <b>$1</b>').replace(/http:\/\/[^ ]+/g, '<u>$&</u>')).join('\n')}</pre></div>`;
+  if (q && q.geraete){ const g = q.geraete;
+    return `<div class="bild geraete"><div class="lap"><div class="schirm"><img src="${g.laptop}" alt=""></div><div class="fuss"></div></div>`
+      + `<div class="tab"><img src="${g.tablet}" alt=""></div><div class="hand"><img src="${g.handy}" alt=""></div></div>`; }
+  if (q && q.reihe) return `<div class="bild reihe">${q.reihe.map(x => `<figure><figcaption>${x.n[L]}</figcaption><img src="${x.s[L] || x.s.en}" alt="${x.n[L]}" loading="lazy"></figure>`).join('')}</div>`;
+  if (Array.isArray(q)) return `<div class="bild trip">${q.map(u => `<img src="${u}" alt="" loading="lazy">`).join('')}</div>`;
+  if (!q) return `<div class="bild"><div class="platz">${S.kopf.platz[L]} · ${id}</div></div>`;
+  if (/\.mp4(\?|$)/.test(q)) return `<div class="bild"><video src="${q}"${POSTER[id] ? ` poster="${POSTER[id]}"` : ''} autoplay muted loop playsinline data-tempo="${TEMPO[id] || 1}" onloadedmetadata="this.defaultPlaybackRate=this.playbackRate=+this.dataset.tempo"></video></div>`;
+  return `<div class="bild"${FORMAT[id] ? ` style="aspect-ratio:${FORMAT[id]}"` : ''}><img src="${q}" alt="" loading="lazy"></div>`;
+}
+const LADEN = 'https://github.com/CasparDavi/klangfeder/releases/latest/download/';
+const mbL = (n) => (L === 'ru' ? n + ' МБ' : n + ' MB');
+/* Die drei Knöpfe im Kopf: direkt die Datei; die Einzelheiten stehen unten im Abschnitt „Herunterladen“. */
+function knoepfe(){ return `<div class="knoepfe">${S.laden.systeme.map(x => `<a href="${LADEN}${x.datei}">${x.name} ↓<small>${mbL(x.mb)}</small></a>`).join('')}</div>`; }
+let L, KACHELN = {};
+function bauen(){
+  document.documentElement.lang = L;
+  document.querySelectorAll('.sprache button').forEach(b => b.classList.toggle('an', b.dataset.l === L));
+  KACHELN = {};
+  let h = `<section class="held"><h1><span class="rad" aria-hidden="true"></span>${S.kopf.marke[L]}</h1><p class="spruch">${S.kopf.h[L]}</p><p>${S.kopf.p[L]}</p>${knoepfe()}${bild('titel', L)}</section>`;
+  for (const a of S.abschnitte){
+    const kopf = `<div class="kopf"><p class="augenbraue">${a.augenbraue[L]}</p><h2>${a.h[L]}</h2><p>${a.p[L]}</p></div>`;
+    h += `<section class="abschnitt${a.fahrt ? ' mit-fahrt' : ''}">${kopf}<div class="raster">`;
+    if (a.fahrt && !a.fahrtNach) h += fahrt(a, kopf);
+    for (const k of a.kacheln){
+      KACHELN[k.id] = k;
+      const zahl = k.zahl ? `<span class="zahl">${k.zahl.n}<small>${k.zahl.t[L]}</small></span>` : '';
+      h += `<article class="k w${k.w}${k.quer ? ' quer' : ''}${k.oben ? ' oben' : ''}${a.fahrt && a.fahrt.includes(k.id) ? ' in-fahrt' : ''}${k.wFahrt ? ' fahrt-w' + k.wFahrt : ''}" data-id="${k.id}"><div class="text"><p class="klein">${k.klein[L]}</p><h3>${k.h[L]}</h3><p>${k.p[L]}</p>${zahl}<ul class="druck">${k.d[L].map(x => `<li>${x}</li>`).join('')}</ul></div>
+        ${NUR_TEXT.has(k.id) ? '' : bild(k.id, L)}
+        <button class="plus" data-k="${k.id}" aria-label="${S.kopf.mehr[L]}">${PLUS}</button></article>`;
+      if (a.fahrtNach === k.id) h += fahrt(a, kopf);
+    }
+    h += `</div></section>`;
+  }
+  if (S.lieder) { const g = S.lieder;
+    h += `<section class="abschnitt lieder"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div><div class="liste">${
+      g.liste.map(x => `<a class="lied" href="${x.url}" target="_blank" rel="noopener"><img src="${x.bild}?v=${BV}" alt=""><span class="stil">${x.stil[L]} · ${x.dauer}</span><b>${x.t}</b><span class="hoeren">${g.hoeren[L]} ↗</span></a>`).join('')}</div></section>`; }
+  if (S.vergleich) { const g = S.vergleich, Z = ['–', '◐', '●'];
+    h += `<section class="abschnitt vergleich"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div>
+      <div class="vgl-rahmen"><table class="vgl"><thead><tr><th></th>${g.spalten.map((x, i) => `<th${i ? '' : ' class="wir"'}>${x[L]}</th>`).join('')}</tr></thead>
+      <tbody>${g.zeilen.map(z => z.g ? `<tr class="gruppe"><th colspan="${g.spalten.length + 1}">${z.g[L]}</th></tr>` : `<tr${z.ehrlich ? ' class="ehrlich"' : ''}><th>${z.t[L]}</th>${z.w.map((w, i) => `<td class="z${w}${i ? '' : ' wir'}" title="${g.zeichen[L][w]}">${Z[w]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+      <p class="vgl-fuss"><span class="vgl-leg">● ${g.zeichen[L][2]} · ◐ ${g.zeichen[L][1]} · – ${g.zeichen[L][0]}</span>${g.fuss[L]}</p></section>`;
+  }
+  { const g = S.laden;
+    h += `<section class="abschnitt laden" id="laden"><div class="kopf"><p class="augenbraue">${g.augenbraue[L]}</p><h2>${g.h[L]}</h2><p>${g.p[L]}</p></div><div class="raster">${
+      g.systeme.map(x => `<article class="k w4"><div class="text"><p class="klein">${x.name}</p><h3>${x.typ}</h3><p>${x.zeile[L]}<br>${mbL(x.mb)}</p><a class="knopf" href="${LADEN}${x.datei}">${g.knopf[L]} ↓</a></div></article>`).join('')}</div><p class="anf">${g.anf[L]}</p></section>`; }
+  h += `<section class="grenzen"><h2>${S.grenzen.h[L]}</h2><ul>${S.grenzen.l[L].map(x => `<li>${x}</li>`).join('')}</ul></section>`;
+  h += `<footer>${ghLink(S.fuss[L])}${S.stern[L] ? `<br>${S.stern[L]}` : ''}</footer>`;
+  document.getElementById('seite').innerHTML = h;
+  einpassen(); fahrtMasse(); fahren();
+  document.querySelectorAll('#seite video[autoplay]').forEach(anstossen);
+}
+function fahrt(a, kopf){
+  const ks = a.fahrt.map(id => a.kacheln.find(k => k.id === id)), art = a.fahrtArt || 'wandel';
+  const q = id => bild(id, L).match(/src="([^"]+)"/)[1];   // Bildpfad wie in der Kachel, je Sprache
+  const medien = art === 'zoom'
+    ? `<div class="welt"><img class="ganz" src="${q(ks[0].id)}" alt=""><img class="nah" src="${q(ks[1].id)}" alt=""></div>`
+    : `<img src="${q(ks[0].id)}" alt=""><img src="${q(ks[1].id)}" alt=""><video src="${BILDER[ks[2].id]}" poster="${q(ks[0].id)}" muted loop playsinline preload="auto"></video><span class="linie"></span>`;
+  return `<div class="fahrt" data-art="${art}" data-ids="${a.fahrt.join(' ')}" style="--n:${ks.length + 0.4};--seite:${art === 'zoom' ? ZOOM.seite : 1180 / 982}"><div class="halt">${kopf}<div class="buehne">
+    <div class="ftext"><p class="schritte">${ks.map((k, i) => `<span data-i="${i}">${k.klein[L]}</span>`).join(' <i>·</i> ')}</p>
+      <div class="stufen">${ks.map((k, i) => `<div class="stufe" data-i="${i}"><h3>${k.h[L]}</h3><p>${k.p[L]}</p></div>`).join('')}</div></div>
+    <div class="fbild">${medien}</div>
+    <button class="plus" data-k="${ks[0].id}" aria-label="${S.kopf.mehr[L]}">${PLUS}</button></div></div></div>`;
+}
+// Wandel (Gestalten): Bild → Tiefenkarte wird von oben nach unten gewischt (beide Stufen Kante an Kante, man sieht, dass
+// sie aufeinanderliegen); Tiefenkarte → Clip wird überblendet, das Bild „erwacht“, der Clip läuft erst nach der Blende los.
+const WISCH = [[0.24, 0.40], [0.58, 0.74]];
+const UEBERGANG = ['wisch', 'blende'];
+// Zoom (Plakat): Lage des Ausschnitts im Plakat, als Anteil von Breite und Höhe. Gemessen per Kreuzkorrelation
+// (0,998, in DE/EN/RU gleich): x 0, y 1466, 1386 × 1326 von 4000 × 2862 Plakatpixeln.
+const ZOOM = { seite: 4000 / 2862, nah: { x: 0, y: 1466 / 2862, w: 1386 / 4000, h: 1326 / 2862 }, fahrt: [0.18, 0.78], blende: [0.62, 0.84] };
+const glatt = t => t * t * (3 - 2 * t);
+function fahren(){ document.querySelectorAll('.fahrt').forEach(fahre); }
+function fahre(f){
+  if (!f.offsetParent) return;
+  const r = f.getBoundingClientRect(), halt = f.querySelector('.halt');
+  const leiste = document.querySelector('.sprache').offsetHeight;
+  const rest = innerHeight - leiste - halt.offsetHeight;   // passt alles: mittig; sonst unten bündig, Überschrift ragt oben hinaus
+  const oben = Math.round(rest >= 24 ? leiste + rest / 2 : innerHeight - halt.offsetHeight - 12);   // ab hier steht die Kachel
+  halt.style.top = oben + 'px';
+  const p = Math.min(1, Math.max(0, (oben - r.top) / (r.height - halt.offsetHeight)));
+  const stufe = f.dataset.art === 'zoom' ? zoomen(f, p) : wandeln(f, p);
+  f.querySelectorAll('.schritte span, .stufe').forEach(e => e.classList.toggle('an', +e.dataset.i === stufe));
+  f.querySelector('.plus').dataset.k = f.dataset.ids.split(' ')[stufe];
+}
+function wandeln(f, p){
+  const ebenen = f.querySelectorAll('.fbild > img, .fbild > video'), linie = f.querySelector('.linie');
+  let stufe = 0, linieX = null;
+  WISCH.forEach(([a, b], i) => {
+    const w = Math.min(1, Math.max(0, (p - a) / (b - a)));
+    if (UEBERGANG[i] === 'blende') ebenen[i + 1].style.opacity = w.toFixed(3);
+    else ebenen[i + 1].style.clipPath = `inset(0 0 ${(100 - w * 100).toFixed(2)}% 0)`;
+    if (w > 0 && w < 1 && UEBERGANG[i] === 'wisch') linieX = w;
+    if (w >= 0.5) stufe = i + 1;
+  });
+  linie.style.opacity = linieX === null ? 0 : 1;
+  if (linieX !== null) linie.style.top = `calc(${(linieX * 100).toFixed(2)}% - 1px)`;
+  const v = ebenen[2];
+  if (p >= WISCH[1][1]) { if (v.paused && !v.dataset.steht) { v.currentTime = 0; anstossen(v); } }
+  else { if (!v.paused || v.currentTime) { v.pause(); v.currentTime = 0; } knopfWeg(v); }
+  return stufe;
+}
+// Kamera als Ausschnitt des Plakats (Anteile; der Rahmen hat das Seitenverhältnis des Plakats). Gezoomt wird geometrisch
+// um den Fixpunkt beider Ausschnitte, so wirkt die Fahrt gleichmäßig. Ziel: so breit wie der Ausschnitt, unten bündig mit ihm
+// (dort steht das Werkverzeichnis). Kurz vor dem Ziel blendet der hochaufgelöste Ausschnitt über.
+function zoomen(f, p){
+  const n = ZOOM.nah, [a, b] = ZOOM.fahrt, t = glatt(Math.min(1, Math.max(0, (p - a) / (b - a))));
+  const w1 = n.w, y1 = n.y + n.h - w1, fy = y1 / (1 - w1);   // Ziel (x 0, y1, w1) und Fixpunkt (0, fy)
+  const k = Math.pow(w1, t), y = fy * (1 - k);
+  const setze = (el, x0, y0, bw, bh) => { const s = el.style;
+    s.left = ((x0 - 0) / k * 100).toFixed(3) + '%'; s.top = ((y0 - y) / k * 100).toFixed(3) + '%';
+    s.width = (bw / k * 100).toFixed(3) + '%'; s.height = (bh / k * 100).toFixed(3) + '%'; };
+  setze(f.querySelector('.ganz'), 0, 0, 1, 1);
+  const nah = f.querySelector('.nah'); setze(nah, n.x, n.y, n.w, n.h);
+  nah.style.opacity = glatt(Math.min(1, Math.max(0, (p - ZOOM.blende[0]) / (ZOOM.blende[1] - ZOOM.blende[0])))).toFixed(3);
+  return t >= 0.5 ? 1 : 0;
+}
+// iPhones im Stromsparmodus spielen Videos nicht von selbst ab. Dann steht das Standbild da, mit einem Knopf; ein Tipp startet.
+function anstossen(v){
+  const p = v.play();
+  if (p) p.then(() => knopfWeg(v)).catch(() => {
+    v.dataset.steht = 1;
+    if (!v.parentElement.querySelector('.abspielen'))
+      v.insertAdjacentHTML('afterend', `<button class="abspielen" aria-label="${S.kopf.abspielen[L]}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button>`);
+  });
+}
+function knopfWeg(v){ delete v.dataset.steht; v.parentElement.querySelector('.abspielen')?.remove(); }
+// Überschrift und Kachel stehen gemeinsam (der Abstand bleibt konstant). Das Bild richtet sich nach der Kachel allein;
+// ist der Schirm für beides zu niedrig, scrollt die Überschrift hinaus und die Kachel bleibt ganz sichtbar.
+function fahrtMasse(){ document.querySelectorAll('.fahrt').forEach(f => {
+  if (!f.offsetParent) return;
+  const leiste = document.querySelector('.sprache').offsetHeight;
+  const schmal = matchMedia('(max-width:820px) and (orientation:portrait)').matches;
+  const frei = innerHeight - leiste - 24 - 6 - (schmal ? f.querySelector('.ftext').offsetHeight : 0);
+  f.style.setProperty('--bildhoehe', Math.max(160, frei) + 'px');
+}); }
+let fahrtRuht = true;
+addEventListener('scroll', () => { if (fahrtRuht) { fahrtRuht = false; requestAnimationFrame(() => { fahrtRuht = true; fahren(); }); } }, { passive: true });
+addEventListener('resize', () => { fahrtMasse(); fahren(); });
+// Titel füllt die Spalte; die Servermeldung zeigt überall denselben Ausschnitt.
+function einpassen(){
+  // Titel: füllt die Breite, wird aber nie breiter als die Spalte (Schriftbreite schwankt je Gerät).
+  const h1 = document.querySelector('.held h1');
+  if (h1){ h1.style.setProperty('--fit', 1); const f = h1.parentElement.clientWidth / h1.getBoundingClientRect().width;
+    if (f < 1) h1.style.setProperty('--fit', (Math.floor(f * 100) / 100).toFixed(2)); }
+  // Servermeldung: auf schmaleren Kacheln derselbe Ausschnitt wie auf dem großen Schirm (dort 22 em Text breit), nur kleiner.
+  // Lautmatrix: die SVG-Schrift skaliert mit – so groß setzen, dass sie gerendert mindestens 12 px hat (Hausregel 14)
+  for (const sv of document.querySelectorAll('.matrix svg')){
+    const vb = sv.viewBox.baseVal, f = sv.getBoundingClientRect().width / (vb && vb.width || 1);
+    if (f > 0) sv.style.setProperty('--ms', Math.max(13, 12.5 / f).toFixed(1) + 'px');
+  }
+  for (const pre of document.querySelectorAll('.konsole pre')){
+    const f = Math.min(1, (pre.clientWidth - 32) / (22 * 13));
+    pre.style.setProperty('--fit', (Math.floor(f * 100) / 100).toFixed(2));
+  }
+}
+addEventListener('resize', einpassen);
+let knopf = null;
+function auf(id, plus){
+  knopf = plus;
+  const k = KACHELN[id]; if (!k) return;
+  document.getElementById('fenster').innerHTML = `<button class="zu" aria-label="${S.kopf.zu[L]}">${KREUZ}</button>
+    <p class="klein">${k.klein[L]}</p><h4>${k.h[L]}</h4><ul>${k.d[L].map(x => `<li>${x}</li>`).join('')}</ul>`;
+  document.getElementById('overlay').classList.add('auf');
+  document.body.style.overflow = 'hidden';
+  lage();
+  try { document.querySelector('#fenster .zu').focus({ preventScroll: true }); } catch (e) {}
+}
+function lage(){
+  const o = document.getElementById('overlay'), f = document.getElementById('fenster');
+  if (!knopf || !o.classList.contains('auf')) return;
+  const r = knopf.getBoundingClientRect(), z = f.querySelector('.zu'), W = o.clientWidth, H = o.clientHeight, m = 16;
+  f.style.left = f.style.top = '0px';
+  const w = f.offsetWidth, h = f.offsetHeight, zr = f.offsetWidth - z.offsetLeft - z.offsetWidth, zt = z.offsetTop;
+  const x = Math.max(m, Math.min(r.right + zr - w, W - m - w));
+  const y = Math.max(m, Math.min(r.top - zt, H - m - h));
+  f.style.left = x + 'px'; f.style.top = y + 'px';
+}
+addEventListener('resize', lage);
+function zu(){ document.getElementById('overlay').classList.remove('auf'); document.body.style.overflow = ''; }
+document.addEventListener('click', e => {
+  const p = e.target.closest('.plus'); if (p) return auf(p.dataset.k, p);
+  const ab = e.target.closest('.abspielen');
+  if (ab){ const v = ab.parentElement.querySelector('video'); knopfWeg(v); v.play().catch(() => {}); return; }
+  if (e.target.closest('.zu') || e.target.id === 'overlay') zu();
+  const b = e.target.closest('.sprache button');
+  if (b){ const l = b.dataset.l; try { localStorage.setItem('kf-seite-sprache', l); } catch(e){} if (l !== SEITE) location.href = DATEI[l] + location.hash; }
+});
+addEventListener('keydown', e => { if (e.key === 'Escape') zu(); });
+L = spracheWaehlen();
+if (L !== SEITE) location.replace(DATEI[L] + location.hash); else bauen();
+</script>
+</body>
+</html>
