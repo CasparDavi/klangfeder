@@ -161,6 +161,28 @@ const schritte = {
       const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
       await new Promise(r => setTimeout(r, 4500)); return e.value.length + ' Zeichen Probetext · ' + (h && h.textContent)`);
   },
+  // Verhörer (19.11.2026): je Sprache vier eigene Zeilen, jede mit einer Stelle, die zwei Hörweisen hat
+  async verhoerer(K) {
+    const t = { de: 'Seid ihr bereit für Träume\nEr scannt die leere Stadt\nIch sag dir, wie es war\nund alles in mir schweigt\nWann werd ich wieder lachen\nmein Traum aus Glas zerbricht\nnimmt ihr die Angst vom Herzen\nsie quält mich jede Nacht',
+      en: "I scream into the night\nthat's tough to say out loud\nan aim beyond the stars\nmy tread is soft and slow\nupon two wings I fly\nhe asked a simple thing\nan ice cold wind\na notion of you",
+      ru: 'На двор ушёл мой брат\nО друг, не уходи\nИ мрак ложится тихо\nГоворить мы не могли\nБыл же праздник светлый\nЛишь дал мне знак рукой\nИз лап зимы весна\nВаш ум и ваша речь' }[SPR];
+    const titel = { de: 'Hörvarianten', en: 'Mondegreens', ru: 'Ослы́шки' }[SPR];
+    return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
+      const e = document.getElementById('text'); e.value = ${J(t)};
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+      const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
+      await new Promise(r => setTimeout(r, 4500)); return document.querySelectorAll('#ebene .vh-o.ve').length + ' Winkel'`);
+  },
+  // Grammatischer Reim (Russisch, 19.11.2026): in allen drei Sprachen derselbe russische Text, die Oberfläche in ihrer Sprache
+  async gramm(K) {
+    const t = 'Я тебя так долго любил\nИ к тебе под вечер ходил\nМы сидели за столом\nПод открытым окном\nТёмная холодная ночь\nГонит все сомнения прочь';
+    const titel = { de: 'Grammatischer Reim', en: 'Grammatical rhyme', ru: 'Грамматическая рифма' }[SPR];
+    return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
+      const e = document.getElementById('text'); e.value = ${J(t)};
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+      const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
+      await new Promise(r => setTimeout(r, 4500)); return document.querySelectorAll('#ebene .r.gramm').length + ' gepunktet'`);
+  },
   // Klangketten-Pillen setzen: genau diese an (binnen = Binnenreim)
   ketten: (arten = []) => async K => K.ev(`for (const b of document.querySelectorAll('#ketten [data-kette]')) { if (b.classList.contains('an') !== ${J(arten)}.includes(b.dataset.kette)) b.click(); }
       await new Promise(r => setTimeout(r, 2500));
@@ -291,6 +313,10 @@ const BILDER = [
   { name: 'klangketten', zeigt: 'Klangketten im Blatt: Zeileneinstieg, Binnen- und Schlagreim, Mehrsilbenreim, Stammreim, Alliteration, Assonanz',
     vor: [schritte.probe, schritte.ketten(['einstieg', 'binnen', 'multi', 'stamm', 'allit', 'asso'])], clip: ['#kettenzeile', '#blatt'] },
   // Fluss: Hebungsdiagramm vor dem Text mit Pause, Drop-Haken und Zeilensprung-Pfeil; Klangketten aus (nur Binnenreim bleibt)
+  { name: 'verhoerer', zeigt: 'gelbe Winkel: zwei Hörweisen an einer Wortgrenze (Seid ihr / sei dir)',
+    vor: [schritte.verhoerer, schritte.ketten([])], clip: ['#blatt'] },
+  { name: 'gramm', zeigt: 'grammatischer Reim im Russischen: gepunktete Linie am Reimteil (любил / ходил, столом / окном)',
+    vor: [schritte.gramm, schritte.ketten([])], clip: ['#blatt'] },
   { name: 'fluss', zeigt: 'Silbenzahl und Hebungsdiagramm vor den Zeilen: Lücke = Pause, Haken = Drop, Pfeil = Zeilensprung',
     vor: [schritte.probe, schritte.ketten(['binnen'])], clip: ['#blatt'] },
   // Stammreime und Wortfamilie in der Werkbank (nur diese beiden Gruppen)
@@ -376,6 +402,9 @@ const FELD = {
   regie:       { feld: [751, 520], fenster: [1600, 1100], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, ohneMarke: true, leisteZu: true },
   // neu 17.11.2026: Klangketten (quer, wie „schreiben“), Fluss (w5 neben Versmaß w7), Stammreim und Anlaut (w6, Werkbank)
   klangketten: { feld: [750, 460], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
+  // neu 19.11.2026: Verhörer und grammatischer Reim, nebeneinander (w6), nur das Blatt mit Titel
+  verhoerer:   { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
+  gramm:       { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
   fluss:       { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: -8, ohneMarke: true, leisteZu: true },
   stammreim:   { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .lexikon', dy: -10 },
   anlaut:      { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .anlautwahl', dy: -4 },
