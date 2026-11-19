@@ -424,7 +424,7 @@ S.laden = {
       ru:'<b>Системные требования.</b> Около 1,5 ГБ свободного места для программы и словарей. Современный веб-браузер. Другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Без цифровой подписи: в Windows браузер Edge сначала задерживает загрузку — нажмите стрелку рядом с «Удалить» → «Сохранить»; при первом запуске Windows может спросить ещё раз, а macOS блокирует приложение, пока вы не разрешите его в разделе «Конфиденциальность и безопасность» → «Всё равно открыть». После установки колокольчик рядом с «Система» сообщает о новой версии; один клик её устанавливает.'}
 };
 
-const BV = '26';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
+const BV = '27';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
   titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}`, ru: `img/titel-ru.webp?v=${BV}` } },
   schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}`, ru: `img/schreiben-ru.webp?v=${BV}` } },

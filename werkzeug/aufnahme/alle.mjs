@@ -455,7 +455,7 @@ for (const b of liste) {
   if (F && F.hervor) console.log('    ', await K.ev(`const e = document.querySelector(${J(F.hervor)}); if (!e) return 'hervor: fehlt';
     Object.assign(e.style, { outline: '2px solid #ff7a1a', outlineOffset: '5px', borderRadius: '6px', boxShadow: '0 0 0 9px rgba(255,122,26,.18)' }); return 'hervorgehoben: ' + ${J(F.hervor)}`));
   // ohneMarke: die Markierung eines vorigen Werkbank-Bildes (orange hinterlegte Zeilen) schließen
-  if (F && F.ohneMarke) console.log('    ', await K.ev(`document.getElementById('wbzu')?.click(); const t = document.getElementById('text'); t.setSelectionRange(0, 0); t.blur();
+  if (F && F.ohneMarke) console.log('    ', await K.ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));   /* das × gibt es seit 18.11.2026 nicht mehr; Esc leert die Werkbank */ const t = document.getElementById('text'); t.setSelectionRange(0, 0); t.blur();
     await new Promise(r => setTimeout(r, 800)); return 'Markierung zu: ' + document.querySelectorAll('#blatt .markiert, #blatt [class*=mark]').length`));
   if (F) console.log('    ', await lage(K, F));
   if (b.nurSchritt) continue;   // Zwischenschritt ohne Bild (z. B. Pillen wieder aus)
