@@ -19,14 +19,16 @@ const PORT = 8796;
 const OG = (L) => `${BASIS}img/og-${L}.jpg?v=20261119`;   // Vorschaubild je Sprache (werkzeug/vorschaubild.mjs); v hochzählen, wenn es neu ist
 
 
+/* Titel nach dem Stichworttest vom 19.11.2026 (Google-Vorschläge): „songwriting software“, „Songtext schreiben“,
+   «программа для написания песен» sind die Lyrics-nächsten gesuchten Wörter; „Versmaß“ suchen vor allem Schüler. */
 const KOPF = {
-  en: { titel: 'KlangFeder – rhyming dictionary, stress and metre for song lyrics and poems',
+  en: { titel: 'KlangFeder – free songwriting software with rhyming dictionary, stress and metre',
         beschr: 'Free songwriting tool for English, German and Russian: see stress, metre and rhyme while you write, find rhymes and words that fit. Runs on your own computer.',
         og: 'KlangFeder – Verse that sounds right while you write it.' },
-  de: { titel: 'KlangFeder – Reime finden, Betonung und Versmaß für Liedtexte und Gedichte',
+  de: { titel: 'KlangFeder – Songtexte schreiben, Reime finden, Betonung sehen',
         beschr: 'Kostenloses Werkzeug für Liedtexte und Gedichte auf Deutsch, Englisch und Russisch: Betonung, Versmaß und Reim beim Schreiben sehen, Reime und passende Wörter finden.',
         og: 'KlangFeder – Verse, die schon beim Schreiben richtig klingen.' },
-  ru: { titel: 'KlangFeder — подбор рифмы, ударения и размер стиха для песен и стихов',
+  ru: { titel: 'KlangFeder — программа для написания песен: подбор рифмы и ударения',
         beschr: 'Бесплатная программа для песен и стихов на русском, немецком и английском: ударения, размер и рифма прямо при письме, подбор рифм и подходящих слов.',
         og: 'KlangFeder — Стихи, которые звучат верно уже при письме.' },
 };
