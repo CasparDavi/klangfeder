@@ -498,7 +498,7 @@ const BILDER = {
    { k: { de: 'Assonanz', ru: 'ассонанс', en: 'assonance' }, f: '#f08a24', w: { de: ['Liebe / Wiege', 'nur die Vokale gleich'], ru: ['ночь / ложь', 'совпадают только гласные'], en: ['night / eyes', 'only the vowels match'] } },
    { k: { de: 'Konsonanz', ru: 'консонанс', en: 'consonance' }, f: '#c0646c', w: { de: ['Liebe / lebe', 'nur die Konsonanten gleich'], ru: ['день / конь', 'совпадают только согласные'], en: ['love / leave', 'only the consonants match'] } },
    { k: { de: 'Anklang', ru: 'созвучие', en: 'echo' }, f: '#76767b', w: { de: ['Wind / Winter', 'klingt ähnlich, andere Silbenzahl'], ru: ['ночь / очи', 'звучит похоже, но число слогов другое'], en: ['love / lover', 'sounds similar, different number of syllables'] } },
-   { k: { de: 'rührend', ru: 'тавтологическая', en: 'identical' }, f: '#55555b', w: { de: ['Liebe / bliebe', 'auch der Laut vor dem betonten Vokal gleich'], ru: ['свет / ответ', 'совпадает даже согласный перед ударным гласным'], en: ['breast / rest', 'even the sound before the stressed vowel is the same'] } } ] },
+   { k: { de: 'rührend', ru: 'тавтологическая', en: 'identical' }, f: '#6f6f75', w: { de: ['Liebe / bliebe', 'auch der Laut vor dem betonten Vokal gleich'], ru: ['свет / ответ', 'совпадает даже согласный перед ударным гласным'], en: ['breast / rest', 'even the sound before the stressed vowel is the same'] } } ] },
   /* Ausrichtung zweier Lautketten wie im Programm (kern/laute.mjs ausrichten, Gedichte-Matrix; Punkte am 12.11.2026 gerechnet):
      | gleich, : ähnlich, · verschieden; „von“ = Punkte des Worts gegen sich selbst */
   /* Ausrichtung zweier Lautketten wie im Programm, je Sprache mit eigenen Wörtern – gerechnet mit
