@@ -41,9 +41,9 @@ function kopf(L) {
     downloadUrl: 'https://github.com/CasparDavi/klangfeder/releases/latest', image: OG(L),
     license: 'https://opensource.org/licenses/MIT', author: { '@type': 'Person', name: 'Caspar_D' } };
   /* Startseite: wer Deutsch oder Russisch gewählt hat (oder dessen Browser so eingestellt ist), kommt sofort auf seine
-     Sprachseite – vor dem ersten Bild, damit kein englischer Text aufblitzt. Gleiche Reihenfolge wie spracheWaehlen(). */
-  const weiter = L !== 'en' ? '' : `<script>(function(){var l=null;try{l=localStorage.getItem('kf-seite-sprache')}catch(e){}`
-    + `if(!/^(de|en|ru)$/.test(l||''))l=new URLSearchParams(location.search).get('lang');`
+     Sprachseite – vor dem ersten Bild, damit kein englischer Text aufblitzt. Gleiche Reihenfolge wie spracheWaehlen(): ?lang= vor dem Gemerkten. */
+  const weiter = L !== 'en' ? '' : `<script>(function(){var l=new URLSearchParams(location.search).get('lang');`
+    + `if(!/^(de|en|ru)$/.test(l||'')){l=null;try{l=localStorage.getItem('kf-seite-sprache')}catch(e){}}`
     + `if(!/^(de|en|ru)$/.test(l||'')){l=null;var n=navigator.languages||[navigator.language||'en'];for(var i=0;i<n.length&&!l;i++){var x=(n[i]||'').slice(0,2);if(/^(de|en|ru)$/.test(x))l=x}}`
     + `var d={de:'de.html',ru:'ru.html'}[l];if(d)location.replace(d+location.hash)})()</script>\n`;
   return `<!--kopf-->

@@ -499,9 +499,11 @@ const KREUZ = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke
 const SEITE = document.documentElement.dataset.seite || 'en';
 const DATEI = { en: './', de: 'de.html', ru: 'ru.html' };
 function spracheWaehlen(){
+  /* ?lang= vor dem Gemerkten: die App und die READMEs verschicken Links mit ?lang= – die müssen die Seite bestimmen
+     (Fund der KlangTresor-Sitzung 19.11.2026; dort seit 16.11. so). Reihenfolge wie im Kopfskript von sprachseiten.mjs. */
+  const q = new URLSearchParams(location.search).get('lang'); if (q && S.kopf.h[q]) return q;
   if (SEITE !== 'en') return SEITE;
   try { const s = localStorage.getItem('kf-seite-sprache'); if (s && S.kopf.h[s]) return s; } catch(e){}
-  const q = new URLSearchParams(location.search).get('lang'); if (q && S.kopf.h[q]) return q;
   for (const l of (navigator.languages || [navigator.language || 'en'])) { const k = (l||'').slice(0,2); if (S.kopf.h[k]) return k; }
   return 'en';
 }
