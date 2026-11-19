@@ -161,6 +161,24 @@ const schritte = {
       const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
       await new Promise(r => setTimeout(r, 4500)); return e.value.length + ' Zeichen Probetext · ' + (h && h.textContent)`);
   },
+  // Flusskontrolle (19.11.2026): ein bekanntes gemeinfreies Gedicht in einer Klang-Anzeige und ein überlieferter Zungenbrecher
+  // im Phonemstau bei schnellem Tempo (Jörg: „keine Nonsense-Texte, echte Beispiele, die bekannt sind“). Texte aus T_ORT
+  // (flk-gedicht-<spr>.txt, flk-zunge-<spr>.txt); danach ⌥ gedrückt – das Blatt zeigt nur Text und Balken.
+  flk(art) { return async K => {
+    const f = { gedicht: process.env.FLK_GEDICHT, zunge: process.env.FLK_ZUNGE }[art];
+    if (!f || !fs.existsSync(f)) return 'KEIN Text für ' + art;
+    const t = fs.readFileSync(f, 'utf8');
+    const titel = art === 'gedicht' ? { de: 'Erlkönig', en: 'The Raven', ru: 'Зимнее утро' }[SPR] : { de: 'Fischers Fritz', en: 'She sells seashells', ru: 'Карл у Клары' }[SPR];
+    const [proj, bpm] = art === 'gedicht' ? ['hd', 120] : ['stau', 200];
+    return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
+      const e = document.getElementById('text'); e.value = ${J(t)};
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+      const h = document.getElementById('songtitel'); if (h) { h.textContent = ${J(titel)}; h.dispatchEvent(new Event('input', { bubbles: true })); }
+      await new Promise(r => setTimeout(r, 4500));
+      GL.proj = ${J(proj)}; GL.ebene = 'silbe'; GL.bpm = ${bpm}; glattMerken(); glattZeigen();
+      await glattHolen(); balkenMalen(); flackernAn(); await new Promise(r => setTimeout(r, 400));
+      return document.querySelectorAll('#balken i').length + ' Balken · ' + ${J(proj)} + ' · ' + ${bpm} + ' BPM'`);
+  }; },
   // Verhörer (19.11.2026): je Sprache vier eigene Zeilen, jede mit einer Stelle, die zwei Hörweisen hat
   async verhoerer(K) {
     const t = { de: 'Seid ihr bereit für Träume\nEr scannt die leere Stadt\nIch sag dir, wie es war\nund alles in mir schweigt\nWann werd ich wieder lachen\nmein Traum aus Glas zerbricht\nnimmt ihr die Angst vom Herzen\nsie quält mich jede Nacht',
@@ -313,6 +331,11 @@ const BILDER = [
   { name: 'klangketten', zeigt: 'Klangketten im Blatt: Zeileneinstieg, Binnen- und Schlagreim, Mehrsilbenreim, Stammreim, Alliteration, Assonanz',
     vor: [schritte.probe, schritte.ketten(['einstieg', 'binnen', 'multi', 'stamm', 'allit', 'asso'])], clip: ['#kettenzeile', '#blatt'] },
   // Fluss: Hebungsdiagramm vor dem Text mit Pause, Drop-Haken und Zeilensprung-Pfeil; Klangketten aus (nur Binnenreim bleibt)
+  { name: 'flk-gedicht', zeigt: 'Flusskontrolle, Flickermodus: bekanntes Gedicht, hell · dunkel je Silbe (orange hell, blau dunkel)',
+    vor: [schritte.flk('gedicht')], clip: ['#editor'] },
+  { name: 'flk-zunge', zeigt: 'Flusskontrolle, Flickermodus: Zungenbrecher bei 200 BPM im Phonemstau – zu volle Schläge rot',
+    vor: [schritte.flk('zunge')], clip: ['#editor'] },
+  { name: 'flk-aus', zeigt: '(kein Bild – Flickermodus aus)', vor: [async K => K.ev(`flackernAus(); return 'aus'`)], nurSchritt: true },
   { name: 'verhoerer', zeigt: 'gelbe Winkel: zwei Hörweisen an einer Wortgrenze (Seid ihr / sei dir)',
     vor: [schritte.verhoerer, schritte.ketten([])], clip: ['#blatt'] },
   { name: 'gramm', zeigt: 'grammatischer Reim im Russischen: gepunktete Linie am Reimteil (любил / ходил, столом / окном)',
@@ -403,6 +426,9 @@ const FELD = {
   // neu 17.11.2026: Klangketten (quer, wie „schreiben“), Fluss (w5 neben Versmaß w7), Stammreim und Anlaut (w6, Werkbank)
   klangketten: { feld: [750, 460], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
   // neu 19.11.2026: Verhörer und grammatischer Reim, nebeneinander (w6), nur das Blatt mit Titel
+  // neu 19.11.2026: Flusskontrolle – zwei Bilder nebeneinander (w6), Blatt mit Titel im Flickermodus
+  'flk-gedicht': { feld: [558, 200], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, mitTitel: true, ohneMarke: true, leisteZu: true },
+  'flk-zunge':   { feld: [558, 200], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, mitTitel: true, ohneMarke: true, leisteZu: true },
   verhoerer:   { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
   gramm:       { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
   fluss:       { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: -8, ohneMarke: true, leisteZu: true },
