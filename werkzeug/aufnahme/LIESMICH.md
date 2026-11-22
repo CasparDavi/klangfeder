@@ -1,12 +1,13 @@
 # Aufnahmen für die Landingpage
 
 Werkzeuge aus dem KlangTresor übernommen (`cdp.mjs`, `folge.mjs`; Sicherung `KlangTresor-Sicherung/20261027/werkzeuge-scratchpad-2217.tar.gz`).
-Aufgenommen wird **nie** an der Arbeitsinstanz (8790), sondern an einer Probeinstanz mit eigener Ablage, KI und KlangTresor aus
-(so sieht ein neuer Nutzer die KlangFeder):
+Aufgenommen wird **nie** an der Arbeitsinstanz (8790), sondern an einer Probeinstanz mit eigener Ablage (seit 22.11.2026 ist die
+KI immer an – es gibt keinen Schalter `mitKI` mehr):
 
 ```bash
 A=<Ordner für die Aufnahmen>; mkdir -p $A/ablage; ln -sfn <KlangFeder>/daten $A/ablage/daten
-echo '{"mitKI":false,"mitTresor":false}' > $A/ablage/einstellungen.json
+echo '{"mitTresor":true}' > $A/ablage/einstellungen.json
+ln -sfn <KlangFeder>/stimmen $A/ablage/stimmen     # für „hoeren“: geladene Vorlesestimmen, Wahl als "stimmen" in einstellungen.json
 KLANGFEDER_PORT=8792 KLANGFEDER_ABLAGE=$A/ablage KLANGFEDER_DATEN=<KlangFeder>/daten node --experimental-sqlite server.mjs
 ```
 
@@ -37,7 +38,7 @@ A=<Aufnahmeordner> werkzeug/aufnahme/alle-sprachen.sh          # de en ru
 A=<Aufnahmeordner> SPRACHEN="de" werkzeug/aufnahme/alle-sprachen.sh
 ```
 
-Erwartet im Ordner `$A`: `ablage/` (mit `{"mitKI":true,"mitTresor":true}`); die Texte kommen aus `T_ORT` (siehe oben). Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
+Erwartet im Ordner `$A`: `ablage/` (mit `{"mitTresor":true}` und `stimmen/`); die Texte kommen aus `T_ORT` (siehe oben). Laufen müssen die Probeinstanz auf 8792 und der KlangTresor auf 8788.
 Ergebnis: `$A/bilder-de/`, `-en/`, `-ru/` mit `<name>-<sprache>.webp`.
 
 * `vergleich` braucht den KlangTresor NICHT (mehr): der Lauf legt sich seine ältere Fassung selbst an – er fügt den
@@ -73,9 +74,8 @@ URL=http://127.0.0.1:8792/ SPR=en TEXT_EN=$A/erlking-en.txt node <repo>/werkzeug
 
 * Die Liedtexte liegen **nicht im Repo**; `TEXT_DE` und `TEXT_EN` zeigen auf sie. Russisch braucht keinen: dort
   steht der Beispieltext der KlangFeder im Feld.
-* Für `laenge` muss in der Ablage `mitTresor` an sein und der KlangTresor laufen, für `ki`
-  `mitKI` – die KlangFeder nutzt dafür Claude Code auf diesem Rechner, ein Schlüssel ist nicht nötig:
-  `echo '{"mitKI":true,"mitTresor":true}' > $A/ablage/einstellungen.json`
+* Für `laenge` muss in der Ablage `mitTresor` an sein und der KlangTresor laufen (die KI ist immer an):
+  `echo '{"mitTresor":true}' > $A/ablage/einstellungen.json`
 * Fenster 1600 × 1000 bei doppelter Pixeldichte (`BREIT`, `HOCH`, `DPR`). **Die Kästen der linken Spalte haben
   eine feste Breite**, die nicht mit dem Fenster wächst – `laenge`, `zaehlen` und `ki` werden darum mit `DPR=4`
   aufgenommen, sonst sind sie auf der Seite unscharf:
@@ -103,3 +103,9 @@ Zuschnitt (2× Pixeldichte, Ausschnitte in Bildpunkten der Aufnahme 2880 × 1800
 | `schreiben-<spr>.webp` | `magick ganz-<spr>.png -crop 1560x700+780+470 +repage -quality 86 schreiben-<spr>.webp` |
 
 Nach dem Ersetzen von Bildern `BV` in `docs/inhalt.js` hochzählen.
+
+## KI-Bilder (seit 22.11.2026)
+
+`kiverkehr` zeigt den KI-Bereich mit einer echten Antwort: ein Gemini-Lauf aus der Probeinstanz über den Schlüssel im
+Schlüsselbund (kostenlos). `webchat` und `entwurf` brauchen keine KI. Ältere Einträge im KI-Bereich werden für das Bild
+ausgeblendet. `dienste` (Seite System) macht Meldungen der Dienste unscharf, die Konto- oder Team-Kennungen enthalten.

@@ -3,8 +3,10 @@
 // einem automatischen Ablaufskript jederzeit in jeder Sprache neu erstellen kannst".)
 //
 // Aufgenommen wird nie an der Arbeitsinstanz, sondern an einer Probeinstanz mit eigener Ablage (siehe LIESMICH.md).
-// Für die Bilder „laenge" und „vergleich" muss in dieser Ablage mitTresor an sein und der KlangTresor laufen,
-// für „ki" mitKI; die KlangFeder nutzt dafür Claude Code auf diesem Rechner, kein Schlüssel nötig.
+// Für die Bilder „laenge" und „vergleich" muss in dieser Ablage mitTresor an sein und der KlangTresor laufen.
+// Die KI ist seit 22.11.2026 immer an. „kiverkehr“ (der KI-Bereich) braucht eine echte Antwort: ein Gemini-Lauf über den
+// Schlüssel im Schlüsselbund (kostenlos); „webchat“ und „entwurf“ brauchen keine KI. „hoeren“ braucht geladene Stimmen in der
+// Ablage (ablage/stimmen, Wahl in einstellungen.json).
 //
 //   URL=http://127.0.0.1:8792/ SPR=de node werkzeug/aufnahme/alle.mjs            alle Bilder
 //   URL=… SPR=en node werkzeug/aufnahme/alle.mjs reimschema reimsuche            nur diese
@@ -235,6 +237,53 @@ const schritte = {
       return [...document.querySelectorAll('[data-klang].an')].map(b => b.textContent).join(' + ') || 'keine'`),
 };
 
+// ---------- KI-Bereich (seit 22.11.2026; vorher die Lasche „KI-Verkehr“) ----------
+const WUNSCH = { de: 'mehr Bild', en: 'more imagery', ru: 'больше образности' };
+const ki = {
+  // KI-Bereich offen und hoch, Verlauf dieser Sitzung; Zwischenablage erlaubt (Kopieren beim Web-Chat-Bot)
+  bereich: (hoehe = 0.86) => async K => { await K.sende('Browser.grantPermissions', { permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'], origin: URL.replace(/\/$/, '') }).catch(() => {});
+    return K.ev(`localStorage.setItem('klangfeder-kidrawer', JSON.stringify({ hoehe: ${hoehe}, zu: false })); KD.hoehe = ${hoehe}; KD.zu = false;
+      KV.sicht = 'sitzung'; KD.sig = null; kdSetzen(false); await new Promise(r => setTimeout(r, 1200)); return 'KI-Bereich offen'`); },
+  anbieter: name => async K => K.ev(`for (let i = 0; i < 40; i++) { const s = ANBIETER_STAND; if (s && s[${J(name)}] && s[${J(name)}].vorhanden) break;
+      ANBIETER_STAND = await (await fetch('/api/claude')).json(); claudeWahlFuellen(); await new Promise(r => setTimeout(r, 1500)); }
+    const w = $('kAnbieter'); w.value = ${J(name)}; w.dispatchEvent(new Event('change')); await new Promise(r => setTimeout(r, 500));
+    return 'Anbieter ' + w.value + (ANBIETER_STAND[${J(name)}] && ANBIETER_STAND[${J(name)}].vorhanden ? ' bereit' : ' NICHT bereit')`),
+  vorschau: an => async K => K.ev(`KD_VORSCHAU = ${an}; $('kdVorschau').checked = ${an}; try { localStorage.setItem('klangfeder-ki-vorschau', '${an ? 1 : 0}'); } catch {} return 'vorschau ${an}'`),
+  // die Zeile mit dem Werkbank-Wort neu fassen lassen; warten, bis der Auftrag im KI-Bereich steht (bei echter KI: bis die Antwort da ist)
+  zeile: (warten = 'eintrag') => async K => K.ev(`const t = document.getElementById('text'), z = t.value.split('\\n'), w = ${J(WORT[SPR])};
+    const i = z.findIndex(x => x.includes(w)); if (i < 0) return 'Zeile mit ' + w + ' fehlt';
+    for (const k of [i, i + 1, i - 1]) { zeileWaehlen(k); await new Promise(r => setTimeout(r, 1800)); if (document.getElementById('wbWunsch')) break; }
+    if (!document.getElementById('wbWunsch')) return 'Werkbank zu';
+    // erst den Stand zählen: der neue Eintrag ist der, der danach dazukommt (sonst griff der vorige Lauf)
+    const vorher = document.querySelectorAll('#kdListe .kvlauf').length;
+    $('wbWunsch').value = ${J(WUNSCH[SPR])}; $('wbHolen').click();
+    for (let n = 0; n < 150; n++) { await new Promise(r => setTimeout(r, 1000));
+      if (document.querySelectorAll('#kdListe .kvlauf').length <= vorher) continue;
+      const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); if (!l) continue;
+      if (${J(warten)} === 'eintrag' && l.querySelector('.kvn.kf')) break;
+      if (${J(warten)} === 'antwort' && l.querySelector('.kvn.ki .kdvar .vorschlag, .kvn.ki ol li')) break;
+      if (${J(warten)} === 'antwort' && /fehler/.test(l.querySelector('.kvmeta')?.innerHTML || '')) return 'FEHLER: ' + l.querySelector('.kvmeta').textContent; }
+    await new Promise(r => setTimeout(r, 1500));
+    const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); return (l ? l.querySelector('.kvmeta').textContent : 'kein Eintrag').slice(0, 90)`),
+  // im letzten Eintrag einen Baustein aufklappen (Name wie im KI-Bereich) und den Eintrag oben in den Blick holen
+  aufklappen: id => async K => K.ev(`const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); if (!l) return 'kein Eintrag';
+    const n = t('kd.b.' + ${J(id)}), z = [...l.querySelectorAll('.kfz')].find(r => r.querySelector('.n')?.textContent.trim().startsWith(n));
+    if (z && !z.classList.contains('offen')) z.click(); await new Promise(r => setTimeout(r, 500));
+    const el = $('kdInhalt'); el.scrollTop = l.offsetTop - 6; return z ? 'aufgeklappt: ' + n : 'Baustein fehlt: ' + n`),
+  // nur der jüngste Eintrag ist zu sehen – die älteren (frühere Bilder, Abgebrochenes) werden für das Bild ausgeblendet
+  nurLetzter: async K => K.ev(`const a = [...document.querySelectorAll('#kdListe .kvlauf')]; a.forEach((e, i) => { e.style.display = i === a.length - 1 ? '' : 'none'; }); return a.length + ' Einträge, 1 gezeigt'`),
+  oben: async K => K.ev(`const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); const el = $('kdInhalt'); if (l) el.scrollTop = l.offsetTop - 6;
+    document.querySelectorAll('.toast, #meldung').forEach(e => e.remove?.()); return 'oben'`),
+  unten: async K => K.ev(`const el = $('kdInhalt'); el.scrollTop = el.scrollHeight; return 'unten'`),
+  anhang: async K => K.ev(`const f = document.querySelector('.kfedit[data-b="anhang"]'); if (!f) return 'kein Entwurf';
+    f.value = ${J({ de: 'Kein Herz-Schmerz-Reim, bitte.', en: 'No heart/apart rhyme, please.', ru: 'Без рифмы любовь/кровь, пожалуйста.' }[SPR])}; f.dispatchEvent(new Event('input', { bubbles: true }));
+    const el = $('kdInhalt'); const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); if (l) el.scrollTop = l.offsetTop - 6; return 'Anhang eingetragen'`),
+  // Aufräumen: offene Entwürfe und Wartende verwerfen, damit das nächste Bild sauber beginnt
+  aufraeumen: async K => K.ev(`for (const e of (KD.liste || [])) if (['entwurf', 'laeuft'].includes(e.status) && e.id) await fetch('/api/claude/' + e.id, { method: 'DELETE' }).catch(() => {});
+    KD_VORSCHAU = false; $('kdVorschau').checked = false; try { localStorage.setItem('klangfeder-ki-vorschau', '0'); } catch {}
+    W.auftrag = null; K && null; KD.sig = null; await kdLaden(); return 'aufgeräumt'`),
+};
+
 // ---------- die Bilder ----------
 const BILDER = [
   { name: 'titel', zeigt: 'das ganze Fenster: Aufbau links, Text in der Mitte, Reimwerkbank rechts',
@@ -285,30 +334,29 @@ const BILDER = [
   { name: 'vergleich', zeigt: 'alte und neue Fassung nebeneinander, mit Kennzahlen darüber',
     vor: [schritte.text, schritte.ausgang, schritte.feilen, schritte.vergleich], clip: ['#vergleich'] },
 
-  // SONDERFALL: Dieses Bild braucht echten KI-Verkehr und läuft darum gegen die ARBEITSINSTANZ (URL=…:8790),
-  // nicht gegen die Probeinstanz – dort kommt kein Auftrag durch (Knopf bleibt gesperrt, kein Protokoll).
-  // Caspar_D, 15.11.2026: „dann nutze die normale instanz in claude".
-  // Der Text wird NICHT gesetzt: die Lasche braucht ihn nicht, und der offene Stand bleibt unberührt.
-  // Gezeigt wird allein der OBERSTE Eintrag – die älteren enthalten Liedtexte im Klartext und werden ausgeblendet.
-  { name: 'kiverkehr', zeigt: 'die Lasche „KI-Verkehr": ein Auftrag an die KI und ihre Antwort, mit Modell und Dauer',
-    vor: [async K => K.ev(`const l = document.querySelector('[data-lasche="ki"]'); if (!l) return 'Lasche fehlt';
-      l.click(); await new Promise(r => setTimeout(r, 1500));
-      // Der Filter steht beim Laden auf „dieses Lied" – im Aufnahme-Browser ist aber keins geladen, die Lasche
-      // bliebe leer. „diese Sitzung" zeigt den Verkehr des laufenden Servers, unabhängig vom Lied.
-      const sicht = document.getElementById('kvSicht');
-      if (sicht) { sicht.value = 'sitzung'; sicht.dispatchEvent(new Event('change', { bubbles: true })); }
-      // Die Liste wird nachgeladen – warten, bis sie steht, sonst bleibt das Bild leer.
-      for (let i = 0; i < 30; i++) { if (document.querySelectorAll('#kiverkehr .kvlauf').length) break; await new Promise(r => setTimeout(r, 500)); }
-      await new Promise(r => setTimeout(r, 900));
-      // Gezeigt wird der Eintrag IN DER SPRACHE DER OBERFLÄCHE. Seit die Prompts übersetzt sind (ki-prompts.mjs),
-      // ist die Anrede der KlangFeder je Sprache verschieden – daran lässt sich der passende Lauf erkennen.
-      const marke = { de: 'In der KlangFeder wird dir geschrieben', en: 'You are being written to in KlangFeder', ru: 'Вам пишут в KlangFeder' }['${SPR}'] || '';
-      const alle = [...document.querySelectorAll('#kiverkehr .kvlauf')];
-      const treffer = alle.find(e => (e.innerText || '').includes(marke)) || alle[0];
-      alle.forEach(e => { if (e !== treffer) e.style.display = 'none'; });
-      // NICHT „ganz zeigen“: der volle Auftrag schiebt die Antwort der KI aus dem Feld – Auftrag und Antwort gehören beide ins Bild
-      return alle.length + ' Einträge, gezeigt: ' + (treffer ? (treffer.innerText || '').slice(0, 40).replace(/\\n/g, ' ') : 'keiner')`)],
-    clip: ['#kiverkehr'], rand: 14, hoch: 0.40 },
+  // KI-Bereich (22.11.2026): eine echte Antwort von Gemini in der Probeinstanz – Du, KlangFeder mit Bausteinen („Maß der Zeile“
+  // aufgeklappt), die KI mit ihren Fassungen. Der frühere Sonderfall (Lasche, Arbeitsinstanz 8790) entfällt.
+  { name: 'kiverkehr', zeigt: 'der KI-Bereich: deine Nachricht, die Bausteine der KlangFeder, die Antwort der KI',
+    vor: [schritte.text, ki.bereich(), ki.anbieter('gemini'), ki.zeile('antwort'), ki.nurLetzter, ki.aufklappen('ziel')] },
+  // Web-Chat-Bot: der Auftrag ist kopiert, unten wartet das Feld für die Antwort
+  { name: 'webchat', zeigt: 'Web-Chat-Bot: kopierter Auftrag, Feld für die eingefügte Antwort',
+    vor: [schritte.text, ki.aufraeumen, ki.anbieter('webchat'), ki.bereich(), ki.zeile('eintrag'), ki.nurLetzter, ki.unten] },
+  // Entwurf: vor dem Senden ansehen – Bausteine als Textfelder, ein eigener angehängt
+  { name: 'entwurf', zeigt: 'Entwurf: Bausteine ändern, eigenen anhängen, dann senden',
+    vor: [schritte.text, ki.aufraeumen, ki.anbieter('claude'), ki.vorschau(true), ki.bereich(), ki.zeile('eintrag'), ki.nurLetzter, ki.anhang] },
+  { name: 'ki-ende', zeigt: '(Zwischenschritt: Entwürfe verwerfen, KI-Bereich zu)', nurSchritt: true,
+    vor: [ki.aufraeumen, async K => K.ev(`KD.zu = true; kdMerken(); kdSetzen(false); return 'KI-Bereich zu'`)] },
+  // Durchsicht (Flusskontrolle): alles Auffällige auf einen Blick
+  // Durchsicht am Verhörer-Text (der Erlkönig hat nur eine Stelle, auch bei 150 BPM); die ersten Gruppen aufgeklappt
+  { name: 'durchsicht', zeigt: 'Durchsicht: alle Stellen, die beim Singen haken könnten',
+    vor: [schritte.verhoerer, schritte.abschnitt(5),
+      async K => K.ev(`await new Promise(r => setTimeout(r, 2500)); const l = document.getElementById('dsListe');
+        [...l.querySelectorAll('details')].slice(0, 2).forEach(d => { d.open = true; }); await new Promise(r => setTimeout(r, 600));
+        return document.getElementById('dsZahl').textContent + ' · ' + l.textContent.trim().slice(0, 80).replace(/\\s+/g, ' ')`)] },
+  // Hören: Klopfen, Vorlesen mit Art (natürlich, Versmaß, im Takt) – mit geladener Stimme
+  { name: 'hoeren', zeigt: 'Hören: Klopfen, Vorlesen natürlich · Versmaß · im Takt',
+    vor: [schritte.text, schritte.abschnitt(6), async K => K.ev(`for (let i = 0; i < 20 && $('vorleseArt').hidden; i++) await new Promise(r => setTimeout(r, 500));
+      $('vorleseArt').value = 'takt'; return 'Art: ' + ($('vorleseArt').hidden ? 'keine Stimme' : $('vorleseArt').value)`)] },
 
   // Klangfarbe: Pillen „hart“ und „dunkel“ an – danach wieder aus – orange Linie unter jedem Wort, wie stark es passt
   { name: 'klangfarbe', zeigt: 'Werkbank mit Klangfarben-Pillen: passende Wörter vorn, orange Linie zeigt, wie stark',
@@ -369,7 +417,13 @@ const BILDER = [
     vor: [schritte.seite('/system'),
           async K => K.ev(`const z = [...document.querySelectorAll('#korpora .kz')], b = (z.find(x => /OpenThesaurus/.test(x.querySelector('.kzn b').textContent)) || z[0] || document).querySelector('[data-kqauf]');
             if (!b) return 'keine Korpora'; b.click(); await new Promise(r => setTimeout(r, 300)); return 'aufgeklappt: ' + b.dataset.kqauf`)],
-    clip: ['#korpora'], rand: 18, inBlick: true, hoch: 0.40 }
+    clip: ['#korpora'], rand: 18, inBlick: true, hoch: 0.40 },
+  // Seite System: die KI-Karten (Abo, Schlüssel, Apple) und der Stimm-Eichkasten – ans Ende, das Arbeitsblatt steht danach nicht mehr
+  // Meldungen der Dienste können Konto- oder Team-Kennungen enthalten (Grok: console.x.ai/team/<id>) – im Bild unscharf, nie lesbar
+  { name: 'dienste', zeigt: 'Seite System: KI-Dienste mit Abo, Schlüssel oder auf dem Mac',
+    vor: [schritte.seite('/system#ki'), async K => K.ev(`let n = 0; for (const e of document.querySelectorAll('#karten .zustand')) if (/team\\/|[0-9a-f]{8}-[0-9a-f]{4}-|request_id|\\*{4}/i.test(e.textContent)) { e.style.filter = 'blur(6px)'; n++; } return 'unscharf: ' + n`)] },
+  { name: 'stimmeichen', zeigt: 'Seite System: Vorlesestimme eichen',
+    vor: [schritte.seite('/system')] },
 ];
 
 // ---------- Fensterleiste mit Namen ----------
@@ -440,7 +494,15 @@ const FELD = {
   ki:          { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '.sec:has(#claude)', dx: -12, dy: -12, einblick: true },
   laenge:      { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '#aLaenge', dx: -24, dy: 14, unten: true, einblick: true },
   // KI-Verkehr steht in der Blattspalte: Leiste schmal, Werkbank aus, Fenster so breit, dass die Spalte das Feld trägt
-  kiverkehr:   { feld: [558, 330], fenster: [1000, 1000], leiste: 185, werkbank: 0, anker: '#kiverkehr', dx: -10, dy: -10, leisteZu: true },
+  // KI-Bereich (Drawer) in der Blattspalte: Leiste schmal, Werkbank aus, Bereich fast so hoch wie die Spalte
+  kiverkehr:   { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
+  webchat:     { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
+  entwurf:     { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
+  durchsicht:  { feld: [558, 300], fenster: [1700, 1100], leiste: 790, anker: '#dsFeld', dx: -12, dy: -12, einblick: true },
+  hoeren:      { feld: [558, 330], fenster: [1700, 1000], leiste: 790, anker: 'h4.glteil[data-i18n="s6.hoeren"]', dx: -12, dy: -14, einblick: true },
+  // Systemseite schmal, damit zwei Karten nebeneinander ins Feld passen
+  dienste:     { feld: [558, 420], fenster: [800, 1500], anker: '#karten', dx: -8, dy: -8, einblick: true },
+  stimmeichen: { feld: [558, 330], fenster: [800, 1500], anker: '#stimmEichung', dx: -8, dy: -8, einblick: true },
   eigene:      { feld: [558, 330], fenster: [800, 1000], anker: '#korpora', einblick: true },
   vergleich:   { feld: [1136, 600], fenster: [1600, 1100], anker: '#vergleich' },
 };

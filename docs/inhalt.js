@@ -207,7 +207,7 @@ const S = {
       de:['<b>Abschnitte</b> wie [Verse], [Chorus], [Bridge] gliedern den Text; Reimschema und Versmaß gelten je Abschnitt.','<b># am Zeilenanfang</b> ist eine Notiz für dich und geht nicht an Suno.','<b>Zeilen vor der ersten Klammer</b> gelten als Vorspann (Hinweise, Dank) und werden nicht mitgemessen.'],
       ru:['<b>Разделы</b> вроде [Verse], [Chorus], [Bridge] членят текст; схема рифмовки и размер действуют для каждого раздела.','<b># в начале строки</b> — заметка для вас, в Suno она не уходит.','<b>Строки до первой скобки</b> считаются вступлением (пояснения, благодарности) и не измеряются.']}},
   /* Durchsicht (0.9.21, 20.11.2026) */
-  {id:'durchsicht',w:12,klein:{"en": "Review", "de": "Durchsicht", "ru": "Обзор"},
+  {id:'durchsicht',w:12,quer:true,klein:{"en": "Review", "de": "Durchsicht", "ru": "Обзор"},
    h:{"en": "Everything notable at a glance.", "de": "Alles Auffällige auf einen Blick.", "ru": "Всё заметное — одним взглядом."},
    p:{"en": "Before a text goes to Suno, the review collects every spot that could catch when sung: overfull beats, long stretches without a breath, mishearings, two stressed syllables in a row and departures from the outline. A click jumps to the spot.", "de": "Bevor ein Text zu Suno geht, sammelt die Durchsicht alle Stellen, die beim Singen haken könnten: zu volle Schläge, lange Strecken ohne Atem, Hörfallen, zwei betonte Silben hintereinander und Abweichungen vom Gerüst. Ein Klick springt zur Stelle.", "ru": "Прежде чем текст уйдёт в Suno, обзор собирает все места, которые могут мешать при пении: переполненные доли, длинные отрезки без вдоха, ослышки, два ударных слога подряд и отступления от каркаса. Щелчок переносит к месту."},
    d:{"en": ["<b>Counted per 10 lines</b> and set beside the measure of the templates you ticked. What is merely denser than there is shown lighter, not red – rough spots are allowed."], "de": ["<b>Gezählt je 10 Zeilen</b> und neben das Maß der Vorlagen gestellt, die du angekreuzt hast. Was nur dichter ist als dort, wird heller gezeigt, nicht rot – raue Stellen dürfen sein."], "ru": ["<b>Подсчитано на каждые 10 строк</b> и поставлено рядом с мерой отмеченных вами образцов. То, что лишь плотнее, чем там, показано светлее, а не красным, — шероховатости допустимы."]}},
@@ -266,18 +266,19 @@ const S = {
   ]},
  {augenbraue:{en:'If you like',de:'Wahlweise',ru:'По желанию'},
   h:{en:'Good on its own.<br>Better together.',de:'Allein gut.<br>Zusammen besser.',ru:'Хорошо и в одиночку.<br>Вместе — ещё лучше.'},
-  p:{en:'KlangFeder works entirely on its own. Switched on, an AI writes with you, and KlangTresor brings your Suno archive as a yardstick.',
-     de:'Die KlangFeder arbeitet ganz für sich. Eingeschaltet schreibt eine KI mit, und der KlangTresor bringt dein Suno-Archiv als Maßstab.',
-     ru:'KlangFeder работает полностью самостоятельно. Если включить, вместе с вами пишет ИИ, а KlangTresor приносит ваш архив Suno как мерило.'},
+  p:{en:'KlangFeder works entirely on its own. If you like, an AI writes with you – even without an account, via a chat bot in your browser – and KlangTresor brings your Suno archive as a yardstick.',
+     de:'Die KlangFeder arbeitet ganz für sich. Wenn du willst, schreibt eine KI mit – auch ohne Konto, über einen Chat-Bot im Browser –, und der KlangTresor bringt dein Suno-Archiv als Maßstab.',
+     ru:'KlangFeder работает полностью самостоятельно. По желанию вместе с вами пишет ИИ – даже без аккаунта, через чат-бот в браузере, – а KlangTresor приносит ваш архив Suno как мерило.'},
   kacheln:[
+  /* KI (22.11.2026): zehn Wege – Abo, API-Schlüssel, auf dem Mac, Chat-Bot im Browser; Bild: die KI-Karten der Seite System */
   {id:'ki',w:6,klein:{en:'With AI',de:'Mit KI',ru:'С ИИ'},
-   h:{en:'Claude or ChatGPT write with you.',de:'Claude oder ChatGPT schreiben mit.',ru:'Claude или ChatGPT пишут вместе с вами.'},
-   p:{en:'The AI proposes storylines, drafts a text in the style of your models or reworks lines – all through your own Anthropic or OpenAI account.',
-      de:'Die KI schlägt Handlungen vor, erstellt einen Text im Stil deiner Vorlagen oder überarbeitet Zeilen – über dein eigenes Konto bei Anthropic oder OpenAI.',
-      ru:'ИИ предлагает сюжеты, пишет текст в стиле ваших образцов или перерабатывает строки — через вашу собственную учётную запись в Anthropic или OpenAI.'},
-   d:{en:['<b>Your own account:</b> KlangFeder uses Claude Code or Codex on your computer; the System page helps you sign in.','<b>The AI treats</b> your rhyme, beat and structure settings as rules.','<b>The AI gets all measurements</b> – overfull beats, breath, mishearings, length – and is asked to keep your templates’ measure instead of smoothing everything.','<b>When the AI is switched off</b>, everything to do with it is hidden, not greyed out.'],
-      de:['<b>Dein eigenes Konto:</b> Die KlangFeder nutzt Claude Code bzw. Codex auf deinem Rechner; die Seite „System“ hilft beim Anmelden.','<b>Reim, Hebungen und Aufbau</b> bekommt die KI als Vorgabe mit.','<b>Die KI bekommt alle Messungen</b> – zu volle Schläge, Atem, Hörfallen, Länge – und soll das Maß deiner Vorlagen halten, statt alles zu glätten.','<b>Ist die KI ausgeschaltet,</b> ist alles dazu ausgeblendet, nicht ausgegraut.'],
-      ru:['<b>Ваша учётная запись:</b> KlangFeder использует Claude Code или Codex на вашем компьютере; страница «Система» помогает войти.','<b>Рифму, ударные слоги и структуру</b> ИИ получает как заданные правила.','<b>ИИ получает все измерения</b> — переполненные доли, дыхание, ослышки, длину — и должен держаться меры ваших образцов, а не сглаживать всё подряд.','<b>Если ИИ выключен,</b> всё, что к нему относится, скрыто, а не затемнено.']}},
+   h:{en:'Any AI can write with you.',de:'Jede KI schreibt mit.',ru:'Писать вместе с вами может любой ИИ.'},
+   p:{en:'The AI proposes storylines, drafts a text in the style of your models or reworks lines – with your Claude or ChatGPT subscription, with an API key for Gemini, Grok, Mistral, DeepSeek or OpenRouter, with Apple Intelligence on the Mac, or with no account at all via a chat bot in your browser.',
+      de:'Die KI schlägt Handlungen vor, erstellt einen Text im Stil deiner Vorlagen oder überarbeitet Zeilen – mit deinem Abo bei Claude oder ChatGPT, mit einem API-Schlüssel bei Gemini, Grok, Mistral, DeepSeek oder OpenRouter, mit Apple Intelligence auf dem Mac oder ohne jedes Konto über einen Chat-Bot im Browser.',
+      ru:'ИИ предлагает сюжеты, пишет текст в стиле ваших образцов или перерабатывает строки – по вашей подписке Claude или ChatGPT, по API-ключу Gemini, Grok, Mistral, DeepSeek или OpenRouter, с Apple Intelligence на Mac или вообще без аккаунта через чат-бот в браузере.'},
+   d:{en:['<b>The System page shows the way:</b> one card per service; your key stays in your computer’s keychain, and a card only turns green once the service has accepted it.','<b>The model list stays current:</b> new versions appear by themselves, and each one can be chosen.','<b>The AI treats</b> your rhyme, beat and structure settings as rules and also gets KlangFeder’s rhyme list – for a line, a rhyme pair and a section.','<b>The AI gets all measurements</b> – overfull beats, breath, mishearings, length – and is asked to keep your templates’ measure instead of smoothing everything.'],
+      de:['<b>Die Seite „System“ führt hin:</b> je Dienst eine Karte; der Schlüssel bleibt im Schlüsselbund deines Rechners, und grün wird die Karte erst, wenn der Dienst ihn angenommen hat.','<b>Die Modellliste bleibt aktuell:</b> neue Versionen erscheinen von selbst, jede ist wählbar.','<b>Reim, Hebungen und Aufbau</b> bekommt die KI als Vorgabe mit, dazu die Reimliste der KlangFeder – für Zeile, Reimpaar und Abschnitt.','<b>Die KI bekommt alle Messungen</b> – zu volle Schläge, Atem, Hörfallen, Länge – und soll das Maß deiner Vorlagen halten, statt alles zu glätten.'],
+      ru:['<b>Страница «Система» ведёт к цели:</b> по карточке на каждый сервис; ключ хранится в связке ключей вашего компьютера, а карточка становится зелёной, только когда сервис его принял.','<b>Список моделей всегда актуален:</b> новые версии появляются сами, выбрать можно любую.','<b>Рифму, ударные слоги и структуру</b> ИИ получает как заданные правила, а также список рифм KlangFeder – для строки, пары и раздела.','<b>ИИ получает все измерения</b> — переполненные доли, дыхание, ослышки, длину — и должен держаться меры ваших образцов, а не сглаживать всё.']}},
   {id:'laenge',w:6,klein:{en:'With KlangTresor',de:'Mit dem KlangTresor',ru:'С KlangTresor'},
    h:{en:'Your archive as the yardstick.',de:'Dein Archiv als Maßstab.',ru:'Ваш архив как мерило.'},
    p:{en:'If KlangTresor is running, KlangFeder knows your songs: it estimates how long Suno will take to sing a text, and how densely, judged against your archive.',
@@ -288,14 +289,33 @@ const S = {
       ru:['<b>Образцы:</b> песни из KlangTresor, отмеченные как образцы, показывают свой стиль — размер, рифму, структуру — и служат ИИ примером.','<b>Длительность</b> оценивается лишь приблизительно (в среднем ±12 %); плотность говорит больше.','<b>KlangTresor</b> — отдельная свободная программа для вашего архива Suno: <a href="https://github.com/CasparDavi/klangtresor">github.com/CasparDavi/klangtresor</a>.']}},
   /* KI-Verkehr (Jörg, 11.11.2026: „eine Konsole, die die KI-Kommunikation trackt, damit man im Zweifel sehen kann,
      was an Information geflossen ist“; kiprotokoll.mjs, Lasche in web/index.html). */
-  {id:'kiverkehr',w:6,klein:{en:'AI traffic',de:'KI-Verkehr',ru:'Обмен с ИИ'},
-   h:{en:'You see what went to the AI.',de:'Du siehst, was an die KI ging.',ru:'Вы видите, что ушло к ИИ.'},
-   p:{en:'A tab of its own shows every request and every reply in full – what KlangFeder sent and what came back. If in doubt, you can read exactly which details left your computer.',
-      de:'Eine eigene Lasche zeigt jeden Auftrag und jede Antwort im vollen Wortlaut – was die KlangFeder geschickt hat und was zurückkam. Im Zweifel ist nachzulesen, welche Angaben deinen Rechner verlassen haben.',
-      ru:'Отдельная вкладка показывает каждый запрос и каждый ответ целиком — что KlangFeder отправила и что вернулось. В случае сомнений можно прочитать, какие именно сведения покинули ваш компьютер.'},
-   d:{en:['<b>It stays with you:</b> the record lives in KlangFeder’s own folder, not online. Remove KlangFeder and it goes too.','<b>The record is kept per song:</b> the last hundred entries of each song remain, across sessions – so the traffic of the song you worked on yesterday is still there.'],
-      de:['<b>Das Protokoll bleibt bei dir:</b> Es steht in der Ablage der KlangFeder, nicht im Netz. Wer die KlangFeder entfernt, löscht es mit.','<b>Das Protokoll ist nach Liedern geordnet:</b> Zu jedem Lied bleiben die letzten hundert Einträge, auch über Sitzungen hinweg – der Verkehr zu dem Lied von gestern ist noch da.'],
-      ru:['<b>Запись остаётся у вас:</b> она лежит в собственной папке KlangFeder, не в сети. Удалите KlangFeder — исчезнет и она.','<b>Запись ведётся по песням:</b> к каждой песне сохраняются последние сто записей, в том числе между сеансами, — обмен по вчерашней песне никуда не денется.']}},
+  /* KI-Bereich (22.11.2026, ersetzt die Lasche „KI-Verkehr“): Du · KlangFeder mit Bausteinen · KI, der Reihe nach */
+  {id:'kiverkehr',w:6,klein:{en:'AI panel',de:'KI-Bereich',ru:'Область ИИ'},
+   h:{en:'You see what goes to the AI.',de:'Du siehst, was an die KI geht.',ru:'Вы видите, что уходит к ИИ.'},
+   p:{en:'The AI panel slides up into the text window: your message first, then KlangFeder’s, then the AI’s answer – in order, the newest at the bottom.',
+      de:'Der KI-Bereich gleitet von unten ins Textfenster: deine Nachricht zuerst, dann die der KlangFeder, dann die Antwort der KI – der Reihe nach, das Neueste unten.',
+      ru:'Область ИИ выезжает снизу в окно текста: сначала ваше сообщение, потом сообщение KlangFeder, потом ответ ИИ – по порядку, самое новое внизу.'},
+   d:{en:['<b>Split into building blocks:</b> lyrics, style prompt, line measure with a small stress chart, findings, rhyme words, templates, rules – each with a symbol and a summary, unfolding to the exact wording.','<b>Under “Send along”</b> you switch building blocks off; what is off stays struck through in the record.','<b>It stays with you:</b> the record lives in KlangFeder’s own folder, not online. Remove KlangFeder and it goes too.','<b>The record is kept per song:</b> the last hundred entries of each song remain, across sessions – so the traffic of the song you worked on yesterday is still there.'],
+      de:['<b>In Bausteine gegliedert:</b> Liedtext, Stil-Prompt, Maß der Zeile mit kleinem Hebungsbild, Befunde, Reimwörter, Vorlagen, Regeln – jeder mit Symbol und Kurzfassung, aufklappbar bis zum Wortlaut.','<b>Unter „Mitschicken“</b> schaltest du Bausteine ab; was abgeschaltet ist, steht durchgestrichen im Verlauf.','<b>Das Protokoll bleibt bei dir:</b> Es steht in der Ablage der KlangFeder, nicht im Netz. Wer die KlangFeder entfernt, löscht es mit.','<b>Das Protokoll ist nach Liedern geordnet:</b> Zu jedem Lied bleiben die letzten hundert Einträge, auch über Sitzungen hinweg – der Verkehr zu dem Lied von gestern ist noch da.'],
+      ru:['<b>Разбито на блоки:</b> текст песни, стиль-промпт, размер строки с маленькой схемой ударений, находки, рифмы, образцы, правила – у каждого символ и краткое содержание, разворачивается до дословного текста.','<b>В разделе «Отправлять»</b> вы отключаете блоки; отключённое остаётся в записи зачёркнутым.','<b>Запись остаётся у вас:</b> она лежит в собственной папке KlangFeder, не в сети. Удалите KlangFeder — исчезнет и она.','<b>Запись ведётся по песням:</b> к каждой песне сохраняются последние сто записей, в том числе между сеансами, — обмен по вчерашней песне никуда не денется.']}},
+  /* Web-Chat-Bot (22.11.2026): kopieren, im Browser einfügen, Antwort zurück – ohne Konto */
+  {id:'webchat',w:6,klein:{en:'No account',de:'Ohne Konto',ru:'Без аккаунта'},
+   h:{en:'Any chat bot writes with you.',de:'Jeder Chat-Bot schreibt mit.',ru:'Писать может любой чат-бот.'},
+   p:{en:'“Copy” puts the whole request, rules included, on the clipboard. You paste it into a chat bot in your browser – ChatGPT, Gemini, Grok … – and its answer back, into a field that only accepts pasting.',
+      de:'„Kopieren“ legt den ganzen Auftrag samt Regeln in die Zwischenablage. Du fügst ihn in einem Chat-Bot im Browser ein – ChatGPT, Gemini, Grok … – und dessen Antwort zurück, in ein Feld, das nur Einfügen annimmt.',
+      ru:'«Копировать» кладёт весь запрос вместе с правилами в буфер обмена. Вы вставляете его в чат-бот в браузере – ChatGPT, Gemini, Grok … – а его ответ обратно, в поле, которое принимает только вставку.'},
+   d:{en:['<b>Untidy answers too</b> are read – with code blocks, bold type or translated markers.','<b>If the format does not fit,</b> the request stays open, and a “format request” to copy asks the chat bot for a clean answer.'],
+      de:['<b>Auch unordentliche Antworten</b> liest die KlangFeder – mit Codeblöcken, Fettschrift oder übersetzten Markierungen.','<b>Passt das Format nicht,</b> bleibt der Auftrag offen, und eine „Formatbitte“ zum Kopieren bittet den Chat-Bot um eine saubere Antwort.'],
+      ru:['<b>Даже неаккуратные ответы</b> KlangFeder прочитает – с блоками кода, жирным шрифтом или переведёнными метками.','<b>Если формат не подошёл,</b> запрос остаётся открытым, а «просьба о формате» для копирования попросит чат-бот ответить аккуратно.']}},
+  /* Entwurf (22.11.2026): vor dem Senden ansehen, Bausteine ändern, eigenen anhängen */
+  {id:'entwurf',w:6,klein:{en:'Before sending',de:'Vor dem Senden',ru:'Перед отправкой'},
+   h:{en:'You decide what the AI gets.',de:'Du bestimmst, was die KI bekommt.',ru:'Вы решаете, что получит ИИ.'},
+   p:{en:'If you like, every request first waits as a draft: each building block is there as text to edit, and you can attach one of your own – only then does it go to the AI.',
+      de:'Auf Wunsch liegt jeder Auftrag erst als Entwurf da: Jeder Baustein steht als Text zum Ändern bereit, ein eigener lässt sich anhängen – erst dann geht er an die KI.',
+      ru:'По желанию каждый запрос сначала лежит черновиком: каждый блок можно изменить как текст, можно добавить свой – и только потом он уходит к ИИ.'},
+   d:{en:['<b>What you change</b> is marked “edited” in the record afterwards.'],
+      de:['<b>Was du änderst,</b> steht danach im Verlauf als „geändert“.'],
+      ru:['<b>Что вы изменили,</b> потом отмечено в записи как «изменено».']}},
   /* Eigene Nachschlagewerke (Jörg, 14.11.2026: „bitte so im vagen bleiben, damit wir keine Rechte verletzen, die
      Entscheidung liegt beim Nutzer“). Darum ohne Namen, ohne Anleitung, ohne Versprechen. */
   {id:'eigene',w:6,klein:{en:'Your own reference works',de:'Eigene Nachschlagewerke',ru:'Собственные справочники'},
@@ -356,9 +376,9 @@ const S = {
  ],
  grenzen:{
   h:{en:'Good to know',de:'Gut zu wissen',ru:'Полезно знать'},
-  l:{en:['KlangFeder suggests; it does not decide. Stress, metre and rhymes are calculated automatically and can be wrong; the judgement stays with you.','Your texts stay on your computer. Only if you let an AI write or revise do your text and request go to Claude or ChatGPT, via your own account there.'],
-     de:['Die KlangFeder schlägt vor, sie entscheidet nicht. Betonung, Versmaß und Reime sind berechnet und können danebenliegen; das Urteil bleibt bei dir.','Deine Texte bleiben auf deinem Rechner. Nur wenn du eine KI schreiben oder überarbeiten lässt, gehen Text und Wunsch an Claude oder ChatGPT, über dein eigenes Konto dort.'],
-     ru:['KlangFeder предлагает, но не решает. Ударение, размер и рифмы рассчитаны и могут ошибаться; оценка остаётся за вами.','Ваши тексты остаются на вашем компьютере. Только если вы поручаете ИИ написать или переработать текст, текст и ваша просьба уходят в Claude или ChatGPT — через вашу собственную учётную запись там.']}
+  l:{en:['KlangFeder suggests; it does not decide. Stress, metre and rhymes are calculated automatically and can be wrong; the judgement stays with you.','Your texts stay on your computer. Only if you let an AI write or revise do your text and request go to the service you chose – via your subscription, your API key, or the chat bot you paste into yourself. With Apple Intelligence everything stays on the Mac. In Mistral’s free plan requests may be used for training; DeepSeek processes them on servers in China.'],
+     de:['Die KlangFeder schlägt vor, sie entscheidet nicht. Betonung, Versmaß und Reime sind berechnet und können danebenliegen; das Urteil bleibt bei dir.','Deine Texte bleiben auf deinem Rechner. Nur wenn du eine KI schreiben oder überarbeiten lässt, gehen Text und Wunsch an den Dienst, den du gewählt hast – über dein Abo, deinen API-Schlüssel oder den Chat-Bot, in den du selbst einfügst. Mit Apple Intelligence bleibt alles auf dem Mac. Im kostenlosen Plan von Mistral dürfen Anfragen zum Training verwendet werden; DeepSeek verarbeitet sie auf Servern in China.'],
+     ru:['KlangFeder предлагает, но не решает. Ударение, размер и рифмы рассчитаны и могут ошибаться; оценка остаётся за вами.','Ваши тексты остаются на вашем компьютере. Только если вы поручаете ИИ написать или переработать текст, текст и пожелание уходят выбранному вами сервису – по вашей подписке, по вашему API-ключу или в чат-бот, куда вы вставляете их сами. С Apple Intelligence всё остаётся на Mac. В бесплатном плане Mistral запросы могут использоваться для обучения; DeepSeek обрабатывает их на серверах в Китае.']}
  },
  fuss:{en:'KlangFeder is free of charge and made by Caspar_D. The program is under the MIT licence, the data under the licences of their sources · github.com/CasparDavi/klangfeder',
        de:'Die KlangFeder ist kostenlos und stammt von Caspar_D. Das Programm steht unter MIT-Lizenz, die Daten unter den Lizenzen ihrer Quellen · github.com/CasparDavi/klangfeder',
@@ -420,6 +440,8 @@ S.vergleich = {
   {g:{"de": "Mit KI und bei dir", "en": "With AI and at home", "ru": "С ИИ и у вас"}},
   {t:{"de": "KI schreibt, das Werkzeug misst jede Fassung nach", "en": "AI writes, the tool measures every version", "ru": "ИИ пишет, инструмент проверяет каждую версию"},w:[2, 0, 0, 0, 0, 0]},
   {t:{"de": "Jeder KI-Auftrag im vollen Wortlaut einsehbar", "en": "Every AI request readable word for word", "ru": "Каждый запрос к ИИ виден дословно"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Jede KI: Abo, API-Schlüssel, auf dem Mac oder ohne Konto über jeden Chat-Bot", "en": "Any AI: subscription, API key, on the Mac or with no account via any chat bot", "ru": "Любой ИИ: подписка, API-ключ, на Mac или без аккаунта через любой чат-бот"},w:[2, 0, 0, 0, 0, 0]},
+  {t:{"de": "Auftrag vor dem Senden ändern, Eigenes anhängen", "en": "Edit the request before sending, attach your own", "ru": "Изменить запрос перед отправкой, добавить своё"},w:[2, 0, 0, 0, 0, 0]},
   {t:{"de": "Auf deinem Rechner, ohne Konto, kostenlos", "en": "On your computer, no account, free", "ru": "На вашем компьютере, без учётной записи, бесплатно"},w:[2, 1, 1, 1, 0, 1]},
   {t:{"de": "Beat-Raster, Akkorde, Handy-App", "en": "Beat grid, chords, phone app", "ru": "Сетка бита, аккорды, приложение для телефона"},w:[0, 1, 2, 1, 1, 1],ehrlich:true}],
  zeichen:{en:['no','partly or only some','yes'],de:['nein','teilweise oder nur bei einigen','ja'],ru:['нет','частично или только у некоторых','да']},
@@ -446,7 +468,7 @@ S.laden = {
       ru:'<b>Системные требования.</b> Около 1,5 ГБ свободного места для программы и словарей. Современный веб-браузер. Другие системы Linux: <a href="https://github.com/CasparDavi/klangfeder/releases/latest/download/KlangFeder-x86_64.AppImage">AppImage</a>. Без цифровой подписи: в Windows браузер Edge сначала задерживает загрузку — нажмите стрелку рядом с «Удалить» → «Сохранить»; при первом запуске Windows может спросить ещё раз, а macOS блокирует приложение, пока вы не разрешите его в разделе «Конфиденциальность и безопасность» → «Всё равно открыть». После установки колокольчик рядом с «Система» сообщает о новой версии; один клик её устанавливает.'}
 };
 
-const BV = '27';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
+const BV = '28';   // Bildstand: hochzählen, wenn Bilder ersetzt werden (sonst zeigt der Browser alte)
 const BILDER = {
   titel: { sprachen: { de: `img/titel-de.webp?v=${BV}`, en: `img/titel-en.webp?v=${BV}`, ru: `img/titel-ru.webp?v=${BV}` } },
   schreiben: { sprachen: { de: `img/schreiben-de.webp?v=${BV}`, en: `img/schreiben-en.webp?v=${BV}`, ru: `img/schreiben-ru.webp?v=${BV}` } },
@@ -466,7 +488,12 @@ const BILDER = {
   gebunden: { sprachen: { de: `img/gebunden-de.webp?v=${BV}`, en: `img/gebunden-en.webp?v=${BV}`, ru: `img/gebunden-ru.webp?v=${BV}` } },
   kiverkehr: { sprachen: { de: `img/kiverkehr-de.webp?v=${BV}`, en: `img/kiverkehr-en.webp?v=${BV}`, ru: `img/kiverkehr-ru.webp?v=${BV}` } },
   eigene: { sprachen: { de: `img/eigene-de.webp?v=${BV}`, en: `img/eigene-en.webp?v=${BV}`, ru: `img/eigene-ru.webp?v=${BV}` } },
-  ki: { sprachen: { de: `img/ki-de.webp?v=${BV}`, en: `img/ki-en.webp?v=${BV}`, ru: `img/ki-ru.webp?v=${BV}` } },
+  ki: { sprachen: { de: `img/dienste-de.webp?v=${BV}`, en: `img/dienste-en.webp?v=${BV}`, ru: `img/dienste-ru.webp?v=${BV}` } },   // seit 0.9.23 die KI-Karten der Seite System
+  webchat: { sprachen: { de: `img/webchat-de.webp?v=${BV}`, en: `img/webchat-en.webp?v=${BV}`, ru: `img/webchat-ru.webp?v=${BV}` } },
+  entwurf: { sprachen: { de: `img/entwurf-de.webp?v=${BV}`, en: `img/entwurf-en.webp?v=${BV}`, ru: `img/entwurf-ru.webp?v=${BV}` } },
+  hoeren: { sprachen: { de: `img/hoeren-de.webp?v=${BV}`, en: `img/hoeren-en.webp?v=${BV}`, ru: `img/hoeren-ru.webp?v=${BV}` } },
+  stimmeichen: { sprachen: { de: `img/stimmeichen-de.webp?v=${BV}`, en: `img/stimmeichen-en.webp?v=${BV}`, ru: `img/stimmeichen-ru.webp?v=${BV}` } },
+  durchsicht: { sprachen: { de: `img/durchsicht-de.webp?v=${BV}`, en: `img/durchsicht-en.webp?v=${BV}`, ru: `img/durchsicht-ru.webp?v=${BV}` } },
   laenge: { sprachen: { de: `img/laenge-de.webp?v=${BV}`, en: `img/laenge-en.webp?v=${BV}`, ru: `img/laenge-ru.webp?v=${BV}` } },
   vergleich: { sprachen: { de: `img/vergleich-de.webp?v=${BV}`, en: `img/vergleich-en.webp?v=${BV}`, ru: `img/vergleich-ru.webp?v=${BV}` } },
   klangketten: { sprachen: { de: `img/klangketten-de.webp?v=${BV}`, en: `img/klangketten-en.webp?v=${BV}`, ru: `img/klangketten-ru.webp?v=${BV}` } },
@@ -608,8 +635,8 @@ const BILDER = {
    leg: { ges: { de: 'Wörter', ru: 'слова', en: 'words' }, neu: { de: 'davon neu', ru: 'из них новые', en: 'of those new' }, alle: { de: 'alle neu', ru: 'все новые', en: 'all new' } } } },
 };
 const POSTER = {}, TEMPO = {};
-const NUR_TEXT = new Set(['hoeren', 'stimmeichen', 'durchsicht']);   // Kacheln, die ohne Bild stehen (0.9.21: Bilder folgen mit dem nächsten Aufnahmelauf)
+const NUR_TEXT = new Set([]);   // Kacheln, die ohne Bild stehen (0.9.21: Bilder folgen mit dem nächsten Aufnahmelauf)
 const GH = 'github.com/CasparDavi/klangfeder';
 const ghLink = (s) => s.replace(GH, `<a class="gh" href="https://${GH}">${GH}</a>`);
 const KONSOLE = {}, konsole = () => [];
-const FORMAT = { flkgedicht: '558/200', flkzunge: '558/200', schreiben: '750/420', reimschema: '654/760', reimsuche: '462/760', ersatz: '558/560', luecke: '558/560', klangfarbe: '558/560', lautschrift: '558/560', gebunden: '750/370', zaehlen: '365/520', regie: '751/520', hoerquiz: '462/430', ki: '558/300', laenge: '558/300', kiverkehr: '558/330', eigene: '558/330', vergleich: '1136/600', klangketten: '750/460', fluss: '750/420', stammreim: '558/400', anlaut: '558/400', buecher: '1536/1024' };   /* Kachelfelder in Seitenpixeln (Inhaltsbreite 1136) – die Bilder werden genau dafür aufgenommen, im Maßstab des Titelbilds (werkzeug/aufnahme/alle.mjs, FELD; Jörg 17.11.2026: Schrift überall so groß wie im Titelbild) */
+const FORMAT = { flkgedicht: '558/200', flkzunge: '558/200', schreiben: '750/420', reimschema: '654/760', reimsuche: '462/760', ersatz: '558/560', luecke: '558/560', klangfarbe: '558/560', lautschrift: '558/560', gebunden: '750/370', zaehlen: '365/520', regie: '751/520', hoerquiz: '462/430', ki: '558/420', laenge: '558/300', kiverkehr: '558/420', webchat: '558/420', entwurf: '558/420', hoeren: '558/330', stimmeichen: '558/330', durchsicht: '558/300', eigene: '558/330', vergleich: '1136/600', klangketten: '750/460', fluss: '750/420', stammreim: '558/400', anlaut: '558/400', buecher: '1536/1024' };   /* Kachelfelder in Seitenpixeln (Inhaltsbreite 1136) – die Bilder werden genau dafür aufgenommen, im Maßstab des Titelbilds (werkzeug/aufnahme/alle.mjs, FELD; Jörg 17.11.2026: Schrift überall so groß wie im Titelbild) */

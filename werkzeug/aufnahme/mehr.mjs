@@ -1,5 +1,5 @@
 // Aufnahmeschritte „Mit KI“ / „Mit KlangTresor“ (Landingpage docs/img/). Die Probeinstanz braucht dafür beide Arbeitsweisen
-// ({"mitKI":true,"mitTresor":true} in ihrer einstellungen.json); der KlangTresor wird nur lesend gefragt (Längenschätzung).
+// ({"mitTresor":true} in ihrer einstellungen.json; die KI ist seit 22.11.2026 immer an); der KlangTresor wird nur lesend gefragt (Längenschätzung).
 //   ART=ki      – links „Schreiben mit KI“ aufgeklappt                 → ki.png
 //   ART=laenge  – links der Aufbau mit Länge und Dichte unten          → laenge.png
 import fs from 'node:fs';
