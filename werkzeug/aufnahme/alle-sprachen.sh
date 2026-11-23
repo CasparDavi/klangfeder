@@ -36,7 +36,7 @@ for f in erlkoenig.txt erlking-en-strophen.txt erlkoenig-ru.txt panther.txt rave
 # Pixeldichte für alle. Die Reihenfolge ist die der Tafel BILDER; die Zwischenschritte (…-aus, …-zu) gehören dazu.
 # 22.11.2026: dazu Flusskontrolle, Verhörer, grammatischer Reim (liefen bis dahin einzeln), der KI-Bereich (kiverkehr, jetzt in der
 # Probeinstanz mit einem Gemini-Lauf), Web-Chat-Bot, Entwurf, Durchsicht, Hören und die Systemseite (KI-Dienste, Stimme eichen).
-GROB="titel schreiben klangketten fluss reimschema reimsuche ersatz luecke klangfarbe klangfarbe-aus lautschrift lautschrift-zu stammreim anlaut anlaut-aus gebunden zaehlen regie hoerquiz hoerquiz-zu flk-gedicht flk-zunge flk-aus verhoerer gramm ki laenge vergleich kiverkehr webchat entwurf ki-ende durchsicht hoeren eigene dienste stimmeichen"
+GROB="titel schreiben klangketten fluss reimschema reimsuche ersatz luecke klangfarbe klangfarbe-aus lautschrift lautschrift-zu stammreim anlaut anlaut-aus gebunden zaehlen regie hoerquiz hoerquiz-zu flk-gedicht flk-zunge flk-singbar flk-aus verhoerer gramm ki laenge vergleich kiverkehr webchat entwurf ki-ende durchsicht hoeren eigene dienste stimmeichen"
 
 for L in $SPRACHEN; do
   Z="$A/bilder-$L"; mkdir -p "$Z"
@@ -47,7 +47,7 @@ for L in $SPRACHEN; do
     URL="$URL" SPR="$L" DPR="$D" \
       TEXT_DE="$T_ORT/erlkoenig.txt" TEXT_EN="$T_ORT/erlking-en-strophen.txt" TEXT_RU="$T_ORT/erlkoenig-ru.txt" \
       PROBE_DE="$T_ORT/panther.txt" PROBE_EN="$T_ORT/raven.txt" PROBE_RU="$T_ORT/poslushajte.txt" \
-      FLK_GEDICHT="$T_ORT/flk-gedicht-$L.txt" FLK_ZUNGE="$T_ORT/flk-zunge-$L.txt" \
+      FLK_GEDICHT="$T_ORT/flk-gedicht-$L.txt" FLK_ZUNGE="$T_ORT/flk-zunge-$L.txt" FLK_SINGBAR="$T_ORT/flk-singbar-$L.txt" \
       node werkzeug/aufnahme/alle.mjs "$@" --ziel="$Z" || echo "!! $L bei Pixeldichte $D abgebrochen"
   done
   # Die drei Bilder der Kachel „Ansehen" laufen über die ältere Schrittfolge: sie teilen einen Zustand (die Wolke

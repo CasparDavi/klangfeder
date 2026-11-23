@@ -167,11 +167,17 @@ const schritte = {
   // im Phonemstau bei schnellem Tempo (Jörg: „keine Nonsense-Texte, echte Beispiele, die bekannt sind“). Texte aus T_ORT
   // (flk-gedicht-<spr>.txt, flk-zunge-<spr>.txt); danach ⌥ gedrückt – das Blatt zeigt nur Text und Balken.
   flk(art) { return async K => {
-    const f = { gedicht: process.env.FLK_GEDICHT, zunge: process.env.FLK_ZUNGE }[art];
+    const f = { gedicht: process.env.FLK_GEDICHT, zunge: process.env.FLK_ZUNGE, singbar: process.env.FLK_SINGBAR }[art];
     if (!f || !fs.existsSync(f)) return 'KEIN Text für ' + art;
     const t = fs.readFileSync(f, 'utf8');
-    const titel = art === 'gedicht' ? { de: 'Erlkönig', en: 'The Raven', ru: 'Зимнее утро' }[SPR] : { de: 'Fischers Fritz', en: 'She sells seashells', ru: 'Карл у Клары' }[SPR];
-    const [proj, bpm] = art === 'gedicht' ? ['hd', 120] : ['stau', 200];
+    // 23.11.2026 (Jörg: Kacheln mit weniger Rand, „singbarkeit dazu“): drei schmale Kacheln (w4), Zeilen höchstens ~55 Zeichen
+    // (Poe passt nicht mehr hinein); Zungenbrecher: die langen oben, unten rechts liegt auf der Seite der Knopf „+“. Singbarkeit zeigt den Schlusston: Atem erreicht bei
+    // Gedichtzeilen selbst bei 40 BPM keine 4,5 s (nachgerechnet), der Schlusston wechselt dagegen sichtbar – Erlkönig
+    // Wind/Kind geschlossen, Arm/warm offen; Daffodils cloud/crowd offen, hills/daffodils geschlossen; Памятник: нерукотворный geschlossen, тропа/столпа offen; deutsch Gryphius (Alexandriner, lange Zeilen).
+    const titel = { gedicht: { de: 'Es ist alles eitel', en: 'Sonnet 18', ru: 'Зимнее утро' }, zunge: { de: 'Zungenbrecher', en: 'Tongue twisters', ru: 'Скороговорки' },
+      singbar: { de: 'Erlkönig', en: 'Daffodils', ru: 'Памятник' } }[art][SPR];
+    const [proj, bpm0] = { gedicht: ['hd', 120], zunge: ['stau', 200], singbar: ['schluss', 120] }[art];
+    const bpm = +(process.env['FLK_BPM_' + art.toUpperCase()] || bpm0);   // zum Ausprobieren: FLK_BPM_ZUNGE=180
     return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
       const e = document.getElementById('text'); e.value = ${J(t)};
       e.dispatchEvent(new Event('input', { bubbles: true }));
@@ -383,6 +389,8 @@ const BILDER = [
     vor: [schritte.flk('gedicht')], clip: ['#editor'] },
   { name: 'flk-zunge', zeigt: 'Flusskontrolle, Flickermodus: Zungenbrecher bei 200 BPM im Phonemstau – zu volle Schläge rot',
     vor: [schritte.flk('zunge')], clip: ['#editor'] },
+  { name: 'flk-singbar', zeigt: 'Flusskontrolle, Singbarkeit: bekanntes Gedicht in der Anzeige Schlusston – offen trägt, geschlossen ist schwer zu halten',
+    vor: [schritte.flk('singbar')], clip: ['#editor'] },
   { name: 'flk-aus', zeigt: '(kein Bild – Flickermodus aus)', vor: [async K => K.ev(`flackernAus(); return 'aus'`)], nurSchritt: true },
   { name: 'verhoerer', zeigt: 'gelbe Winkel: zwei Hörweisen an einer Wortgrenze (Seid ihr / sei dir)',
     vor: [schritte.verhoerer, schritte.ketten([])], clip: ['#blatt'] },
@@ -481,8 +489,10 @@ const FELD = {
   klangketten: { feld: [750, 460], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
   // neu 19.11.2026: Verhörer und grammatischer Reim, nebeneinander (w6), nur das Blatt mit Titel
   // neu 19.11.2026: Flusskontrolle – zwei Bilder nebeneinander (w6), Blatt mit Titel im Flickermodus
-  'flk-gedicht': { feld: [558, 200], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, mitTitel: true, ohneMarke: true, leisteZu: true },
-  'flk-zunge':   { feld: [558, 200], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, mitTitel: true, ohneMarke: true, leisteZu: true },
+  // 23.11.2026: drei Bilder nebeneinander (w4), Feld so hoch wie Titel und vier Zeilen – weniger Rand (Jörg)
+  'flk-gedicht': { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
+  'flk-zunge':   { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
+  'flk-singbar': { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
   verhoerer:   { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
   gramm:       { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
   fluss:       { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: -8, ohneMarke: true, leisteZu: true },
