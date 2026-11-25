@@ -52,7 +52,7 @@ const TEXT = { de: process.env.TEXT_DE, en: process.env.TEXT_EN, ru: process.env
 // Werkbank als ganzes Wort auf – Zusammensetzungen liefern nichts.
 const WORT = { de: 'Not', en: 'sight', ru: 'водой' };
 // Derbe Wörter (nur für die Unschärfe in den Bildern der Feature-Seite – die App zeigt sie ungefiltert): Wortstämme
-const DERB = '/(fick|fotz|wichs|nutte|hure|scheiß|scheiss|fuck|cunt|shit|bitch|whore|motherf|nigg|пизд|хуй|хуе|хуя|хуё|ебл|ебат|ебан|ёбан|бляд|блят|мудак|муди|залуп|сучк|сука|суки|шлюх|жоп)/';
+const DERB = '/(fick|fotz|wichs|nutte|hure|scheiß|scheiss|fuck|cunt|shit|bitch|whore|motherf|nigg|пизд|хуй|хуе|хуя|хуё|ебл|ебал|ебат|ебан|ёбан|бляд|блят|мудак|муди|залуп|сучк|сука|суки|шлюх|жоп)/';
 // Die Wendung für das Bild „luecke" muss MEHRERE Hebungen haben: die Werkbank sucht dort Wendungen, die über jede
 // Hebung mitreimen. „the night" (15.11.2026) hatte nur eine – das englische Bild zeigte zweimal den Satz „The
 // selection has only one beat" und sonst nichts. Gemessen an /api/reimsuche/zeile und /ketten:
@@ -85,6 +85,53 @@ const laden = () => {
 // ---------- Hilfen für die Zustände ----------
 const J = o => JSON.stringify(o);
 const schritte = {
+
+  // ---------- 0.10.0: Handlung, Plan, Mischung, Stil – je Sprache
+  plan: async K => K.ev(`neuAnfangen(false); await new Promise(r => setTimeout(r, 800));
+    themaFeld.value = ${J({ de: 'Ein Leuchtturmwärter hält in einer Sturmnacht Wacht. Das Licht flackert und erlischt. Draußen ruft ein Schiff um Hilfe. Mit der letzten Kerze steigt er hinauf und entzündet das Feuer neu.',
+      en: 'A lighthouse keeper keeps watch on a stormy night. The light flickers and goes out. Out at sea a ship calls for help. With his last candle he climbs up and lights the fire again.',
+      ru: 'Смотритель маяка дежурит в штормовую ночь. Свет мигает и гаснет. В море корабль зовёт на помощь. С последней свечой он поднимается наверх и снова зажигает огонь.' }[SPR])};
+    themaFeld.dispatchEvent(new Event('input')); AUF = FORMEN.find(f => f[0] === 'pre')[1](); GERUEST = 'pre'; aufbauMerken(); claudeGrund();
+    await new Promise(r => setTimeout(r, 1200)); return 'Plan: ' + AUF.map(r => r.name).join(', ')`),
+  // eine Mischung aus zwei Genres der Liedsprache (Folk und Liedermacher, sonst die beiden größten), gewürfelt wie auf der Karte
+  mischung: async K => K.ev(`const sp = liedSprache(), d = await (await fetch('/api/genre/gruppen?sprache=' + sp)).json(), n = d.gruppen.filter(g => !g.mundart).map(g => g.name);
+    const a = n.find(x => /folk|фолк/i.test(x)) || n[0], b = n.find(x => /lieder|singer|бард|шансон|chanson/i.test(x) && x !== a) || n[1], auswahl = { [a]: 2, [b]: 1 };
+    const j = await (await fetch('/api/genre/wurf', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ auswahl, saat: 7, sprache: sprache(), liedSprache: sp }) })).json();
+    genreSetzen({ auswahl, saat: 7, text: j.text, stil: j.stil, sprache: sp, aufbau: j.aufbau, aufbauGenre: j.aufbauGenre, ausschluss: j.ausschluss || '' });
+    if (!stil.trim()) stilSetzen(j.stil || ''); claudeGrund(); return 'Mischung ' + a + ' ×2, ' + b`),
+  // die Genre-Karte öffnen: zwei Genres gewichtet – oder nur die Genre-Datei des Dichters der Sprache
+  genreKarte: was => async K => K.ev(`document.getElementById('aGenre').click(); for (let i = 0; i < 30 && document.getElementById('genreFenster').hidden; i++) await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 1500)); GN.wahl = {}; GN.saat = ${J(was)} === 'dichter' ? ${J({ de: 10, en: 11, ru: 2 }[SPR])} : 7;   // Dichter: Saat mit einem gereimten Gedicht als Form
+    document.getElementById('gnMundart').style.display = 'none';   // Mundart kommt auf der Feature-Seite nicht vor (Jörg, 25.11.2026)
+    const warte = async () => { for (let i = 0; i < 60 && !(GN.textFuer === gnSchluessel() && document.getElementById('gnText').style.opacity !== '0.5'); i++) await new Promise(r => setTimeout(r, 250)); await new Promise(r => setTimeout(r, 400)); };
+    if (${J(was)} === 'dichter') { const k = (GD_LISTE.find(d => /^§datei:(goethe|shakespeare|puschkin)$/.test(d.key)) || {}).key; if (!k) return 'keine Dichter-Datei';
+      genreGewicht(k, 1); await warte(); GN.fokus = null; genreGewichteZeigen(); return 'Dichter: ' + k; }
+    const n = GN.daten.gruppen.filter(g => !g.mundart).map(g => g.name), a = n.find(x => /folk|фолк/i.test(x)) || n[0], b = n.find(x => /lieder|singer|бард|шансон|chanson/i.test(x) && x !== a) || n[1];
+    genreGewicht(a, 2); await warte(); genreGewicht(b, 1); await warte(); GN.fokus = null; genreGewichteZeigen(); return 'Genres: ' + a + ' ×2, ' + b`),
+  // Stil und Ausschluss für Schritt 8; die KI hat mit dem letzten Text eigene geliefert (als Vorschlag)
+  // ein Stil-Prompt in echter Länge (Suno-Prompts haben meist 150–300 Zeichen) – mit der Mischung allein blieb das Feld halb leer
+  stilAus: async K => K.ev(`stilSetzen(${J({ de: 'dark folk ballad, fingerpicked acoustic guitar, upright bass, cello, low intimate male vocals, German lyrics, storytelling, minor key, slow build, galloping rhythm in the chorus, night wind atmosphere, sparse percussion, 72 bpm',
+      en: 'dark folk ballad, fingerpicked acoustic guitar, upright bass, cello, low intimate male vocals, English lyrics, storytelling, minor key, slow build, galloping rhythm in the chorus, night wind atmosphere, sparse percussion, 72 bpm',
+      ru: 'dark folk ballad, fingerpicked acoustic guitar, upright bass, cello, low intimate male vocals, Russian lyrics, storytelling, minor key, slow build, galloping rhythm in the chorus, night wind atmosphere, sparse percussion, 72 bpm' }[SPR])});
+    ausschlussSetzen(${J({ de: 'schlager, autotune, trap hi-hats', en: 'autotune, trap hi-hats, country', ru: 'шансон, автотюн, трэп' }[SPR])});
+    kiStilAnbieten(${J({ de: 'dark folk ballad, fingerpicked guitar, cello, intimate male vocals', en: 'dark folk ballad, fingerpicked guitar, cello, intimate male vocals', ru: 'dark folk ballad, fingerpicked guitar, cello, intimate male vocals, Russian vocals' }[SPR])});
+    kiAusschlussAnbieten(${J({ de: 'pop punk, eurodance', en: 'pop punk, eurodance', ru: 'pop punk, eurodance' }[SPR])});
+    sunoZeigen(); return 'Stil und Ausschluss gesetzt'`),
+  // Handlungen aus Stichworten – echte KI, warten bis fertig
+  handlungen: async K => K.ev(`themaFeld.value = ${J({ de: 'Leuchtturm, Sturm, das Licht erlischt, ein Schiff in Not', en: 'lighthouse, storm, the light goes out, a ship in distress', ru: 'маяк, шторм, свет гаснет, корабль в беде' }[SPR])};
+    themaFeld.dispatchEvent(new Event('input')); claudeGrund(); await claudeAuftrag('handlungen');
+    for (let i = 0; i < 400 && (K.auftrag || K.seit); i++) await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1500)); const l = K.verlauf[K.verlauf.length - 1]; return l && l.handlungen ? 'Handlungen: ' + l.handlungen.handlungen.map(h => h.titel).join(' · ') : 'KEINE Handlungen: ' + (l && l.text || '')`),
+  // Lektorat des fertigen Textes – echte KI, warten bis fertig
+  // die Handlung, die zum Beispieltext gehört (Jörg, 25.11.2026: „was soll der screenshot mit dem erlkönig und dem leuchtturm“ –
+  // mit dem Leuchtturm-Plan aus schritte.plan meldete das Lektorat nur, dass Text und Handlung nicht zusammengehören)
+  lektorat: async K => K.ev(`themaFeld.value = ${J({ de: 'Ein Vater reitet nachts mit seinem kranken Kind durch Wind und Nebel nach Hause. Das Kind sieht den Erlkönig, der es mit Spielen und seinen Töchtern lockt; der Vater erklärt alles als Nebel, Wind und Weiden. Als der Erlkönig Gewalt androht, schreit das Kind auf. Der Vater reitet schneller, doch als er den Hof erreicht, ist das Kind tot. Gemeint ist: Der Erlkönig ist nur ein Fiebertraum des Kindes, und am Ende soll der Hörer das eindeutig erkennen.',
+      en: 'A father rides home at night through wind and mist with his sick child. The child sees the Erl-King, who lures him with games and his daughters; the father explains it all away as mist, wind and willows. When the Erl-King threatens force, the child cries out. The father rides faster, but when he reaches the courtyard the child is dead. What is meant: the Erl-King is only the child’s fever dream, and by the end the listener should recognise that clearly.',
+      ru: 'Отец ночью скачет домой сквозь ветер и туман с больным ребёнком. Ребёнок видит лесного царя, который манит его играми и своими дочерьми; отец объясняет всё туманом, ветром и ивами. Когда царь грозит силой, ребёнок кричит. Отец гонит коня, но, доехав до дома, видит, что ребёнок мёртв. Задумано так: лесной царь – лишь горячечный бред ребёнка, и в конце слушатель должен это ясно понять.' }[SPR])};
+    themaFeld.dispatchEvent(new Event('input')); await new Promise(r => setTimeout(r, 800));
+    $('kEntwurf').checked = false; await lektoratStarten('textpruefung');
+    for (let i = 0; i < 400 && LK.auftrag; i++) await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1500)); return 'Lektorat: ' + document.getElementById('status').textContent.slice(0, 90)`),
   // Der Ausgang für „alt | neu": es muss eine ÄLTERE Fassung dasein, sonst steht links „leer (neuer Text)" und die
   // halbe Ansicht ist leer – so geschehen in den Bildern vom 15.11.2026 (Caspar_D, 16.11.: „damit ist die
   // Zweispaltendarstellung zur Hälfte leer"). Beim Nutzer entsteht sie von selbst: wer einen Text EINFÜGT, bekommt
@@ -150,6 +197,17 @@ const schritte = {
       return (w.hidden ? 'ZU' : 'offen') + ': ' + w.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`),
   // Probetext je Sprache für Klangketten und Fluss (gemeinfrei; Caspar_D 17.11.2026: „gemeinfrei reicht“): Rilke „Der Panther“,
   // Poe „The Raven“, Majakowski „Послушайте!“ – gemessen: sie zeigen Mehrsilbenreim, Schlagreim, Zeilensprung, Pause, Drop
+  // Fluss-Bild Deutsch (Jörg 26.11.2026: „ein paar gemeinfreie Gedichte nehmen“): Goethe „Wandrers Nachtlied“ (1780) zeigt
+  // auf engem Raum Drop („Ist Ruh,“), Zeilensprung („Spürest du“) und Hebungsprall (Titel „Nachtlied“). Datei neben den Probetexten.
+  async nachtlied(K) {
+    const f = path.join(path.dirname(process.env.PROBE_DE || TEXT.de || ''), 'wandrers-nachtlied.txt');
+    if (!fs.existsSync(f)) return 'KEIN Text: ' + f;
+    const t = fs.readFileSync(f, 'utf8');
+    return K.ev(`document.querySelector('button[data-ansicht="ein"]')?.click(); await new Promise(r => setTimeout(r, 800));
+      const e = document.getElementById('text'); e.value = ${J(t)};
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 4000)); return e.value.length + ' Zeichen Nachtlied'`);
+  },
   async probe(K) {
     const f = { de: process.env.PROBE_DE, en: process.env.PROBE_EN, ru: process.env.PROBE_RU }[SPR];
     if (!f || !fs.existsSync(f)) return 'KEIN Probetext für ' + SPR;
@@ -263,7 +321,7 @@ const ki = {
     // erst den Stand zählen: der neue Eintrag ist der, der danach dazukommt (sonst griff der vorige Lauf)
     const vorher = document.querySelectorAll('#kdListe .kvlauf').length;
     $('wbWunsch').value = ${J(WUNSCH[SPR])}; $('wbHolen').click();
-    for (let n = 0; n < 150; n++) { await new Promise(r => setTimeout(r, 1000));
+    for (let n = 0; n < 300; n++) { await new Promise(r => setTimeout(r, 1000));   // Gemini braucht zeitweise über 150 s (26.11.2026)
       if (document.querySelectorAll('#kdListe .kvlauf').length <= vorher) continue;
       const l = [...document.querySelectorAll('#kdListe .kvlauf')].pop(); if (!l) continue;
       if (${J(warten)} === 'eintrag' && l.querySelector('.kvn.kf')) break;
@@ -293,7 +351,7 @@ const ki = {
 // ---------- die Bilder ----------
 const BILDER = [
   { name: 'titel', zeigt: 'das ganze Fenster: Aufbau links, Text in der Mitte, Reimwerkbank rechts',
-    vor: [schritte.text, schritte.abschnitt(3), schritte.werkbank()], ganz: true },
+    vor: [schritte.text, schritte.abschnitt(11), schritte.werkbank()], ganz: true },   // 11 = Schritt 4 Aufbau (seit 0.10.0 zählt die Leiste anders, 3 wäre die Handlung)
 
   { name: 'schreiben', zeigt: 'das Textblatt beim Schreiben – Hebungen, Reimfarben, Zeilenzahlen',
     vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 2 },
@@ -313,27 +371,42 @@ const BILDER = [
   { name: 'ersatz', zeigt: 'Ersatzwörter: Synonyme, Gegenwörter, Wendungen – mit Maß und Reimhinweis',
     // nur die Liste, ans Ende gescrollt: dort stehen Wendungen, Synonyme und Gegenteile. Mit dem Kopf darüber
     // reichte der Ausschnitt nie bis dorthin – die Reimlisten sind länger als das Sichtfenster.
-    vor: [schritte.text, schritte.werkbank(), schritte.ohneGruppen(['lx.familie', 'lx.stamm'])], clip: ['#werkbank .lexikon'], scroll: 'ende', rand: 8 },
+    // Wort mit vollen Gruppen (25.11.2026, Leere ≤ ¼): bei „Not“ standen viele Gruppen mit ein, zwei Wörtern
+    vor: [schritte.text, schritte.werkbankAuf({ de: 'Kind', en: 'father', ru: 'водой' }), schritte.ohneGruppen(['lx.familie', 'lx.stamm', 'lx.redew', 'lx.sprich'])], clip: ['#werkbank .lexikon'], scroll: 'synonyme', rand: 8 },
 
   { name: 'luecke', zeigt: 'die Werkbank auf einer Wendung: was an diese Stelle passt',
     // rand 0: mit Luft kam oben ein Streifen der Leiste über der Werkbank mit (oranger Anschnitt, Jörg 17.11.2026);
     // hoch 0.9: gleich hoch wie das Ersatz-Bild daneben, dessen Text länger ist – sonst bleibt dort ein halber leerer Kasten
-    vor: [schritte.text, schritte.werkbank('wendung')], clip: ['#werkbank'], hoch: 0.9, rand: 0 },
+    // seit 26.11.2026 wirklich eine Lücke (Jörg: „das bild zeigt nicht das, was im Text steht“ – vorher Reime auf eine Wendung):
+    // ___ am Zeilenende, die Werkbank zeigt Wörter im Maß der Partnerzeile, die sich auf sie reimen
+    vor: [schritte.text, async K => K.ev(`const t = document.getElementById('text');
+      const [alt, neu] = ${J({ de: ['er trägt sein Kind', 'er trägt sein ___'], en: ['he keepeth him warm.', 'he keepeth him ___.'], ru: ['с ним сын молодой.', 'с ним сын ___.'] })}['${SPR}'];
+      const f = document.getElementById('wbSuchfeld'); if (f) f.value = '';   // Rest einer früheren Suche nicht ins Bild
+      if (!t.value.includes(alt)) return 'nicht im Text: ' + alt;
+      t.value = t.value.replace(alt, neu); t.dispatchEvent(new Event('input', { bubbles: true }));
+      await new Promise(r => setTimeout(r, 2500));
+      const p = t.value.indexOf('___') + 1; t.setSelectionRange(p, p); await wahlNachMarkierung(p, p);
+      await new Promise(r => setTimeout(r, 7000)); if (f) f.value = '';
+      return document.getElementById('wbInhalt').textContent.trim().slice(0, 120).replace(/\\s+/g, ' ')`)], clip: ['#werkbank'], hoch: 0.9, rand: 0 },
 
-  { name: 'zaehlen', zeigt: 'Abschnitt „Für Suno": Zeichenzahl gegen Sunos Grenze, Lyrics zum Kopieren',
-    vor: [schritte.text, schritte.abschnitt(5)], clip: ['.sec:has(#suno)'], hoch: 0.95 },
+  { name: 'zaehlen', zeigt: 'Schritt 8 „Stil und Übergabe": Kopierknöpfe mit Zeichenzahl gegen Sunos Grenzen, Lyrics für Suno',
+    vor: [schritte.text, schritte.mischung, schritte.stilAus, schritte.abschnitt(10)], clip: ['.sec:has(#stilRegie)'], hoch: 0.95 },
 
   { name: 'gebunden', zeigt: 'die zehn Lichter zwischen „frei" und „streng" in der Werkzeugzeile über dem Text',
     vor: [schritte.text], clip: ['#gebunden'], rand: 14 },
 
   { name: 'regie', zeigt: 'Regieanweisungen in eckigen Klammern, wie Suno sie liest',
-    vor: [schritte.text, schritte.abschnitt(3)], clip: ['#blatt'], bis: 3 },
+    // kurze Regie (Jörg 26.11.2026: „wir brauchen einen Text mit kurzer Regie … wenn es um die Klammern geht, dann müssen sie auch
+    // zu sehen sein“): je Klammerzeile nur Abschnitt und ein Stichwort, damit die Klammer im Viertelbild ganz steht
+    vor: [schritte.text, async K => K.ev(`const t = document.getElementById('text'), KURZ = { 'Intro': 'wind', 'Verse 1': 'calm', 'Verse 2': 'tension', 'Chorus': 'hypnotic', 'Verse 3': 'faster', 'Chorus 2': 'darker', 'Bridge': 'panic', 'Breakdown': 'low', 'Climax': 'frantic', 'Outro': 'quiet', 'Final': 'spoken' };
+      const n = t.value.split('\\n').map(z => z.replace(/^\\[([^\\]–]+?) – [^\\]]*\\]$/, (m, a) => KURZ[a.trim()] ? '[' + a.trim() + ' – ' + KURZ[a.trim()] + ']' : m)).join('\\n');
+      if (n === t.value) return 'Regie unverändert'; t.value = n; t.dispatchEvent(new Event('input', { bubbles: true })); await new Promise(r => setTimeout(r, 2500)); return 'Regie gekürzt'`), schritte.abschnitt(3)], clip: ['#blatt'], bis: 3 },
 
-  { name: 'ki', zeigt: 'Abschnitt „Schreiben mit KI": Anbieter, Modell, Denktiefe, Aufträge',
-    vor: [schritte.text, schritte.abschnitt(4)], clip: ['.sec:has(#claude)'], hoch: 1.05 },
+  { name: 'ki', zeigt: 'Schritt 0 „KI-Einstellungen": Anbieter, Modell, Denktiefe',
+    vor: [schritte.text, schritte.abschnitt(8)], clip: ['.sec:has(#kAnbieter)'], hoch: 1.05 },
 
   { name: 'laenge', zeigt: 'Länge bei Suno: Spielzeit, Platz je Zeile, Dichte gegen das Archiv',
-    vor: [schritte.text, schritte.abschnitt(3), async K => K.ev(`const e = document.getElementById('aLaenge');
+    vor: [schritte.text, schritte.abschnitt(11), async K => K.ev(`const e = document.getElementById('aLaenge');
       for (let i = 0; i < 25 && !/\\d/.test(e.textContent); i++) await new Promise(r => setTimeout(r, 500));
       return e.textContent.trim().slice(0, 90).replace(/\\s+/g, ' ')`)], clip: ['#aLaenge'], inBlick: true },
 
@@ -343,7 +416,8 @@ const BILDER = [
   // KI-Bereich (22.11.2026): eine echte Antwort von Gemini in der Probeinstanz – Du, KlangFeder mit Bausteinen („Maß der Zeile“
   // aufgeklappt), die KI mit ihren Fassungen. Der frühere Sonderfall (Lasche, Arbeitsinstanz 8790) entfällt.
   { name: 'kiverkehr', zeigt: 'der KI-Bereich: deine Nachricht, die Bausteine der KlangFeder, die Antwort der KI',
-    vor: [schritte.text, ki.bereich(), ki.anbieter('gemini'), ki.zeile('antwort'), ki.nurLetzter, ki.aufklappen('ziel')] },
+    // aufräumen und ohne Vorschau: ein früherer Entwurf-Lauf lässt sonst „vor dem Senden ansehen“ an, dann steht ein ungesendeter Entwurf im Bild (26.11.2026)
+    vor: [schritte.text, ki.aufraeumen, ki.vorschau(false), ki.bereich(), ki.anbieter('gemini'), ki.zeile('antwort'), ki.nurLetzter, ki.aufklappen('ziel')] },
   // Web-Chat-Bot: der Auftrag ist kopiert, unten wartet das Feld für die Antwort
   { name: 'webchat', zeigt: 'Web-Chat-Bot: kopierter Auftrag, Feld für die eingefügte Antwort',
     vor: [schritte.text, ki.aufraeumen, ki.anbieter('webchat'), ki.bereich(), ki.zeile('eintrag'), ki.nurLetzter, ki.unten] },
@@ -355,11 +429,13 @@ const BILDER = [
   // Durchsicht (Flusskontrolle): alles Auffällige auf einen Blick
   // Durchsicht am Verhörer-Text (der Erlkönig hat nur eine Stelle, auch bei 150 BPM); die ersten Gruppen aufgeklappt
   { name: 'durchsicht', zeigt: 'Durchsicht: alle Stellen, die beim Singen haken könnten',
-    vor: [schritte.verhoerer, schritte.abschnitt(5),
+    vor: [schritte.verhoerer, schritte.abschnitt(6),
       async K => K.ev(`await new Promise(r => setTimeout(r, 2500)); const l = document.getElementById('dsListe');
         [...l.querySelectorAll('details')].slice(0, 2).forEach(d => { d.open = true; }); await new Promise(r => setTimeout(r, 600));
         return document.getElementById('dsZahl').textContent + ' · ' + l.textContent.trim().slice(0, 80).replace(/\\s+/g, ' ')`)] },
   // Hören: Klopfen, Vorlesen mit Art (natürlich, Versmaß, im Takt) – mit geladener Stimme
+  { name: 'flusskontrolle', zeigt: 'Schritt 7: das Panel Flusskontrolle – Tempo, ⌥ zum Sehen, Anzeige, Ebene',
+    vor: [schritte.text, schritte.abschnitt(6)] },
   { name: 'hoeren', zeigt: 'Hören: Klopfen, Vorlesen natürlich · Versmaß · im Takt',
     vor: [schritte.text, schritte.abschnitt(6), async K => K.ev(`for (let i = 0; i < 20 && $('vorleseArt').hidden; i++) await new Promise(r => setTimeout(r, 500));
       $('vorleseArt').value = 'takt'; return 'Art: ' + ($('vorleseArt').hidden ? 'keine Stimme' : $('vorleseArt').value)`)] },
@@ -397,10 +473,12 @@ const BILDER = [
   { name: 'gramm', zeigt: 'grammatischer Reim im Russischen: gepunktete Linie am Reimteil (любил / ходил, столом / окном)',
     vor: [schritte.gramm, schritte.ketten([])], clip: ['#blatt'] },
   { name: 'fluss', zeigt: 'Silbenzahl und Hebungsdiagramm vor den Zeilen: Lücke = Pause, Haken = Drop, Pfeil = Zeilensprung',
-    vor: [schritte.probe, schritte.ketten(['binnen'])], clip: ['#blatt'] },
+    // Deutsch seit 26.11.2026 Goethe „Wandrers Nachtlied“ (Jörg: „ein Hebungsdiagramm mit mehr Variation, ggf ein Drop,
+    // Hebungskollision“; der Erlkönig-Schluss hatte weder Drop noch Prall). Englisch bleibt Poe (die englischen Erlkönig-Zeilen sind zu lang für die Breite), Russisch Majakowski (Treppenzeilen).
+    vor: SPR !== 'de' ? [schritte.probe, schritte.ketten(['binnen'])] : [schritte.nachtlied, schritte.ketten(['binnen'])], clip: ['#blatt'] },
   // Stammreime und Wortfamilie in der Werkbank (nur diese beiden Gruppen)
   { name: 'stammreim', zeigt: 'Werkbank: Stammreime (gleiche betonte Silbe) und Wortfamilie eines Wortes',
-    vor: [schritte.probe, schritte.werkbankAuf({ de: 'Nacht', en: 'fire', ru: 'богу' }), schritte.nurGruppen(['lx.stamm', 'lx.familie'])], clip: ['#wbInhalt .lexikon'], rand: 10 },
+    vor: [schritte.probe, schritte.werkbankAuf({ de: 'Welt', en: 'back', ru: 'день' }), schritte.nurGruppen(['lx.stamm', 'lx.familie'])], clip: ['#wbInhalt .lexikon'], rand: 10 },
   // Anlaut wie in …: Pille an, ein Wort im Feld, die Listen nach dem Anlaut sortiert
   { name: 'anlaut', zeigt: 'Werkbank: „Anlaut wie in …“ – Wörter mit gleichem oder ähnlichem Stab-Anlaut rücken nach vorn',
     vor: [schritte.probe, schritte.werkbankAuf({ de: 'Kreise', en: 'door', ru: 'муку' }), schritte.anlaut({ de: 'Pein', en: 'dark', ru: 'мгла' }), async K => K.ev(`document.querySelectorAll('#wbInhalt .klangwahl, #wbInhalt .lxbed').forEach(e => e.style.display = 'none');
@@ -417,6 +495,32 @@ const BILDER = [
       return document.getElementById('ohrSeite').textContent + ' · ' + document.querySelectorAll('.ohrzeile').length + ' Zeilen'`)],
     clip: ['#ohrFenster .ohrkasten'], rand: 0 },
   { name: 'hoerquiz-zu', zeigt: '(kein Bild – Quiz schließen)', vor: [async K => K.ev(`document.getElementById('ohrZu')?.click(); return 'zu'`)], nurSchritt: true },
+
+  // ---------- 0.10.0 (25.11.2026): der Ablauf in Schritten. Handlung und Lektorat mit echter KI (Claude-Abo der Probeinstanz).
+  // Vorbilder: gemeinfreie Dichter als Genre-Datei in der Aufnahme-Ablage – Goethe, Shakespeare, Puschkin (Jörg: „man könnte das illustrieren
+  // – schreib im Stil von Goethe … für RU und EN noch Puschkin und Shakespeare“).
+  { name: 'ablauf', zeigt: 'die Leiste als Ablauf: Schritte als Balken untereinander, Sprache offen',
+    vor: [schritte.plan, schritte.mischung, async K => K.ev(`kompaktSetzen(false); sektionOeffnen(-1); sektionOeffnen(7); await new Promise(r => setTimeout(r, 1500)); return 'ausführlich, Sprache offen'`)] },   // 7 = Schritt 1 Sprache: kurz, alle neun Schritte passen ins Bild (Jörg 26.11.2026)
+  { name: 'ablauf-aus', zeigt: '(kein Bild – Leiste wieder ausführlich)', vor: [async K => K.ev(`kompaktSetzen(false); return 'aus'`)], nurSchritt: true },
+  { name: 'aufbaubalken', zeigt: 'Schritt 4: Abschnitte als Balken, darunter die Sätze der Handlung',
+    vor: [schritte.plan, schritte.abschnitt(11)] },
+  { name: 'liedtext', zeigt: 'Schritt 5: Gerüst mit Handlung oder KI, „Das bekommt die KI“',
+    vor: [schritte.plan, schritte.mischung, schritte.abschnitt(4)] },
+  { name: 'genrekarte', zeigt: 'Genre-Karte: zwei Genres gemischt, rechts was die Mischung liefert',
+    vor: [schritte.genreKarte('genres')] },
+  { name: 'vorbilder', zeigt: 'Genre-Karte mit eigener Genre-Datei (gemeinfreier Dichter): Wortfeld und Form daraus',
+    vor: [schritte.genreKarte('dichter')] },
+  { name: 'genre-zu', zeigt: '(kein Bild – Genre-Karte zu)', vor: [async K => K.ev(`document.getElementById('gnAbbrechen').click(); return 'zu'`)], nurSchritt: true },
+  { name: 'uebergabe', zeigt: 'Schritt 8: Kopierknöpfe oben, Styles und Exclude Styles mit Vorschlägen',
+    vor: [schritte.text, schritte.mischung, schritte.stilAus,
+      // ein Begriff, der auch im Stil-Prompt steht, damit die Warnung „steht in beiden“ zu sehen ist (alle drei Stil-Prompts nennen bass)
+      async K => K.ev(`ausschlussSetzen($('sAus').value + ', bass'); return $('sAus').value`), schritte.abschnitt(10)] },
+  { name: 'handlung', zeigt: 'KI-Bereich: drei Handlungen aus Stichworten (echte KI)',
+    vor: [schritte.text, ki.aufraeumen, ki.anbieter('claude'), ki.vorschau(false), schritte.handlungen, ki.bereich(), ki.nurLetzter, ki.oben] },
+  { name: 'lektorat', zeigt: 'KI-Bereich: das Lektorat liest den Text wie ein Hörer (echte KI)',
+    vor: [schritte.text, ki.aufraeumen, ki.anbieter('claude'), ki.vorschau(false), schritte.lektorat, ki.bereich(), ki.nurLetzter, ki.oben] },
+  { name: 'ki-ende2', zeigt: '(Zwischenschritt: KI-Bereich zu)', nurSchritt: true,
+    vor: [ki.aufraeumen, async K => K.ev(`KD.zu = true; kdMerken(); kdSetzen(false); return 'KI-Bereich zu'`)] },
 
   // Zuletzt, weil die Seite wechselt: die Systemseite listet die nutzbaren Korpora auf diesem Rechner (Lexikon des Macs, Word,
   // LibreOffice) – je mit Haken und eingeklappter Begründung (Jörg, 16.11.2026). Der OpenThesaurus ist aufgeklappt, damit man
@@ -472,49 +576,60 @@ const WB = { werkbank: 786, fenster: [1700, 1000], anker: '#werkbank' };
 const FELD = {
   // Blatt-Bilder: Leiste schmal (185 px), Ausschnitt ab dem linken Fensterrand – so reicht das Feld genau bis zur Reimspalte
   // (das Blatt allein ist schmaler als das Feld; rechts blieb ein Viertel leer). Ohne die Kommentarzeile des russischen Beispiels.
-  schreiben:   { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, leisteZu: true },
-  reimschema:  { feld: [654, 760], fenster: [1920, 1300], leiste: 340, werkbank: 651, anker: '#blatt', mitTitel: true },
-  reimsuche:   { feld: [462, 760], fenster: [1920, 1300], leiste: 340, werkbank: 651, anker: '#werkbank' },
-  ersatz:      { feld: [558, 560], ...WB },
-  luecke:      { feld: [558, 560], ...WB },
-  klangfarbe:  { feld: [558, 560], ...WB },
-  lautschrift: { feld: [558, 560], ...WB },
+  schreiben:   { feld: [365, 420], fenster: [1040, 1000], dx: 44, dy: 52, leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneKommentar: true, leisteZu: true },
+  reimschema:  { feld: [448, 420], fenster: [860, 1100], leiste: 185, werkbank: 0, ohneDiagramm: true, dx: 14, dy: 52, anker: '#blatt', mitTitel: true },   // Text und Reimspalte, ohne Diagramm und Titel (Leere ≤ ¼, 25.11.2026)
+  reimsuche:   { feld: { de: [430, 420], en: [383, 420], ru: [430, 420] }, fenster: [1920, 1300], leiste: 340, werkbank: { de: 606, en: 540, ru: 606 }, anker: '#werkbank' },
+  ersatz:      { feld: [365, 420], ...WB, werkbank: 514 },   // Drittelbreite: die Spalten füllen die Werkbank (Leere ≤ ¼, 25.11.2026)
+  luecke:      { feld: [365, 420], ...WB, werkbank: 514 },
+  klangfarbe:  { feld: { de: [334, 420], en: [298, 420], ru: [334, 420] }, ...WB, werkbank: { de: 470, en: 420, ru: 470 } },
+  lautschrift: { feld: [540, 215], ...WB, anker: '#lautFenster', unten: true, einblick: true, dx: -6, dy: 38 },   // die ganze Tastatur, darüber ein Stück Reimliste
   // gebunden steht quer neben einem langen Text: das Feld ist so hoch wie der Text (sonst schneidet die Seite das Bild zu)
   // wie die Blatt-Bilder (Jörg 17.11.2026: um die Lichter zentriert zeigte es Anschnitte von Leiste und Werkbank):
   // ab linkem Rand, oben die Werkzeugzeile mit den Lichtern, darunter das Blatt
-  gebunden:    { feld: [750, 370], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#gebunden', abLinks: true, dy: -14, ohneMarke: true, ohneKommentar: true, leisteZu: true, hervor: '#gebunden' },
-  zaehlen:     { feld: [365, 520], fenster: [1600, 1100], leiste: 520, anker: '.sec:has(#suno)', dx: -12, dy: -12, einblick: true, ohneMarke: true },
-  regie:       { feld: [751, 520], fenster: [1600, 1100], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, abLinks: true, ohneKommentar: true, ohneMarke: true, leisteZu: true },
+  gebunden:    { feld: [485, 240], fenster: [1040, 1000], leiste: 185, werkbank: 0, anker: '#gebunden', abLinks: true, dx: 185, dy: -14, ohneMarke: true, ohneKommentar: true, leisteZu: true, hervor: '#gebunden' },
+  zaehlen:     { feld: [269, 420], fenster: [1600, 1100], leiste: 400, anker: '.sunoleiste', dx: -12, dy: -13, einblick: true, ohneMarke: true, hervor: '.sunoleiste .zahl', hervorEng: true },   // Zahlen mit Rahmen (Jörg 26.11.2026)   // ab der Kopierleiste (Leere ≤ ¼, Jörg 25.11.2026)
+  regie:       { feld: [269, 380], fenster: [1040, 1100], leiste: 185, werkbank: 0, anker: '#blatt', dx: 14, dy: { de: 0, en: 0, ru: 52 }, ohneDiagramm: true, mitTitel: true, ohneKommentar: true, ohneMarke: true, leisteZu: true },   // nur Text und Klammern, ohne Diagramm und Reimspalte (Leere ≤ ¼)
   // neu 17.11.2026: Klangketten (quer, wie „schreiben“), Fluss (w5 neben Versmaß w7), Stammreim und Anlaut (w6, Werkbank)
-  klangketten: { feld: [750, 460], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
+  klangketten: { feld: [338, 470], fenster: [760, 1000], ohneDiagramm: true, dx: 14, leiste: 185, werkbank: 0, anker: '#kettenzeile', dy: -4, ohneMarke: true, leisteZu: true },
   // neu 19.11.2026: Verhörer und grammatischer Reim, nebeneinander (w6), nur das Blatt mit Titel
   // neu 19.11.2026: Flusskontrolle – zwei Bilder nebeneinander (w6), Blatt mit Titel im Flickermodus
   // 23.11.2026: drei Bilder nebeneinander (w4), Feld so hoch wie Titel und vier Zeilen – weniger Rand (Jörg)
-  'flk-gedicht': { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
-  'flk-zunge':   { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
-  'flk-singbar': { feld: [365, 165], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 5, mitTitel: true, ohneMarke: true, leisteZu: true },
-  verhoerer:   { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
-  gramm:       { feld: [558, 240], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
-  fluss:       { feld: [750, 420], fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: -8, ohneMarke: true, leisteZu: true },
-  stammreim:   { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .lexikon', dy: -10 },
-  anlaut:      { feld: [558, 400], ...WB, fenster: [1700, 1500], anker: '#wbInhalt .anlautwahl', dy: -4 },
+  'flk-gedicht': { feld: { de: [318, 135], en: [284, 135], ru: [250, 135] }, fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 45, mitTitel: true, ohneMarke: true, leisteZu: true },   // ohne Titelzeile: der Titel ließ rechts eine leere Fläche (Leere ≤ ¼, 25.11.2026)
+  'flk-zunge':   { feld: { de: [365, 135], en: [272, 135], ru: [307, 135] }, fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 45, mitTitel: true, ohneMarke: true, leisteZu: true },   // ohne Titelzeile: der Titel ließ rechts eine leere Fläche (Leere ≤ ¼, 25.11.2026)
+  'flk-singbar': { feld: { de: [250, 135], en: [227, 135], ru: [261, 135] }, fenster: [1600, 1000], leiste: 185, werkbank: 0, anker: '#editor', dx: -10, dy: 45, mitTitel: true, ohneMarke: true, leisteZu: true },   // ohne Titelzeile: der Titel ließ rechts eine leere Fläche (Leere ≤ ¼, 25.11.2026)
+  verhoerer:   { feld: [250, 215], ohneDiagramm: true, dx: 14, fenster: [1040, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
+  gramm:       { feld: [250, 190], ohneDiagramm: true, dx: 14, fenster: [1040, 1000], leiste: 185, werkbank: 0, anker: '#blatt', mitTitel: true, ohneMarke: true, leisteZu: true },
+  fluss:       { feld: { de: [316, 280], en: [365, 300], ru: [330, 300] }, fenster: [1040, 1000], leiste: 185, werkbank: 0, anker: '#blatt', dx: 42, dy: 0, ohneMarke: true, leisteZu: true },
+  stammreim:   { feld: [426, 215], ...WB, werkbank: 600, fenster: [1700, 1500], anker: '#wbInhalt .lexikon', dy: -10 },
+  anlaut:      { feld: [426, 215], ...WB, werkbank: 600, fenster: [1700, 1500], anker: '#wbInhalt .anlautwahl', dy: -4 },
   hoerquiz:    { feld: [462, 430], fenster: [1600, 1000], anker: '#ohrFenster .ohrkasten', mitte: true, dy: -12 },
   // KI und Länge sind kleine Kästen der linken Leiste: Leiste auf Feldbreite gezogen, flache Reihe. Die Länge steht unten im
   // Aufbau – „unten“ legt das Feld mit dem Kasten an seinen Fuß, darüber stehen die Abschnitte, aus denen sie gerechnet wird.
-  ki:          { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '.sec:has(#claude)', dx: -12, dy: -12, einblick: true },
-  laenge:      { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '#aLaenge', dx: -24, dy: 14, unten: true, einblick: true },
+  ki:          { feld: [558, 300], fenster: [1700, 1000], leiste: 790, anker: '.sec:has(#kAnbieter)', dx: -12, dy: -12, einblick: true },
+  laenge:      { feld: [462, 420], fenster: [1600, 1000], leiste: 656, anker: '#aLaenge', dx: -12, dy: 14, unten: true, einblick: true },
   // KI-Verkehr steht in der Blattspalte: Leiste schmal, Werkbank aus, Fenster so breit, dass die Spalte das Feld trägt
   // KI-Bereich (Drawer) in der Blattspalte: Leiste schmal, Werkbank aus, Bereich fast so hoch wie die Spalte
   kiverkehr:   { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
   webchat:     { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
   entwurf:     { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
-  durchsicht:  { feld: [558, 300], fenster: [1700, 1100], leiste: 790, anker: '#dsFeld', dx: -12, dy: -12, einblick: true },
-  hoeren:      { feld: [558, 330], fenster: [1700, 1000], leiste: 790, anker: 'h4.glteil[data-i18n="s6.hoeren"]', dx: -12, dy: -14, einblick: true },
+  // Für Suno als vier Viertelkacheln (Jörg 26.11.2026, 1a); Regiezeilen rechts angeschnitten („schneide die regiezeilen rechts an“)
+  durchsicht:  { feld: [269, 396], fenster: [1600, 1100], leiste: 400, anker: '#dsFeld', dx: -12, dy: -12, einblick: true },
+  flusskontrolle: { feld: [365, 420], fenster: [1600, 1100], leiste: 520, anker: '#flFeld', dx: -12, dy: -12, einblick: true },   // Panel Flusskontrolle in Schritt 7 (Jörg 26.11.2026)
+  hoeren:      { feld: [365, 420], fenster: [1600, 1500], leiste: 520, anker: 'h4.glteil[data-i18n="s6.hoeren"]', dx: -12, dy: -14, einblick: true },
   // Systemseite schmal, damit zwei Karten nebeneinander ins Feld passen
   dienste:     { feld: [558, 420], fenster: [800, 1500], anker: '#karten', dx: -8, dy: -8, einblick: true },
-  stimmeichen: { feld: [558, 330], fenster: [800, 1500], anker: '#stimmEichung', dx: -8, dy: -8, einblick: true },
+  stimmeichen: { feld: [365, 420], fenster: [540, 1500], anker: '#stimmEichung', dx: -8, dy: -8, einblick: true },
   eigene:      { feld: [558, 330], fenster: [800, 1000], anker: '#korpora', einblick: true },
-  vergleich:   { feld: [1136, 600], fenster: [1600, 1100], anker: '#vergleich' },
+  vergleich:   { feld: [1136, 600], fenster: [1600, 1100], werkbank: 0, anker: '#vergleich' },   // ohne leere Werkbank rechts (Leere ≤ ¼)
+  // 0.10.0: der Ablauf – Leiste mit Schritt-Knöpfen (quer), Schritte breit gezogen, Genre-Karte, KI-Bereich wie „kiverkehr“
+  ablauf:       { feld: [365, 520], fenster: [1600, 1100], leiste: 520, werkbank: 0, anker: '#leiste', abLinks: true, ohneMarke: true },   // die Leiste als schmale Spalte am linken Rand, so wie sie benutzt wird (Jörg, 25.11.2026)
+  aufbaubalken: { feld: [365, 330], fenster: [1600, 1100], leiste: 520, werkbank: 0, anker: '.sec:has(#aufbau)', dx: -12, dy: 150, einblick: true },   // schmal: die Balken tragen auf schmaler Leiste genauso (Jörg, 25.11.2026: „nicht breiter als nötig“)
+  uebergabe:    { feld: [269, 420], fenster: [1600, 1100], leiste: 400, werkbank: 0, anker: '#stVorschlaege', dx: -31, dy: -6, einblick: true },   // Vorschläge und Exclude Styles; Kopierleiste und Styles zeigt „Zeichen zählen“
+  liedtext:     { feld: [365, 520], fenster: [1600, 1100], leiste: 520, anker: '.sec:has(#stilRegie)', dx: -12, dy: 12, unten: true, einblick: true },   // unten am Schritt 8: darüber das Ende des Aufbaus statt Leere
+  genrekarte:   { feld: [751, 520], fenster: [1600, 930], anker: '#genreFenster .gnkarte', dx: -8, dy: -10 },
+  vorbilder:    { feld: [558, 420], fenster: [1150, 820], anker: '#genreFenster .gnwurf', dx: -8, dy: -8 },
+  handlung:     { feld: [558, 420], fenster: [1000, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
+  lektorat:     { feld: [751, 520], fenster: [1240, 1100], leiste: 185, werkbank: 0, anker: '#kiDrawer', dx: 6, dy: 0, leisteZu: true },
 };
 // Leiste und Werkbank so breit ziehen, wie das Feld es verlangt (werkbank 0 = ausblenden, fehlt = Vorgabe)
 const lage = (K, F) => K.ev(`const h = document.querySelector('main');
@@ -540,7 +655,10 @@ console.log('Sprache:', await K.ev(`try { spracheSetzen(${J(SPR)}); spracheAnwen
 
 for (const b of liste) {
   console.log(`\n--- ${b.name}: ${b.zeigt}`);
-  const F = FELD[b.name];
+  // FELDX='{…}': das Feld dieses Laufs überschreiben (Versuche mit anderer Breite, ohne die Tafel zu ändern)
+  let F = FELD[b.name] && process.env.FELDX ? { ...FELD[b.name], ...JSON.parse(process.env.FELDX) } : FELD[b.name];
+  // feld je Sprache ({ de: [w, h], en: …, ru: … }): der Inhalt ist je Sprache verschieden breit – das Bild nicht breiter als er
+  if (F) F = Object.fromEntries(Object.entries(F).map(([k, v]) => [k, v && typeof v === 'object' && !Array.isArray(v) && SPR in v ? v[SPR] : v]));   // Angaben je Sprache
   if (F) { await fenster(K, ...F.fenster); console.log('    ', await lage(K, F)); }
   for (const s of b.vor) console.log('   ', JSON.stringify(await s(K)).slice(0, 170));
   if (F && F.ohneKommentar) console.log('    ', await K.ev(`const t = document.getElementById('text');
@@ -550,11 +668,15 @@ for (const b of liste) {
     // NICHT Abschnitt 1 aufklappen: mit KlangTresor steht dort die Liedliste des eigenen Archivs (persönlich, nicht auf die Seite)
     return 'Leiste zu'`));
   // hervor: ein Element im Bild mit orangem Rahmen hervorheben – nur in der Aufnahme (Jörg 17.11.2026: „mach ein Highlight drauf“)
-  if (F && F.hervor) console.log('    ', await K.ev(`const e = document.querySelector(${J(F.hervor)}); if (!e) return 'hervor: fehlt';
-    Object.assign(e.style, { outline: '2px solid #ff7a1a', outlineOffset: '5px', borderRadius: '6px', boxShadow: '0 0 0 9px rgba(255,122,26,.18)' }); return 'hervorgehoben: ' + ${J(F.hervor)}`));
+  // seit 26.11.2026 alle Treffer des Selektors (Zeichenzahlen: drei Rahmen); hervorEng: Rahmen dicht am Element ohne Schein
+  if (F && F.hervor) console.log('    ', await K.ev(`const l = [...document.querySelectorAll(${J(F.hervor)})]; if (!l.length) return 'hervor: fehlt';
+    for (const e of l) Object.assign(e.style, ${F.hervorEng ? "{ outline: '2px solid #ff7a1a', outlineOffset: '3px', borderRadius: '4px' }" : "{ outline: '2px solid #ff7a1a', outlineOffset: '5px', borderRadius: '6px', boxShadow: '0 0 0 9px rgba(255,122,26,.18)' }"}); return 'hervorgehoben: ' + l.length + ' × ' + ${J(F.hervor)}`));
   // ohneMarke: die Markierung eines vorigen Werkbank-Bildes (orange hinterlegte Zeilen) schließen
   if (F && F.ohneMarke) console.log('    ', await K.ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));   /* das × gibt es seit 18.11.2026 nicht mehr; Esc leert die Werkbank */ const t = document.getElementById('text'); t.setSelectionRange(0, 0); t.blur();
     await new Promise(r => setTimeout(r, 800)); return 'Markierung zu: ' + document.querySelectorAll('#blatt .markiert, #blatt [class*=mark]').length`));
+  // ohneDiagramm: Pille „Betonung“ aus – das Blatt zeigt nur Text und Reimspalte, ohne die leere Rinne vor dem Text
+  // (Jörg, 25.11.2026: höchstens ein Viertel Leere; das Diagramm ist bei Hörfalle und grammatischem Reim nicht das Thema)
+  if (F && F.ohneDiagramm) console.log('    ', await K.ev(`anzeigeSetzen('diagramm', false); await new Promise(r => setTimeout(r, 1200)); return 'Diagramm aus'`));
   if (F) console.log('    ', await lage(K, F));
   if (b.nurSchritt) continue;   // Zwischenschritt ohne Bild (z. B. Pillen wieder aus)
   // Kleine Kästen bekommen eine höhere Pixeldichte. Chrome beachtet weder clip.scale noch einen Zoom am body
@@ -563,7 +685,7 @@ for (const b of liste) {
   // Derbe Wörter gehören in die KlangFeder und werden nie umgangen; NUR in den Bildern der Feature-Seite werden sie unscharf
   // gezeichnet (Jörg, 17.11.2026: „du darfst sie in der Feature-Seite (und auch nur dort) blurren“).
   console.log('    ', await K.ev(`const derb = ${DERB}; let n = 0;
-    for (const e of document.querySelectorAll('button.lxe[data-w], .wahl button')) {
+    for (const e of document.querySelectorAll('button.lxe[data-w], .wahl button, button[data-luecke]')) {   // Lückenknöpfe seit 26.11.2026
       const t = (e.dataset && e.dataset.w) || e.textContent || ''; if (derb.test(t.toLowerCase())) { e.style.filter = 'blur(5px)'; n++; } }
     return 'unscharf: ' + n`));
   await K.ev(`for (const e of document.querySelectorAll('#blatt, #editor, .secbody, #werkbank, #wbInhalt, #wbInhalt .lexikon')) e.scrollTop = 0;
@@ -571,6 +693,14 @@ for (const b of liste) {
   // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto).
   // Es scrollt nicht die Werkbank selbst, sondern die Liste darin (.lexikon, overflow-y: auto) – und sie lädt
   // beim Scrollen nach, darum in Schleife, bis der Boden steht.
+  if (b.scroll && typeof b.scroll === 'object') b.scroll = b.scroll[SPR];
+  // scroll 'synonyme': die Liste so rollen, dass die erste Synonym-Gruppe oben steht (die Reime davor sind ein eigenes Bild)
+  if (b.scroll === 'synonyme') console.log('    ', await K.ev(`const l = document.querySelector('#werkbank .lexikon'); if (!l) return 'keine Liste';
+    const k = t('lx.syn.gleich').split(/[·(]/)[0].trim().slice(0, 6), h = [...l.querySelectorAll('.lxh')].find(x => x.textContent.trim().startsWith(k)) || [...l.querySelectorAll('.lxh')].find(x => x.textContent.includes(k));
+    if (!h) return 'keine Synonyme';
+    // was davor steht (Reimgruppen), ausblenden – rollen allein reicht nicht, wenn die Liste danach zu kurz ist
+    let n = 0; for (let e = l.firstElementChild; e && e !== h; e = e.nextElementSibling) { e.style.display = 'none'; n++; }
+    l.scrollTop = 0; await new Promise(r => setTimeout(r, 600)); return 'ab ' + h.textContent.trim() + ' (' + n + ' davor aus)'`));
   if (b.scroll === 'ende') console.log('    ', await K.ev(`const l = document.querySelector('#werkbank .lexikon');
     if (!l) return 'keine Liste';
     // zielgenau: den letzten Eintrag in den Blick holen. Reines scrollTop = scrollHeight bleibt stehen, weil die
@@ -602,6 +732,7 @@ for (const b of liste) {
     execFileSync('magick', [voll, '-crop', `${Math.round(cw * DPR)}x${Math.round((ch - lh) * DPR)}+${Math.round(x * DPR)}+${Math.round(y * DPR)}`, '+repage', dateiF]);
     leisteDavor(dateiF);
     fs.unlinkSync(voll);
+    if (F.ohneDiagramm) await K.ev(`anzeigeSetzen('diagramm', true); return 1`);
     console.log(`    → ${dateiF}`);
     await fenster(K, FB, FH); await lage(K, {});
     continue;

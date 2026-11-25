@@ -16,7 +16,7 @@ const BASIS = 'https://caspardavi.github.io/klangfeder/';
 const DATEI = { en: 'index.html', de: 'de.html', ru: 'ru.html' };
 const ADRESSE = { en: BASIS, de: BASIS + 'de.html', ru: BASIS + 'ru.html' };
 const PORT = 8796;
-const OG = (L) => `${BASIS}img/og-${L}.jpg?v=20261119`;   // Vorschaubild je Sprache (werkzeug/vorschaubild.mjs); v hochzählen, wenn es neu ist
+const OG = (L) => `${BASIS}img/og-${L}.jpg?v=20261126`;   // Vorschaubild je Sprache (werkzeug/vorschaubild.mjs); v hochzählen, wenn es neu ist
 
 
 /* Titel nach dem Stichworttest vom 19.11.2026 (Google-Vorschläge): „songwriting software“, „Songtext schreiben“,
