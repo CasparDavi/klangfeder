@@ -300,9 +300,6 @@ main{max-width:1180px;margin:0 auto;padding:0 22px 80px}
 .plus svg{width:14px;height:14px}
 .plus:hover{background:rgba(90,90,94,.9)}
 .k .druck{display:none}
-.nr{position:absolute;top:12px;right:14px;z-index:5;min-width:30px;padding:3px 9px;border-radius:999px;background:#ff8a1f;color:#000;font:700 16px/1.2 system-ui,sans-serif;text-align:center;pointer-events:none}
-.karte .nr,figure .nr,.nrw .nr{top:6px;right:6px;font-size:13px;min-width:24px;padding:2px 7px;background:#ffc27a}
-.nrw{position:relative;display:contents}
 /* Leicht gedimmt; das Fenster geht am Plus auf, sein Kreuz liegt dort, wo das Plus war (Lage setzt lage()). */
 .overlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.38);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none;overflow:auto}
 .overlay.auf{display:block}
@@ -858,23 +855,8 @@ document.addEventListener('click', e => {
   if (b){ const l = b.dataset.l; try { localStorage.setItem('kf-seite-sprache', l); } catch(e){} if (l !== SEITE) location.href = DATEI[l] + location.search.replace(/[?&]lang=[a-z]+/, '').replace(/^&/, '?') + location.hash; }
 });
 addEventListener('keydown', e => { if (e.key === 'Escape') zu(); });
-/* Nummern zum Durchgehen (Jörg, 26.11.2026: „eine version, die zahlen an die Abbildungen schreibt, damit wir nur auf Nummern
-   referenzieren müssen“): nur mit ?nr in der Adresse. Jede Kachel fortlaufend, das Titelbild 0; mehrere Abbildungen in einer
-   Kachel (Bildpaar, Ansichten, Reimstufen-Karten) mit Buchstaben. */
-function nummern(){
-  if (!/[?&]nr\b/.test(location.search)) return;
-  const marke = (el, t) => { const s = document.createElement('span'); s.className = 'nr'; s.textContent = t; if (getComputedStyle(el).position === 'static') el.style.position = 'relative'; el.appendChild(s); };
-  const titel = document.querySelector('.held .bild'); if (titel) marke(titel, '0');
-  document.querySelectorAll('article.k').forEach((k, i) => {
-    marke(k, String(i + 1));
-    k.querySelectorAll('.bild.stapel figure, .bild.reihe figure, .karten .karte, .bild.trip img').forEach((t, j) => {
-      const z = String(i + 1) + 'abcdefghij'[j];
-      if (t.tagName === 'IMG') { const w = document.createElement('span'); w.className = 'nrw'; t.replaceWith(w); w.appendChild(t); marke(w, z); } else marke(t, z);
-    });
-  });
-}
 L = spracheWaehlen();
-if (L !== SEITE) location.replace(DATEI[L] + location.search + location.hash); else { bauen(); nummern(); }
+if (L !== SEITE) location.replace(DATEI[L] + location.search + location.hash); else bauen();
 </script>
 </body>
 </html>
